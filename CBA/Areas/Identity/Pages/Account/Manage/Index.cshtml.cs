@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using CBA.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,12 +12,12 @@ namespace CBA.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<CBAUser> _userManager;
+        private readonly SignInManager<CBAUser> _signInManager;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<CBAUser> userManager,
+            SignInManager<CBAUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -32,21 +33,35 @@ namespace CBA.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [Display(Name = "Username")]
+            public string UserName { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(CBAUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var firstName = user.FirstName;
+            var lastName = user.LastName;
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                UserName = userName,
+                FirstName = firstName,
+                LastName = lastName
             };
         }
 
@@ -85,6 +100,20 @@ namespace CBA.Areas.Identity.Pages.Account.Manage
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
                 }
+            }
+
+            var firstName = user.FirstName;
+            if (firstName != Input.FirstName)
+            {
+                user.FirstName = Input.FirstName;
+                await _userManager.UpdateAsync(user);
+            }
+
+            var lastName = user.LastName;
+            if (lastName != Input.LastName)
+            {
+                user.LastName = Input.LastName;
+                await _userManager.UpdateAsync(user);
             }
 
             await _signInManager.RefreshSignInAsync(user);

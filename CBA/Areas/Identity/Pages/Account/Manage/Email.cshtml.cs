@@ -10,18 +10,19 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using CBA.Models;
 
 namespace CBA.Areas.Identity.Pages.Account.Manage
 {
     public partial class EmailModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<CBAUser> _userManager;
+        private readonly SignInManager<CBAUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public EmailModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<CBAUser> userManager,
+            SignInManager<CBAUser> signInManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -49,7 +50,7 @@ namespace CBA.Areas.Identity.Pages.Account.Manage
             public string NewEmail { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(CBAUser user)
         {
             var email = await _userManager.GetEmailAsync(user);
             Email = email;
