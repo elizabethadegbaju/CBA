@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace CBA.Controllers
 {
-    [Authorize(Roles="SuperUser")]
+    [Authorize(Roles="Superuser")]
     public class UserRolesController : Controller
     {
         private readonly SignInManager<CBAUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<CBARole> _roleManager;
         private readonly UserManager<CBAUser> _userManager;
 
-        public UserRolesController(SignInManager<CBAUser> signInManager, RoleManager<IdentityRole> roleManager, UserManager<CBAUser> userManager)
+        public UserRolesController(SignInManager<CBAUser> signInManager, RoleManager<CBARole> roleManager, UserManager<CBAUser> userManager)
         {
             _signInManager = signInManager;
             _roleManager = roleManager;

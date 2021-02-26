@@ -11,14 +11,14 @@ namespace CBA.Models
 {
     public static class SeedData
     {
-        public static async Task SeedRolesAsync(UserManager<CBAUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedRolesAsync(UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager)
         {
-            await roleManager.CreateAsync(new IdentityRole(DefaultRoles.SuperUser.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(DefaultRoles.Admin.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(DefaultRoles.Staff.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(DefaultRoles.Customer.ToString()));
+            await roleManager.CreateAsync(new CBARole(DefaultRoles.SuperUser.ToString()));
+            await roleManager.CreateAsync(new CBARole(DefaultRoles.Admin.ToString()));
+            await roleManager.CreateAsync(new CBARole(DefaultRoles.Staff.ToString()));
+            await roleManager.CreateAsync(new CBARole(DefaultRoles.Customer.ToString()));
         }
-        public static async Task SeedSuperUserAsync(UserManager<CBAUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedSuperUserAsync(UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager)
         {
             var superUser = new CBAUser
             {
@@ -43,7 +43,7 @@ namespace CBA.Models
                 await roleManager.SeedClaimsForSuperAdmin();
             }
         }
-        private async static Task SeedClaimsForSuperAdmin(this RoleManager<IdentityRole> roleManager)
+        private async static Task SeedClaimsForSuperAdmin(this RoleManager<CBARole> roleManager)
         {
             var superUserRole = await roleManager.FindByNameAsync("SuperUser");
             var claims = await roleManager.GetClaimsAsync(superUserRole);

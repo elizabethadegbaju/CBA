@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CBA.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Superuser")]
     public class UsersController : Controller
     {
         private readonly UserManager<CBAUser> _userManager;

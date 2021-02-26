@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CBA.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace CBA.Controllers
 {
-    [Authorize(Roles = "SuperUser")]
+    [Authorize(Roles = "Superuser")]
     public class RolesController : Controller
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<CBARole> _roleManager;
 
-        public RolesController(RoleManager<IdentityRole> roleManager)
+        public RolesController(RoleManager<CBARole> roleManager)
         {
             _roleManager = roleManager;
         }
@@ -48,7 +49,7 @@ namespace CBA.Controllers
             {
                 try
                 {
-                    await _roleManager.CreateAsync(new IdentityRole(name));
+                    await _roleManager.CreateAsync(new CBARole(name));
                 }
                 catch
                 {

@@ -1,9 +1,11 @@
 ﻿using CBA.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 
 namespace CBA.Data
 {
@@ -13,5 +15,6 @@ namespace CBA.Data
             : base(options)
         {
         }
+        new public DbSet<CBARole> Roles { get; set; }
     }
 }

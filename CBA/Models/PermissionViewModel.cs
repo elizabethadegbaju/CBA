@@ -8,7 +8,7 @@ namespace CBA.Models
 {
     public class PermissionViewModel
     {
-        public IdentityRole Role { get; set; }
+        public CBARole Role { get; set; }
         public IList<RoleClaimsViewModel> RoleClaims { get; set; }
     }
     public class RoleClaimsViewModel

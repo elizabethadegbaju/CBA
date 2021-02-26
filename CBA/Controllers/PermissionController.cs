@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace CBA.Controllers
 {
-    [Authorize(Roles = "SuperUser")]
+    [Authorize(Roles = "Superuser")]
     public class PermissionController : Controller
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<CBARole> _roleManager;
 
-        public PermissionController(RoleManager<IdentityRole> roleManager)
+        public PermissionController(RoleManager<CBARole> roleManager)
         {
             _roleManager = roleManager;
         }

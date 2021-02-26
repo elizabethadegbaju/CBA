@@ -25,7 +25,7 @@ namespace CBA
                 try
                 {
                     var userManager = services.GetRequiredService<UserManager<CBAUser>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var roleManager = services.GetRequiredService<RoleManager<CBARole>>();
                     await SeedData.SeedRolesAsync(userManager, roleManager);
                     logger.LogInformation("SeedData for Default roles successful");
                     await SeedData.SeedSuperUserAsync(userManager, roleManager);
