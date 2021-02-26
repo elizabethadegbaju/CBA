@@ -34,11 +34,11 @@ namespace CBA.Controllers
                 var userRolesViewModel = new UserRolesViewModel
                 {
                     Name = role.Name,
-                    Selected = false
+                    IsSelected = false
                 };
                 if (await _userManager.IsInRoleAsync(user, role.Name))
                 {
-                    userRolesViewModel.Selected = true;
+                    userRolesViewModel.IsSelected = true;
                 }
                 viewModel.Add(userRolesViewModel);
             }
@@ -91,7 +91,7 @@ namespace CBA.Controllers
             var user = await _userManager.FindByIdAsync(id);
             var roles = await _userManager.GetRolesAsync(user);
             var result = await _userManager.RemoveFromRolesAsync(user, roles);
-            result = await _userManager.AddToRolesAsync(user, model.UserRoles.Where(a => a.Selected).Select(b => b.Name));
+            result = await _userManager.AddToRolesAsync(user, model.UserRoles.Where(a => a.IsSelected).Select(b => b.Name));
             var currentUser = await _userManager.GetUserAsync(User);
             await _signInManager.RefreshSignInAsync(currentUser);
             await SeedData.SeedSuperUserAsync(_userManager, _roleManager);

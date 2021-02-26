@@ -13,10 +13,10 @@ namespace CBA.Models
     {
         public static async Task SeedRolesAsync(UserManager<CBAUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            await roleManager.CreateAsync(new IdentityRole(Role.SuperUser.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Role.Admin.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Role.Staff.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Role.Customer.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(DefaultRoles.SuperUser.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(DefaultRoles.Admin.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(DefaultRoles.Staff.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(DefaultRoles.Customer.ToString()));
         }
         public static async Task SeedSuperUserAsync(UserManager<CBAUser> userManager, RoleManager<IdentityRole> roleManager)
         {
@@ -34,10 +34,10 @@ namespace CBA.Models
                     await userManager.CreateAsync(superUser, "Ade981_");
                     await userManager.AddToRolesAsync(superUser, new List<string>()
                         {
-                            Role.Admin.ToString(),
-                            Role.SuperUser.ToString(),
-                            Role.Staff.ToString(),
-                            Role.Customer.ToString()
+                            DefaultRoles.Admin.ToString(),
+                            DefaultRoles.SuperUser.ToString(),
+                            DefaultRoles.Staff.ToString(),
+                            DefaultRoles.Customer.ToString()
                         });
                 }
                 await roleManager.SeedClaimsForSuperAdmin();

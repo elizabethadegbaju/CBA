@@ -13,6 +13,6 @@ namespace CBA.Models
     public class UserRolesViewModel
     {
         public string Name { get; set; }
-        public bool Selected { get; set; }
+        public bool IsSelected { get; set; }
     }
 }

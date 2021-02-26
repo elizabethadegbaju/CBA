@@ -46,7 +46,7 @@ namespace CBA.Controllers
             {
                 if (authorizedClaims.Any(a => a == permission.Type))
                 {
-                    permission.Selected = true;
+                    permission.IsSelected = true;
                 }
             }
             model.RoleClaims = permissions;
@@ -97,7 +97,7 @@ namespace CBA.Controllers
             {
                 await _roleManager.RemoveClaimAsync(role, claim);
             }
-            var selectedClaims = model.RoleClaims.Where(a => a.Selected).ToList();
+            var selectedClaims = model.RoleClaims.Where(a => a.IsSelected).ToList();
             foreach (var claim in selectedClaims)
             {
                 MemberInfo member = typeof(Permissions).GetMember(claim.Type)[0];
