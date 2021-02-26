@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CBA.Models
 {
-    public enum Role
+    public enum DefaultRoles
     {
         SuperUser,
         Admin,
