@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IdentityRole
+@{
+    ViewData["Title"] = "Add Role";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post" asp-controller="Roles" asp-action="Create">
+    <div class="input-group">
+        <input name="name" class="form-control">
+    </div>
+    <div class="input-group">
+        <button class="btn btn-info">Add New Role</button>
+    </div>
+</form>

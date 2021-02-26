@@ -1,0 +1,50 @@
+﻿@using CBA.Models
+@model ManageUserRolesViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Manage Roles for @Model.User.UserName</h1>
+
+<div class="card">
+    <div id="viewAll" class="card-body table-responsive">
+        <form asp-controller="UserRoles" method="post" asp-action="Edit" asp-route-id="@Model.User.Id" class="d-inline">
+            <input asp-for="@Model.User.Id" type="hidden" />
+            <table class="table table-hover" id="userRolesTable">
+                <thead>
+                    <tr>
+                        <th>
+                            Role
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.UserRoles.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                <input asp-for="@Model.UserRoles[i].Name" type="hidden" />
+                                @Model.UserRoles[i].Name
+                            </td>
+                            <td>
+                                <div class="form-check m-1">
+                                    <input asp-for="@Model.UserRoles[i].Selected" class="form-check-input" />
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="col-sm-12" style=" padding: 20px 20px 0px 0px">
+                <button type="submit" id="save" class="btn bg-info">
+                    <i class="fa fa-check"></i>
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

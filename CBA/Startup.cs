@@ -34,6 +34,7 @@ namespace CBA
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<CBAUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();

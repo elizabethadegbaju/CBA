@@ -1,0 +1,56 @@
+﻿@model PermissionViewModel
+@{
+    ViewData["Title"] = "Permissions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"] for @Model.Role.Name Role</h1>
+
+<div class="card">
+    <div id="viewAll" class="card-body table-responsive">
+        <form asp-controller="Permission" method="post" asp-action="Edit" class="d-inline">
+            <input asp-for="@Model.Role.Id" type="hidden" />
+            <table class="table table-hover" id="permissionTable">
+                <thead>
+                    <tr>
+                        <th>
+                            Permission Code
+                        </th>
+                        <th>
+                            Permissions Description
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.RoleClaims.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                <input asp-for="@Model.RoleClaims[i].Type" type="hidden" />
+                                @Model.RoleClaims[i].Type
+                            </td>
+                            <td>
+                                <input asp-for="@Model.RoleClaims[i].Value" type="hidden" />
+                                @Model.RoleClaims[i].Value
+                            </td>
+                            <td>
+                                <div class="form-check m-1">
+                                    <input asp-for="@Model.RoleClaims[i].Selected" class="form-check-input" />
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="col-sm-12" style="padding: 20px 20px 0px 0px">
+                <button type="submit" id="save" class="btn btn-info">
+                    <i class="fa fa-check"></i>
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
