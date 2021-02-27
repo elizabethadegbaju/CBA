@@ -29,9 +29,10 @@ namespace CBA.Controllers
         }
 
         // GET: RolesController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(string id)
         {
-            return View();
+            var role = await _roleManager.FindByIdAsync(id);
+            return View(role);
         }
 
         // GET: RolesController/Create
@@ -45,6 +46,7 @@ namespace CBA.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string name)
         {
+            CBARole role;
             if (!string.IsNullOrEmpty(name))
             {
                 try
@@ -56,7 +58,8 @@ namespace CBA.Controllers
                     return View();
                 }
             }
-            return RedirectToAction(nameof(Index));
+            role = await _roleManager.FindByNameAsync(name);
+            return RedirectToAction(nameof(PermissionController.Index), "Permission", new { roleId = role.Id });
         }
 
         // GET: RolesController/Edit/5
@@ -81,23 +84,41 @@ namespace CBA.Controllers
         }
 
         // GET: RolesController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var role = await _roleManager.FindByIdAsync(id);
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            return View(role);
         }
 
         // POST: RolesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(string id, IFormCollection collection)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                id = collection["Id"];
+            }
+            var role = await _roleManager.FindByIdAsync(id);
             try
             {
+                
+                await _roleManager.DeleteAsync(role);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(role);
             }
         }
     }

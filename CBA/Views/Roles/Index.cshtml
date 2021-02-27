@@ -6,6 +6,10 @@
 
 <h1>@ViewData["Title"]</h1>
 
+<p>
+    <a asp-action="Create">Add Role</a>
+</p>
+
 <table class="table table-hover">
     <thead>
         <tr>
@@ -26,11 +30,14 @@
                             Action
                         </button>
                         <div class="dropdown-menu shadow animated--grow-in">
+                            <a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">
+                                <i class="fas fa-view"></i> View
+                            </a>
                             <a class="dropdown-item">
                                 <i class="fas fa-pencil-alt"></i> Edit
                             </a>
                             <form class="d-inline">
-                                <a class="dropdown-item"><i class="fas fa-trash-alt"></i> Delete</a>
+                                <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash-alt"></i> Delete</a>
                             </form>
                             @if (item.Name != "SuperAdmin")
                             {

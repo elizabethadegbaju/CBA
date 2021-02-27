@@ -1,10 +1,13 @@
 ﻿@model PermissionViewModel
 @{
     ViewData["Title"] = "Permissions";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>@ViewData["Title"] for @Model.Role.Name Role</h1>
+
+<p>
+    <a asp-controller="Roles">Back to Roles</a>
+</p>
 
 <div class="card">
     <div id="viewAll" class="card-body table-responsive">
