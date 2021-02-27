@@ -10,7 +10,7 @@
     <a asp-action="Create">Add Role</a>
 </p>
 
-<table class="table table-hover">
+<table class="striped responsive-table">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.Id)</th>
@@ -25,28 +25,33 @@
                 <td>@item.Id</td>
                 <td>@item.Name</td>
                 <td>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Action
-                        </button>
-                        <div class="dropdown-menu shadow animated--grow-in">
-                            <a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">
-                                <i class="fas fa-view"></i> View
+                    <a class="dropdown-trigger btn waves-effect waves-light" href="#" data-target="@(item.Id)actions">Action</a>
+                    <ul id="@(item.Id)actions" class="dropdown-content">
+                        <li>
+                            <a asp-action="Details" asp-route-id="@item.Id">
+                                <i class="material-icons">visibility</i> View
                             </a>
-                            <a class="dropdown-item">
-                                <i class="fas fa-pencil-alt"></i> Edit
+                        </li>
+                        <li>
+                            <a asp-action="Edit" asp-route-id="@item.Id">
+                                <i class="material-icons">edit</i> Edit
                             </a>
-                            <form class="d-inline">
-                                <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash-alt"></i> Delete</a>
-                            </form>
-                            @if (item.Name != "SuperAdmin")
-                            {
-                                <a style='margin-right:16px' asp-controller="Permission" asp-action="Index" asp-route-roleId="@item.Id" class="dropdown-item">
-                                    <i class="fas fa-wrench"></i> Manage Permissions
+                        </li>
+                        <li>
+                            <a asp-action="Delete" asp-route-id="@item.Id">
+                                <i class="material-icons">delete</i> Delete
+                            </a>
+                        </li>
+                        <li class="divider" tabindex="-1"></li>
+                        @if (@item.Name != "SuperAdmin")
+                        {
+                            <li>
+                                <a asp-controller="Permission" asp-action="Index" asp-route-roleId="@item.Id">
+                                    <i class="material-icons">build</i> Manage Permissions
                                 </a>
-                            }
-                        </div>
-                    </div>
+                            </li>
+                        }
+                    </ul>
                 </td>
             </tr>
         }

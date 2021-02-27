@@ -1,0 +1,52 @@
+﻿@model RoleViewModel
+
+@{
+    ViewData["Title"] = $"Edit {Model.Name} Role";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Role</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="red-text"></div>
+            <div class="input-field form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsEnabled" /> @Html.DisplayNameFor(model => model.IsEnabled)
+                </label>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <div class="input-field">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="validate" />
+                <span asp-validation-for="Name" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <input type="submit" value="Save" class="btn waves-effect waves-light" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to Roles</a>
+</div>
+<br />
+
+@if (Model.AuthorizedUsers.Any())
+{
+    <ul class="collection with-header">
+        <li class="collection-header"><h4>Authorized Users</h4></li>
+        @foreach (var user in Model.AuthorizedUsers)
+        {
+            <li class="collection-item">@user</li>
+        }
+    </ul>
+}
+else
+{
+    <h5 class="card-title">No Users found with @Model.Name Role</h5>
+}
+

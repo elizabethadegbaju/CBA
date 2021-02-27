@@ -3,13 +3,13 @@
     ViewData["Title"] = "Users";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h3>@ViewData["Title"]</h3>
 
 <p>
     <a asp-action="Create">Create New User</a>
 </p>
 
-<table class="table table-hover">
+<table class="striped responsive-table">
     <thead>
         <tr>
             <th>
@@ -40,16 +40,14 @@
                     @item.LastName
                 </td>
                 <td>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Action
-                        </button>
-                        <div class="dropdown-menu shadow animated--grow-in">
-                            <a style='margin-right:16px' asp-controller="UserRoles" asp-action="Index" asp-route-userId="@item.Id" class="dropdown-item">
-                                <i class="fas fa-wrench"></i> Manage Roles
+                    <a class="dropdown-trigger btn" href="#" data-target="@(item.Id)actions">Action</a>
+                    <ul id="@(item.Id)actions" class="dropdown-content">
+                        <li>
+                            <a asp-controller="UserRoles" asp-action="Index" asp-route-userId="@item.Id">
+                                <i class="material-icons">build</i> Manage Roles
                             </a>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </td>
             </tr>
         }

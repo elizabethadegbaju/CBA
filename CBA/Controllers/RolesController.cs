@@ -15,10 +15,12 @@ namespace CBA.Controllers
     public class RolesController : Controller
     {
         private readonly RoleManager<CBARole> _roleManager;
+        private readonly UserManager<CBAUser> _userManager;
 
-        public RolesController(RoleManager<CBARole> roleManager)
+        public RolesController(RoleManager<CBARole> roleManager,UserManager<CBAUser> userManager)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         // GET: RolesController
@@ -32,7 +34,20 @@ namespace CBA.Controllers
         public async Task<ActionResult> Details(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
-            return View(role);
+            var model = new RoleViewModel
+            {
+                Id = role.Id,
+                Name = role.Name,
+                IsEnabled = role.IsEnabled
+            };
+            foreach (var user in _userManager.Users)
+            {
+                if (await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    model.AuthorizedUsers.Add(user);
+                }
+            }
+            return View(model);
         }
 
         // GET: RolesController/Create
@@ -63,24 +78,61 @@ namespace CBA.Controllers
         }
 
         // GET: RolesController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(string id)
         {
-            return View();
+            var role = await _roleManager.FindByIdAsync(id);
+            var model = new RoleViewModel
+            {
+                Id = role.Id,
+                Name = role.Name,
+                IsEnabled = role.IsEnabled
+            };
+            foreach (var user in _userManager.Users)
+            {
+                if (await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    model.AuthorizedUsers.Add(user);
+                    continue;
+                }
+                model.UnAuthorizedUsers.Add(user);
+            }
+            return View(model);
         }
 
         // POST: RolesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(string id, RoleViewModel model)
         {
-            try
+            if (id != model.Id)
             {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var role = await _roleManager.FindByIdAsync(id);
+                    role.Name = model.Name;
+                    role.IsEnabled = model.IsEnabled;
+                    await _roleManager.UpdateAsync(role);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    bool roleExists = await _roleManager.RoleExistsAsync(model.Name);
+                    if (!roleExists)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(model);
         }
 
         // GET: RolesController/Delete/5
@@ -112,7 +164,7 @@ namespace CBA.Controllers
             var role = await _roleManager.FindByIdAsync(id);
             try
             {
-                
+
                 await _roleManager.DeleteAsync(role);
                 return RedirectToAction(nameof(Index));
             }
