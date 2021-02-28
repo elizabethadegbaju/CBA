@@ -19,7 +19,16 @@
             @Html.DisplayNameFor(model => model.IsEnabled)
         </dt>
         <dd class="col s10">
-            @Html.DisplayFor(model => model.IsEnabled)
+            <form class="inline">
+                <div class="switch">
+                    <label>
+                        Off
+                        <input disabled asp-for="@Model.IsEnabled" type="checkbox">
+                        <span class="lever"></span>
+                        On
+                    </label>
+                </div>
+            </form>
         </dd>
     </dl>
 </div>

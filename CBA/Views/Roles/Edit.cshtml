@@ -9,22 +9,25 @@
 <h4>Role</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col m4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="red-text"></div>
-            <div class="input-field form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsEnabled" /> @Html.DisplayNameFor(model => model.IsEnabled)
-                </label>
-            </div>
             <input type="hidden" asp-for="Id" />
             <div class="input-field">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="validate" />
                 <span asp-validation-for="Name" class="red-text"></span>
             </div>
+            <div class="switch">
+                <label>
+                    Off
+                    <input asp-for="IsEnabled" type="checkbox">
+                    <span class="lever"></span>
+                    On
+                </label>
+            </div>
             <div class="input-field">
-                <input type="submit" value="Save" class="btn waves-effect waves-light" />
+                <button type="submit" class="btn waves-effect waves-light">Save</button>
             </div>
         </form>
     </div>
