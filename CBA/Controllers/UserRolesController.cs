@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace CBA.Controllers
 {
-    [Authorize(Roles="Superuser")]
     public class UserRolesController : Controller
     {
         private readonly SignInManager<CBAUser> _signInManager;
@@ -84,6 +83,7 @@ namespace CBA.Controllers
         }
 
         // POST: UserRolesController/Edit/5
+        [Authorize(Policy = "CBA002")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ManageUserRolesViewModel model, string id)
