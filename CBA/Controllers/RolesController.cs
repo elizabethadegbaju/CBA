@@ -164,7 +164,6 @@ namespace CBA.Controllers
             var role = await _roleManager.FindByIdAsync(id);
             try
             {
-
                 await _roleManager.DeleteAsync(role);
                 return RedirectToAction(nameof(Index));
             }

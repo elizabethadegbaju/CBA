@@ -60,6 +60,7 @@ namespace CBA.Controllers
 
         // GET: UsersController/Edit/5
         [Authorize(Policy ="CBA002")]
+        [Authorize(Policy = "CBA002")]
         public ActionResult Edit(int id)
         {
             return View();
@@ -84,8 +85,21 @@ namespace CBA.Controllers
         // GET: UsersController/Delete/5
         [Authorize(Policy = "CBA002")]
         public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
             return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
         // POST: UsersController/Delete/5
@@ -93,14 +107,22 @@ namespace CBA.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "CBA002")]
         public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(string id, IFormCollection collection)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                id = collection["Id"];
+            }
+            var user = await _userManager.FindByIdAsync(id);
             try
             {
+                await _userManager.DeleteAsync(user);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
+                return View(user);
             }
         }
     }

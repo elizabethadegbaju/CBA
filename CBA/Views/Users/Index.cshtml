@@ -47,6 +47,11 @@
                                 <i class="material-icons">build</i> Manage Roles
                             </a>
                         </li>
+                        <li>
+                            <a asp-controller="Users" asp-action="Delete" asp-route-id="@item.Id">
+                                <i class="material-icons">delete</i> Delete User
+                            </a>
+                        </li>
                     </ul>
                 </td>
             </tr>
