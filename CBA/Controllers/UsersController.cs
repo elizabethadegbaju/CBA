@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace CBA.Controllers
 {
-    [Authorize(Roles = "Superuser")]
     public class UsersController : Controller
     {
         private readonly UserManager<CBAUser> _userManager;
@@ -22,6 +21,7 @@ namespace CBA.Controllers
         }
 
         // GET: UsersController
+        [Authorize(Policy = "CBA005")]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -36,6 +36,7 @@ namespace CBA.Controllers
         }
 
         // GET: UsersController/Create
+        [Authorize(Policy = "CBA001")]
         public ActionResult Create()
         {
             return View();
@@ -44,6 +45,7 @@ namespace CBA.Controllers
         // POST: UsersController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "CBA001")]
         public ActionResult Create(IFormCollection collection)
         {
             try
@@ -57,12 +59,14 @@ namespace CBA.Controllers
         }
 
         // GET: UsersController/Edit/5
+        [Authorize(Policy ="CBA002")]
         public ActionResult Edit(int id)
         {
             return View();
         }
 
         // POST: UsersController/Edit/5
+        [Authorize(Policy = "CBA002")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -78,6 +82,7 @@ namespace CBA.Controllers
         }
 
         // GET: UsersController/Delete/5
+        [Authorize(Policy = "CBA002")]
         public ActionResult Delete(int id)
         {
             return View();
@@ -86,6 +91,7 @@ namespace CBA.Controllers
         // POST: UsersController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "CBA002")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
