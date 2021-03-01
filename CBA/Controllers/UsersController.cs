@@ -1,23 +1,35 @@
 ﻿using CBA.Models;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace CBA.Controllers
 {
     public class UsersController : Controller
     {
         private readonly UserManager<CBAUser> _userManager;
-        
-        public UsersController(UserManager<CBAUser> userManager)
+        private readonly RoleManager<CBARole> _roleManager;
+        private readonly EmailMetadata _emailMetadata;
+
+        public UsersController(UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager, EmailMetadata emailMetadata)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
+            _emailMetadata = emailMetadata;
         }
 
         // GET: UsersController
@@ -37,29 +49,91 @@ namespace CBA.Controllers
 
         // GET: UsersController/Create
         [Authorize(Policy = "CBA001")]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var viewModel = new List<UserRolesViewModel>();
+            foreach (var role in _roleManager.Roles)
+            {
+                var userRolesViewModel = new UserRolesViewModel
+                {
+                    Name = role.Name,
+                    IsSelected = false
+                };
+                viewModel.Add(userRolesViewModel);
+            }
+            var model = new ManageUserRolesViewModel()
+            {
+                User = new CBAUser(),
+                UserRoles = viewModel
+            };
+            return View(model);
         }
 
         // POST: UsersController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "CBA001")]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(ManageUserRolesViewModel model)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var modelUser = model.User;
+                    MailAddress address = new MailAddress(modelUser.Email);
+                    string userName = address.User;
+                    var userRoles = model.UserRoles.Where(a => a.IsSelected).Select(b => b.Name);
+                    var user = new CBAUser { UserName = userName, Email = modelUser.Email, FirstName = modelUser.FirstName, LastName = modelUser.LastName };
+                    var password = Password.Generate(10, 4);
+                    var result = await _userManager.CreateAsync(user, password);
+                    if (result.Succeeded)
+                    {
+                        result = await _userManager.AddToRolesAsync(user, userRoles);
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                        var callbackUrl = Url.Page(
+                            "/Account/ConfirmEmail",
+                            pageHandler: null,
+                            values: new { area = "Identity", userId = user.Id, code = code },
+                            protocol: Request.Scheme);
+                        EmailMessage message = new EmailMessage
+                        {
+                            Sender = new MailboxAddress("CBA Admin", _emailMetadata.Sender),
+                            Reciever = new MailboxAddress($"{user.FirstName} {user.LastName}", modelUser.Email),
+                            Subject = "Confirm your email",
+                            Content = $"<p>Username={userName}</p>" +
+                            $"<p>Password={password}</p>" +
+                            $"<p>Don't forget to change your password.</p>" +
+                            $"<br />" +
+                            $"<p>Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.</p>"
+                        };
+                        var mimeMessage = EmailMessage.CreateEmailMessage(message);
+                        using (SmtpClient smtpClient = new SmtpClient())
+                        {
+                            smtpClient.Connect(_emailMetadata.SmtpServer,
+                            _emailMetadata.Port, true);
+                            smtpClient.Authenticate(_emailMetadata.UserName,
+                            _emailMetadata.Password);
+                            smtpClient.Send(mimeMessage);
+                            smtpClient.Disconnect(true);
+                        }
+                        return RedirectToAction(nameof(Index));
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                return View(model);
             }
-            catch
+            catch (Exception error)
             {
-                return View();
+                ModelState.AddModelError(string.Empty, error.Message);
+                return View(model);
             }
         }
 
         // GET: UsersController/Edit/5
-        [Authorize(Policy ="CBA002")]
         [Authorize(Policy = "CBA002")]
         public ActionResult Edit(int id)
         {
@@ -84,10 +158,8 @@ namespace CBA.Controllers
 
         // GET: UsersController/Delete/5
         [Authorize(Policy = "CBA002")]
-        public ActionResult Delete(int id)
         public async Task<ActionResult> Delete(string id)
         {
-            return View();
             if (id == null)
             {
                 return NotFound();
@@ -106,7 +178,6 @@ namespace CBA.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "CBA002")]
-        public ActionResult Delete(int id, IFormCollection collection)
         public async Task<ActionResult> Delete(string id, IFormCollection collection)
         {
             if (string.IsNullOrEmpty(id))
@@ -121,7 +192,6 @@ namespace CBA.Controllers
             }
             catch
             {
-                return View();
                 return View(user);
             }
         }
