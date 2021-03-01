@@ -49,7 +49,7 @@ namespace CBA.Controllers
 
         // GET: UsersController/Create
         [Authorize(Policy = "CBA001")]
-        public async Task<ActionResult> Create()
+        public ActionResult Create()
         {
             var viewModel = new List<UserRolesViewModel>();
             foreach (var role in _roleManager.Roles)
