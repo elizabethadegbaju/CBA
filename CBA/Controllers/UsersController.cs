@@ -91,11 +91,7 @@ namespace CBA.Controllers
                         result = await _userManager.AddToRolesAsync(user, userRoles);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId = user.Id, code = code },
-                            protocol: Request.Scheme);
+                        var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { area = "Identity", userId = user.Id, code = code },                            HttpContext.Request.Scheme);
                         EmailMessage message = new EmailMessage
                         {
                             Sender = new MailboxAddress("CBA Admin", _emailMetadata.Sender),
@@ -194,6 +190,18 @@ namespace CBA.Controllers
             {
                 return View(user);
             }
+
+        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            ViewData["Message"] = "Your email has been confirmed. Please Login now. ";
+            ViewData["MessageValue"] = "1";
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
 }
