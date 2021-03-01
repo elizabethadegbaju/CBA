@@ -91,7 +91,7 @@ namespace CBA.Controllers
                         result = await _userManager.AddToRolesAsync(user, userRoles);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { area = "Identity", userId = user.Id, code = code },                            HttpContext.Request.Scheme);
+                        var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { area = "Identity", userId = user.Id, code = code }, HttpContext.Request.Scheme);
                         EmailMessage message = new EmailMessage
                         {
                             Sender = new MailboxAddress("CBA Admin", _emailMetadata.Sender),
@@ -190,7 +190,9 @@ namespace CBA.Controllers
             {
                 return View(user);
             }
+        }
 
+        // GET: UsersController/ConfirmEmail
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
             var user = await _userManager.FindByIdAsync(userId);
