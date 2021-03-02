@@ -1,6 +1,7 @@
 ﻿using CBA.Models;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
@@ -24,12 +26,14 @@ namespace CBA.Controllers
         private readonly UserManager<CBAUser> _userManager;
         private readonly RoleManager<CBARole> _roleManager;
         private readonly EmailMetadata _emailMetadata;
+        private readonly IWebHostEnvironment _env;
 
-        public UsersController(UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager, EmailMetadata emailMetadata)
+        public UsersController(UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager, EmailMetadata emailMetadata, IWebHostEnvironment env)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _emailMetadata = emailMetadata;
+            _env = env;
         }
 
         // GET: UsersController
@@ -92,24 +96,32 @@ namespace CBA.Controllers
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                         var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { area = "Identity", userId = user.Id, code = code }, HttpContext.Request.Scheme);
+                        var pathToFile = _env.WebRootPath
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "Templates"
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "EmailTemplate"
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "ConfirmAccountRegistration.html";
+                        var builder = new BodyBuilder();
+                        string messageBody = "";
+                        using (StreamReader SourceReader = System.IO.File.OpenText(pathToFile))
+                        {
+                            builder.HtmlBody = SourceReader.ReadToEnd();
+                            messageBody = string.Format(builder.HtmlBody, callbackUrl, userName, user.Email, password, user.FirstName, user.LastName);
+                        }
                         EmailMessage message = new EmailMessage
                         {
                             Sender = new MailboxAddress("CBA Admin", _emailMetadata.Sender),
                             Reciever = new MailboxAddress($"{user.FirstName} {user.LastName}", modelUser.Email),
                             Subject = "Confirm your email",
-                            Content = $"<p>Username={userName}</p>" +
-                            $"<p>Password={password}</p>" +
-                            $"<p>Don't forget to change your password.</p>" +
-                            $"<br />" +
-                            $"<p>Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.</p>"
+                            Content = messageBody
                         };
                         var mimeMessage = EmailMessage.CreateEmailMessage(message);
                         using (SmtpClient smtpClient = new SmtpClient())
                         {
-                            smtpClient.Connect(_emailMetadata.SmtpServer,
-                            _emailMetadata.Port, true);
-                            smtpClient.Authenticate(_emailMetadata.UserName,
-                            _emailMetadata.Password);
+                            smtpClient.Connect(_emailMetadata.SmtpServer, _emailMetadata.Port, true);
+                            smtpClient.Authenticate(_emailMetadata.UserName, _emailMetadata.Password);
                             smtpClient.Send(mimeMessage);
                             smtpClient.Disconnect(true);
                         }
