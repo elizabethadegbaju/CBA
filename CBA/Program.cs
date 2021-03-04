@@ -1,4 +1,5 @@
-using CBA.Models;
+using CBAData;
+using CBAData.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CBA
+namespace CBAWeb
 {
     public class Program
     {

@@ -1,5 +1,6 @@
-using CBA.Data;
-using CBA.Models;
+using CBAData;
+using CBAData.Models;
+using CBAService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CBA
+namespace CBAWeb
 {
     public class Startup
     {
@@ -32,6 +33,10 @@ namespace CBA
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
+
+            services.AddTransient<IPermissionService, PermissionService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IRoleService, RoleService>();
 
             services.AddDefaultIdentity<CBAUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<CBARole>()

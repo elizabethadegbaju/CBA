@@ -1,4 +1,4 @@
-﻿using CBA.Models;
+﻿using CBAData.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace CBA.Data
+namespace CBAData
 {
     public class ApplicationDbContext : IdentityDbContext<CBAUser>
     {

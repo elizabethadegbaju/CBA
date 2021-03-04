@@ -1,4 +1,5 @@
-﻿using CBA.Models;
+﻿using CBAData.Models;
+using CBAService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,45 +12,29 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace CBA.Controllers
+namespace CBAWeb.Controllers
 {
     [Authorize(Roles = "Superuser")]
     public class PermissionController : Controller
     {
+        private readonly IPermissionService _permissionService;
         private readonly RoleManager<CBARole> _roleManager;
 
-        public PermissionController(RoleManager<CBARole> roleManager)
+        public PermissionController(IPermissionService permissionService, RoleManager<CBARole> roleManager)
         {
+            _permissionService = permissionService;
             _roleManager = roleManager;
         }
 
         // GET: PermissionController
         public async Task<IActionResult> Index(string roleId)
         {
-            var permissions = new List<RoleClaimsViewModel>();
-            MemberInfo[] permissionEnum = typeof(Permissions).GetMembers(BindingFlags.Public | BindingFlags.Static);
-            foreach (var permission in permissionEnum)
-            {
-                var name = ((DisplayAttribute)permission.GetCustomAttributes(typeof(DisplayAttribute), false)[0]).Name;
-                permissions.Add(new RoleClaimsViewModel { Value = name, Type = permission.Name });
-            }
             var role = await _roleManager.FindByIdAsync(roleId);
             var model = new PermissionViewModel()
             {
-                Role = role
+                Role = role,
+                RoleClaims = await _permissionService.ListRoleClaimsAsync(role)
             };
-            var claims = await _roleManager.GetClaimsAsync(role);
-            var claimValues = permissions.Select(permission => permission.Type).ToList();
-            var roleClaimValues = claims.Select(claim => claim.Type).ToList();
-            var authorizedClaims = claimValues.Intersect(roleClaimValues).ToList();
-            foreach (var permission in permissions)
-            {
-                if (authorizedClaims.Any(a => a == permission.Type))
-                {
-                    permission.IsSelected = true;
-                }
-            }
-            model.RoleClaims = permissions;
             return View(model);
         }
 
@@ -92,18 +77,7 @@ namespace CBA.Controllers
         public async Task<IActionResult> Edit(PermissionViewModel model)
         {
             var role = await _roleManager.FindByIdAsync(model.Role.Id);
-            var claims = await _roleManager.GetClaimsAsync(role);
-            foreach (var claim in claims)
-            {
-                await _roleManager.RemoveClaimAsync(role, claim);
-            }
-            var selectedClaims = model.RoleClaims.Where(a => a.IsSelected).ToList();
-            foreach (var claim in selectedClaims)
-            {
-                MemberInfo member = typeof(Permissions).GetMember(claim.Type)[0];
-                var name = ((DisplayAttribute)member.GetCustomAttributes(typeof(DisplayAttribute), false)[0]).Name;
-                await _roleManager.AddClaimAsync(role, new Claim(claim.Type, name));
-            }
+            _permissionService.EditRoleClaimsAsync(role, model.RoleClaims);
             return RedirectToAction("Index", new { roleId = model.Role.Id });
         }
 

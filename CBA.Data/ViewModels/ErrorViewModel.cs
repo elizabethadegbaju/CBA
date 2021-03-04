@@ -1,6 +1,6 @@
 using System;
 
-namespace CBA.Models
+namespace CBAData.Models
 {
     public class ErrorViewModel
     {

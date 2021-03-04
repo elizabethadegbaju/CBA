@@ -1,5 +1,5 @@
 ﻿using System;
-using CBA.Data;
+using CBAData;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: HostingStartup(typeof(CBA.Areas.Identity.IdentityHostingStartup))]
-namespace CBA.Areas.Identity
+[assembly: HostingStartup(typeof(CBAWeb.Areas.Identity.IdentityHostingStartup))]
+namespace CBAWeb.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {
