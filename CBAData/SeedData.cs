@@ -15,9 +15,6 @@ namespace CBAData
         public static async Task SeedRolesAsync(UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager)
         {
             await roleManager.CreateAsync(new CBARole(DefaultRoles.SuperUser.ToString()));
-            await roleManager.CreateAsync(new CBARole(DefaultRoles.Admin.ToString()));
-            await roleManager.CreateAsync(new CBARole(DefaultRoles.Staff.ToString()));
-            await roleManager.CreateAsync(new CBARole(DefaultRoles.Customer.ToString()));
         }
         public static async Task SeedSuperUserAsync(UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager)
         {
@@ -35,10 +32,7 @@ namespace CBAData
                     await userManager.CreateAsync(superUser, "Ade981_");
                     await userManager.AddToRolesAsync(superUser, new List<string>()
                         {
-                            DefaultRoles.Admin.ToString(),
-                            DefaultRoles.SuperUser.ToString(),
-                            DefaultRoles.Staff.ToString(),
-                            DefaultRoles.Customer.ToString()
+                            DefaultRoles.SuperUser.ToString()
                         });
                 }
                 await roleManager.SeedClaimsForSuperAdmin();
