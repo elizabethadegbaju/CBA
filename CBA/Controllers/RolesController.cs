@@ -1,4 +1,5 @@
-﻿using CBA.Models;
+﻿using CBAData.Models;
+using CBAData.Interfaces;  
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,16 +10,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CBA.Controllers
+namespace CBAWeb.Controllers
 {
     [Authorize(Roles = "Superuser")]
     public class RolesController : Controller
     {
         private readonly RoleManager<CBARole> _roleManager;
         private readonly UserManager<CBAUser> _userManager;
+        private readonly IRoleService _roleService;
 
-        public RolesController(RoleManager<CBARole> roleManager,UserManager<CBAUser> userManager)
+        public RolesController(IRoleService roleService, RoleManager<CBARole> roleManager,UserManager<CBAUser> userManager)
         {
+            _roleService = roleService;
             _roleManager = roleManager;
             _userManager = userManager;
         }
@@ -33,20 +36,7 @@ namespace CBA.Controllers
         // GET: RolesController/Details/5
         public async Task<ActionResult> Details(string id)
         {
-            var role = await _roleManager.FindByIdAsync(id);
-            var model = new RoleViewModel
-            {
-                Id = role.Id,
-                Name = role.Name,
-                IsEnabled = role.IsEnabled
-            };
-            foreach (var user in _userManager.Users)
-            {
-                if (await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    model.AuthorizedUsers.Add(user);
-                }
-            }
+            var model = await _roleService.RetrieveRoleDetailAsync(id);
             return View(model);
         }
 
@@ -61,41 +51,21 @@ namespace CBA.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string name)
         {
-            CBARole role;
             if (!string.IsNullOrEmpty(name))
             {
-                try
-                {
-                    await _roleManager.CreateAsync(new CBARole(name));
-                }
-                catch
-                {
-                    return View();
-                }
+                var roleId = await _roleService.CreateRoleAsync(name);
+                return RedirectToAction(nameof(PermissionController.Index), "Permission", new { roleId = roleId });
             }
-            role = await _roleManager.FindByNameAsync(name);
-            return RedirectToAction(nameof(PermissionController.Index), "Permission", new { roleId = role.Id });
+            else
+            {
+                return View();
+            }
         }
 
         // GET: RolesController/Edit/5
         public async Task<ActionResult> Edit(string id)
         {
-            var role = await _roleManager.FindByIdAsync(id);
-            var model = new RoleViewModel
-            {
-                Id = role.Id,
-                Name = role.Name,
-                IsEnabled = role.IsEnabled
-            };
-            foreach (var user in _userManager.Users)
-            {
-                if (await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    model.AuthorizedUsers.Add(user);
-                    continue;
-                }
-                model.UnAuthorizedUsers.Add(user);
-            }
+            var model = await _roleService.RetrieveRoleDetailAsync(id);
             return View(model);
         }
 
@@ -113,15 +83,11 @@ namespace CBA.Controllers
             {
                 try
                 {
-                    var role = await _roleManager.FindByIdAsync(id);
-                    role.Name = model.Name;
-                    role.IsEnabled = model.IsEnabled;
-                    await _roleManager.UpdateAsync(role);
+                    await _roleService.EditRoleAsync(model.Id, model.IsEnabled, model.Name);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    bool roleExists = await _roleManager.RoleExistsAsync(model.Name);
-                    if (!roleExists)
+                    if (!(await _roleService.CheckRoleExistsAsync(model.Name)))
                     {
                         return NotFound();
                     }

@@ -1,4 +1,5 @@
-﻿using CBA.Models;
+﻿using CBAData.Models;
+using CBAData.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -8,44 +9,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CBA.Controllers
+namespace CBAWeb.Controllers
 {
     public class UserRolesController : Controller
     {
         private readonly SignInManager<CBAUser> _signInManager;
         private readonly RoleManager<CBARole> _roleManager;
         private readonly UserManager<CBAUser> _userManager;
+        private readonly IUserService _userService;
 
-        public UserRolesController(SignInManager<CBAUser> signInManager, RoleManager<CBARole> roleManager, UserManager<CBAUser> userManager)
+        public UserRolesController(SignInManager<CBAUser> signInManager, RoleManager<CBARole> roleManager, UserManager<CBAUser> userManager, IUserService userService)
         {
             _signInManager = signInManager;
             _roleManager = roleManager;
             _userManager = userManager;
+            _userService = userService;
         }
 
         // GET: UserRolesController
         public async Task<IActionResult> Index(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            var viewModel = new List<UserRolesViewModel>();
-            foreach (var role in _roleManager.Roles)
-            {
-                var userRolesViewModel = new UserRolesViewModel
-                {
-                    Name = role.Name,
-                    IsSelected = false
-                };
-                if (await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    userRolesViewModel.IsSelected = true;
-                }
-                viewModel.Add(userRolesViewModel);
-            }
-            var model = new ManageUserRolesViewModel()
-            {
-                User = user,
-                UserRoles = viewModel
-            };
+            var model = await _userService.ListUserRolesAsync(userId);
             return View(model);
         }
 
@@ -88,13 +72,8 @@ namespace CBA.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ManageUserRolesViewModel model, string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            var roles = await _userManager.GetRolesAsync(user);
-            var result = await _userManager.RemoveFromRolesAsync(user, roles);
-            result = await _userManager.AddToRolesAsync(user, model.UserRoles.Where(a => a.IsSelected).Select(b => b.Name));
             var currentUser = await _userManager.GetUserAsync(User);
-            await _signInManager.RefreshSignInAsync(currentUser);
-            await SeedData.SeedSuperUserAsync(_userManager, _roleManager);
+            _userService.EditUserRolesAsync(id, model.UserRoles, currentUser);
             return RedirectToAction("Index", new { userId = id });
         }
 

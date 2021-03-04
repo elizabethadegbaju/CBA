@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CBA.Areas.Identity.Pages.Account
+namespace CBAWeb.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LockoutModel : PageModel

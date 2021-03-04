@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBA", "CBA\CBA.csproj", "{4C5E375A-D7F6-41D1-98EB-E2B7D7E8B736}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CBAWeb", "CBA\CBAWeb.csproj", "{4C5E375A-D7F6-41D1-98EB-E2B7D7E8B736}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CBAData", "CBA.Data\CBAData.csproj", "{4B10DD30-8678-44F1-92A4-65AE08671BF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CBAService", "CBA.Service\CBAService.csproj", "{09A3D050-01B1-4C5C-8DE4-473AB667082D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{4C5E375A-D7F6-41D1-98EB-E2B7D7E8B736}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C5E375A-D7F6-41D1-98EB-E2B7D7E8B736}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C5E375A-D7F6-41D1-98EB-E2B7D7E8B736}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B10DD30-8678-44F1-92A4-65AE08671BF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B10DD30-8678-44F1-92A4-65AE08671BF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B10DD30-8678-44F1-92A4-65AE08671BF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B10DD30-8678-44F1-92A4-65AE08671BF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09A3D050-01B1-4C5C-8DE4-473AB667082D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09A3D050-01B1-4C5C-8DE4-473AB667082D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09A3D050-01B1-4C5C-8DE4-473AB667082D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09A3D050-01B1-4C5C-8DE4-473AB667082D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

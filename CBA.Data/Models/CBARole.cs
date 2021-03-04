@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CBA.Models
+namespace CBAData.Models
 {
     public class CBARole: IdentityRole
     {

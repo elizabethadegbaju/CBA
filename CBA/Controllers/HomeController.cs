@@ -1,4 +1,4 @@
-﻿using CBA.Models;
+﻿using CBAData.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CBA.Controllers
+namespace CBAWeb.Controllers
 {
     public class HomeController : Controller
     {

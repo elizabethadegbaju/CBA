@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CBA.Data.Migrations
+namespace CBAWeb.Data.Migrations
 {
     public partial class CBARole : Migration
     {

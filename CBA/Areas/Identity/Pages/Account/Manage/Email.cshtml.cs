@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using CBA.Models;
+using CBAData.Models;
 
-namespace CBA.Areas.Identity.Pages.Account.Manage
+namespace CBAWeb.Areas.Identity.Pages.Account.Manage
 {
     public partial class EmailModel : PageModel
     {

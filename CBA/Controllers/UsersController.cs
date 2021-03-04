@@ -1,4 +1,5 @@
-﻿using CBA.Models;
+﻿using CBAData.Models;
+using CBAData.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,14 +10,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CBA.Controllers
+namespace CBAWeb.Controllers
 {
     public class UsersController : Controller
     {
         private readonly UserManager<CBAUser> _userManager;
+        private readonly IUserService _userService;
         
-        public UsersController(UserManager<CBAUser> userManager)
+        public UsersController(IUserService userService, UserManager<CBAUser> userManager)
         {
+            _userService = userService;
             _userManager = userManager;
         }
 
@@ -25,8 +28,8 @@ namespace CBA.Controllers
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            var allOtherUsers = _userManager.Users.Where(user => user.Id != currentUser.Id);
-            return View(await allOtherUsers.ToListAsync());
+            var allOtherUsers = await _userService.ListUsersExceptSpecifiedUserAsync(currentUser);
+            return View(allOtherUsers);
         }
 
         // GET: UsersController/Details/5

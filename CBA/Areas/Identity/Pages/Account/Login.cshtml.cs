@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using CBA.Models;
+using CBAData.Models;
 using System.Net.Mail;
 
-namespace CBA.Areas.Identity.Pages.Account
+namespace CBAWeb.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LoginModel : PageModel
