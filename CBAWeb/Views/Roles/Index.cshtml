@@ -19,39 +19,43 @@
         </tr>
     </thead>
     <tbody>
+        @{
+            var count = 0;
+        }
         @foreach (var item in Model)
         {
+            count += 1;
             <tr>
-                <td>@item.Id</td>
+                <td>@count</td>
                 <td>@item.Name</td>
                 <td>
-                    <a class="dropdown-trigger btn waves-effect waves-light" href="#" data-target="@(item.Id)actions">Action</a>
-                    <ul id="@(item.Id)actions" class="dropdown-content">
-                        <li>
-                            <a asp-action="Details" asp-route-id="@item.Id">
-                                <i class="material-icons">visibility</i> View
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-action="Edit" asp-route-id="@item.Id">
-                                <i class="material-icons">edit</i> Edit
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-action="Delete" asp-route-id="@item.Id">
-                                <i class="material-icons">delete</i> Delete
-                            </a>
-                        </li>
-                        <li class="divider" tabindex="-1"></li>
-                        @if (@item.Name != "SuperAdmin")
-                        {
+                    @if (@item.Name != "Superuser")
+                    {
+                        <a class="dropdown-trigger btn waves-effect waves-light" href="#" data-target="@(item.Id)actions">Action</a>
+                        <ul id="@(item.Id)actions" class="dropdown-content">
+                            <li>
+                                <a asp-action="Details" asp-route-id="@item.Id">
+                                    <i class="material-icons">visibility</i> View
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-action="Edit" asp-route-id="@item.Id">
+                                    <i class="material-icons">edit</i> Edit
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-action="Delete" asp-route-id="@item.Id">
+                                    <i class="material-icons">delete</i> Delete
+                                </a>
+                            </li>
+                            <li class="divider" tabindex="-1"></li>
                             <li>
                                 <a asp-controller="Permission" asp-action="Index" asp-route-roleId="@item.Id">
                                     <i class="material-icons">build</i> Manage Permissions
                                 </a>
                             </li>
-                        }
-                    </ul>
+                        </ul>
+                    }
                 </td>
             </tr>
         }
