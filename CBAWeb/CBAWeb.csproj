@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CBA.Data\CBAData.csproj" />
-    <ProjectReference Include="..\CBA.Service\CBAService.csproj" />
+    <ProjectReference Include="..\CBAData\CBAData.csproj" />
+    <ProjectReference Include="..\CBAService\CBAService.csproj" />
   </ItemGroup>
 
 </Project>
