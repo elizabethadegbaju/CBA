@@ -27,8 +27,8 @@ namespace CBAService
 
         public async Task<string> CreateRoleAsync(string name)
         {
-            CBARole role;
             await _roleManager.CreateAsync(new CBARole(name));
+            CBARole role;
             role = await _roleManager.FindByNameAsync(name);
             return role.Id;
         }

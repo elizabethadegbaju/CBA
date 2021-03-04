@@ -51,7 +51,7 @@ namespace CBAWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string name)
         {
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrWhiteSpace(name))
             {
                 var roleId = await _roleService.CreateRoleAsync(name);
                 return RedirectToAction(nameof(PermissionController.Index), "Permission", new { roleId = roleId });
