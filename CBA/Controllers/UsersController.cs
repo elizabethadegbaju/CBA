@@ -1,5 +1,5 @@
 ﻿using CBAData.Models;
-using CBAService;
+using CBAData.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

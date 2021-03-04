@@ -1,4 +1,5 @@
 ﻿using CBAData;
+using CBAData.Interfaces;
 using CBAData.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

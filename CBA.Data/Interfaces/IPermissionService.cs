@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CBAService
+namespace CBAData.Interfaces
 {
     public interface IPermissionService
     {
         Task<List<RoleClaimsViewModel>> ListRoleClaimsAsync(CBARole role);
-        void EditRoleClaimsAsync(CBARole role, IEnumerable<RoleClaimsViewModel> roleClaims);
+        Task EditRoleClaimsAsync(CBARole role, IEnumerable<RoleClaimsViewModel> roleClaims);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CBAData.Models;
+using CBAData.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace CBAService
             return permissions;
         }
 
-        public async void EditRoleClaimsAsync(CBARole role, IEnumerable<RoleClaimsViewModel> roleClaims)
+        public async Task EditRoleClaimsAsync(CBARole role, IEnumerable<RoleClaimsViewModel> roleClaims)
         {
             var claims = await _roleManager.GetClaimsAsync(role);
             foreach (var claim in claims)

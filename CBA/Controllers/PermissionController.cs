@@ -1,5 +1,5 @@
-﻿using CBAData.Models;
-using CBAService;
+﻿using CBAData.Interfaces;
+using CBAData.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -77,7 +77,7 @@ namespace CBAWeb.Controllers
         public async Task<IActionResult> Edit(PermissionViewModel model)
         {
             var role = await _roleManager.FindByIdAsync(model.Role.Id);
-            _permissionService.EditRoleClaimsAsync(role, model.RoleClaims);
+            await _permissionService.EditRoleClaimsAsync(role, model.RoleClaims);
             return RedirectToAction("Index", new { roleId = model.Role.Id });
         }
 

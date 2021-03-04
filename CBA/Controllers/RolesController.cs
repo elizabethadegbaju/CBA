@@ -1,5 +1,5 @@
 ﻿using CBAData.Models;
-using CBAService;  
+using CBAData.Interfaces;  
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -83,7 +83,7 @@ namespace CBAWeb.Controllers
             {
                 try
                 {
-                    _roleService.EditRoleAsync(model.Id, model.IsEnabled, model.Name);
+                    await _roleService.EditRoleAsync(model.Id, model.IsEnabled, model.Name);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

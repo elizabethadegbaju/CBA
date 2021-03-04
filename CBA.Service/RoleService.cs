@@ -1,4 +1,5 @@
-﻿using CBAData.Models;
+﻿using CBAData.Interfaces;
+using CBAData.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -32,7 +33,7 @@ namespace CBAService
             return role.Id;
         }
 
-        public async void EditRoleAsync(string roleId, bool isEnabled, string name)
+        public async Task EditRoleAsync(string roleId, bool isEnabled, string name)
         {
             var role = await _roleManager.FindByIdAsync(roleId);
             role.Name = name;

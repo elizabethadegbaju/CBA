@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CBAService
-{
+namespace CBAData.Interfaces
+{ 
     public interface IUserService
     {
         Task<ManageUserRolesViewModel> ListUserRolesAsync(string userId);
