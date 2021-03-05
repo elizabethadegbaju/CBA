@@ -40,6 +40,10 @@ namespace CBAWeb.Controllers
         {
             var currentUser = await _userManager.GetUserAsync(User);
             var allOtherUsers = await _userService.ListUsersExceptSpecifiedUserAsync(currentUser);
+            if (TempData["Message"] != null)
+            {
+                ViewBag.Message = JsonConvert.DeserializeObject<StatusMessage>((string)TempData["Message"]);
+            }
             return View(allOtherUsers);
         }
 
@@ -154,15 +158,25 @@ namespace CBAWeb.Controllers
             {
                 id = collection["Id"];
             }
-            var user = await _userManager.FindByIdAsync(id);
             try
             {
-                await _userManager.DeleteAsync(user);
+                await _userService.DeleteUserAsync(id);
+                var message = new StatusMessage
+                {
+                    Type = StatusType.Success,
+                    Message = "User deleted successfully"
+                };
+                TempData["Message"] = JsonConvert.SerializeObject(message);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception error)
             {
-                return View(user);
+                ViewBag.Message = new StatusMessage
+                {
+                    Type = StatusType.Error,
+                    Message = error.Message
+                };
+                return View(await _userManager.FindByIdAsync(id));
             }
         }
 
@@ -172,11 +186,11 @@ namespace CBAWeb.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return View("Error");
+                return View("Error", new ErrorViewModel());
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
             var message = new StatusMessage();
-            if (result.Errors.Count() >= 1)
+            if (result.Errors.Any())
             {
                 message.Type = StatusType.Error;
                 message.Message = "Unable to confirm your email.";

@@ -16,5 +16,6 @@ namespace CBAData.Interfaces
         Task<CBAUser> CreateUserAsync(CBAUser modelUser, string password);
         Task UpdateUserRolesAsync(CBAUser user, List<string> userRoles);
         void SendAccountConfirmationEmail(string pathToFile, string callbackUrl, CBAUser user, string password);
+        Task DeleteUserAsync(string userId);
     }
 }

@@ -40,6 +40,12 @@ namespace CBAService
             return await _userManager.FindByIdAsync(user.Id);
         }
 
+        public async Task DeleteUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            await _userManager.DeleteAsync(user);
+        }
+
         public async void EditUserRolesAsync(string userId, IList<UserRolesViewModel> userRolesViewModels, CBAUser currentUser)
         {
             var user = await _userManager.FindByIdAsync(userId);
