@@ -59,9 +59,9 @@ namespace CBAService
             return manageUserRolesViewModel;
         }
 
-        public async Task<List<CBAUser>> ListUsersExceptSpecifiedUserAsync(CBAUser user)
+        public async Task<List<CBAUser>> ListUsersExceptSpecifiedUserAsync(CBAUser currentUser)
         {
-            var allOtherUsers = _userManager.Users.Where(user => user.Id != user.Id);
+            var allOtherUsers = _userManager.Users.Where(user => user.Id != currentUser.Id);
             return await allOtherUsers.ToListAsync();
         }
     }
