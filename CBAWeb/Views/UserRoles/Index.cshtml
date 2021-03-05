@@ -1,0 +1,54 @@
+﻿@model ManageUserRolesViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Manage Roles for @Model.User.UserName</h1>
+
+<div id="viewAll">
+    <form asp-controller="UserRoles" method="post" asp-action="Edit" asp-route-id="@Model.User.Id" class="d-inline">
+        <input asp-for="@Model.User.Id" type="hidden" />
+        <table class="highlight responsive-table" id="userRolesTable">
+            <thead>
+                <tr>
+                    <th>
+                        Role
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.UserRoles.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            <input asp-for="@Model.UserRoles[i].Name" type="hidden" />
+                            @Model.UserRoles[i].Name
+                        </td>
+                        <td>
+                            <div class="switch">
+                                <label>
+                                    Off
+                                    <input asp-for="@Model.UserRoles[i].IsSelected" type="checkbox">
+                                    <span class="lever"></span>
+                                    On
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br/>
+        <div>
+            <button type="submit" id="save" class="btn waves-effect waves-light">
+                Save
+                <i class="material-icons right">check</i>
+            </button>
+        </div>
+    </form>
+    <br/>
+</div>
