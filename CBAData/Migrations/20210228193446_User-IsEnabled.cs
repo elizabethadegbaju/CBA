@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CBA.Data.Migrations
+namespace CBAData.Migrations
 {
     public partial class UserIsEnabled : Migration
     {
