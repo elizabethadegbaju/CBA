@@ -1,4 +1,3 @@
-using MailKit.Net.Smtp;
 using CBAData.Models;
 using CBAData.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -9,16 +8,13 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 using Newtonsoft.Json;
 
 namespace CBAWeb.Controllers
@@ -27,16 +23,14 @@ namespace CBAWeb.Controllers
     {
         private readonly UserManager<CBAUser> _userManager;
         private readonly RoleManager<CBARole> _roleManager;
-        private readonly EmailMetadata _emailMetadata;
         private readonly IWebHostEnvironment _env;
         private readonly IUserService _userService;
 
-        public UsersController(IUserService userService, UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager, EmailMetadata emailMetadata, IWebHostEnvironment env)
+        public UsersController(IUserService userService, UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager, IWebHostEnvironment env)
         {
             _userService = userService;
             _userManager = userManager;
             _roleManager = roleManager;
-            _emailMetadata = emailMetadata;
             _env = env;
         }
 
@@ -59,21 +53,7 @@ namespace CBAWeb.Controllers
         [Authorize(Policy = "CBA001")]
         public ActionResult Create()
         {
-            var viewModel = new List<UserRolesViewModel>();
-            foreach (var role in _roleManager.Roles)
-            {
-                var userRolesViewModel = new UserRolesViewModel
-                {
-                    Name = role.Name,
-                    IsSelected = false
-                };
-                viewModel.Add(userRolesViewModel);
-            }
-            var model = new ManageUserRolesViewModel()
-            {
-                User = new CBAUser(),
-                UserRoles = viewModel
-            };
+            var model = _userService.LoadEmptyUser();
             return View(model);
         }
 
@@ -87,58 +67,38 @@ namespace CBAWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var modelUser = model.User;
-                    MailAddress address = new MailAddress(modelUser.Email);
-                    string userName = address.User;
-                    var userRoles = model.UserRoles.Where(a => a.IsSelected).Select(b => b.Name);
-                    var user = new CBAUser { UserName = userName, Email = modelUser.Email, FirstName = modelUser.FirstName, LastName = modelUser.LastName };
                     var password = Password.Generate(10, 4);
-                    var result = await _userManager.CreateAsync(user, password);
-                    if (result.Succeeded)
+                    var user = await _userService.CreateUserAsync(model.User, password);
+                    var userRoles = model.UserRoles.Where(a => a.IsSelected).Select(b => b.Name);
+                    await _userService.UpdateUserRolesAsync(user, userRoles.ToList());
+
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { userId = user.Id, code = code }, HttpContext.Request.Scheme);
+                    var pathToFile = _env.WebRootPath
+                        + Path.DirectorySeparatorChar.ToString()
+                        + "Templates"
+                        + Path.DirectorySeparatorChar.ToString()
+                        + "EmailTemplate"
+                        + Path.DirectorySeparatorChar.ToString()
+                        + "ConfirmAccountRegistration.html";
+                    _userService.SendAccountConfirmationEmail(pathToFile, callbackUrl, user, password);
+
+                    ViewBag.Message = new StatusMessage
                     {
-                        result = await _userManager.AddToRolesAsync(user, userRoles);
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { userId = user.Id, code = code }, HttpContext.Request.Scheme);
-                        var pathToFile = _env.WebRootPath
-                            + Path.DirectorySeparatorChar.ToString()
-                            + "Templates"
-                            + Path.DirectorySeparatorChar.ToString()
-                            + "EmailTemplate"
-                            + Path.DirectorySeparatorChar.ToString()
-                            + "ConfirmAccountRegistration.html";
-                        var builder = new BodyBuilder();
-                        using (StreamReader SourceReader = System.IO.File.OpenText(pathToFile))
-                        {
-                            builder.HtmlBody = SourceReader.ReadToEnd();
-                            builder.HtmlBody = string.Format(builder.HtmlBody, callbackUrl, userName, user.Email, password, user.FirstName, user.LastName);
-                        }
-                        EmailMessage message = new EmailMessage
-                        {
-                            Sender = new MailboxAddress("CBA Admin", _emailMetadata.Sender),
-                            Reciever = new MailboxAddress($"{user.FirstName} {user.LastName}", modelUser.Email),
-                            Subject = "Confirm your email",
-                            Content = builder.ToMessageBody()
-                        };
-                        var mimeMessage = EmailMessage.CreateEmailMessage(message);
-                        using (SmtpClient smtpClient = new SmtpClient())
-                        {
-                            smtpClient.Connect(_emailMetadata.SmtpServer, _emailMetadata.Port, true);
-                            smtpClient.Authenticate(_emailMetadata.UserName, _emailMetadata.Password);
-                            smtpClient.Send(mimeMessage);
-                            smtpClient.Disconnect(true);
-                        }
-                        return RedirectToAction(nameof(Index));
-                    }
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                        Type = StatusType.Success,
+                        Message = "User created successfully."
+                    };
+                    return RedirectToAction(nameof(Index));
                 }
                 return View(model);
             }
             catch (Exception error)
             {
-                ModelState.AddModelError(string.Empty, error.Message);
+                ViewBag.Message = new StatusMessage
+                {
+                    Type = StatusType.Error,
+                    Message = error.Message
+                };
                 return View(model);
             }
         }

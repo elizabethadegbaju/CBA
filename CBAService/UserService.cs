@@ -1,13 +1,18 @@
-﻿using CBAData;
+﻿using MailKit.Net.Smtp;
+using CBAData;
 using CBAData.Interfaces;
 using CBAData.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Mail;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace CBAService
 {
@@ -16,12 +21,23 @@ namespace CBAService
         private readonly SignInManager<CBAUser> _signInManager;
         private readonly UserManager<CBAUser> _userManager;
         private readonly RoleManager<CBARole> _roleManager;
+        private readonly EmailMetadata _emailMetadata;
 
-        public UserService(SignInManager<CBAUser> signInManager, UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager)
+        public UserService(SignInManager<CBAUser> signInManager, UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager, EmailMetadata emailMetadata)
         {
             _signInManager = signInManager;
             _roleManager = roleManager;
             _userManager = userManager;
+            _emailMetadata = emailMetadata;
+        }
+
+        public async Task<CBAUser> CreateUserAsync(CBAUser modelUser, string password)
+        {
+            MailAddress address = new MailAddress(modelUser.Email);
+            string userName = address.User;
+            var user = new CBAUser { UserName = userName, Email = modelUser.Email, FirstName = modelUser.FirstName, LastName = modelUser.LastName };
+            await _userManager.CreateAsync(user, password);
+            return await _userManager.FindByIdAsync(user.Id);
         }
 
         public async void EditUserRolesAsync(string userId, IList<UserRolesViewModel> userRolesViewModels, CBAUser currentUser)
@@ -63,6 +79,54 @@ namespace CBAService
         {
             var allOtherUsers = _userManager.Users.Where(user => user.Id != currentUser.Id);
             return await allOtherUsers.ToListAsync();
+        }
+
+        public ManageUserRolesViewModel LoadEmptyUser()
+        {
+            var userRolesViewModels = new List<UserRolesViewModel>();
+            foreach (var role in _roleManager.Roles)
+            {
+                var userRolesViewModel = new UserRolesViewModel
+                {
+                    Name = role.Name,
+                    IsSelected = false
+                };
+                userRolesViewModels.Add(userRolesViewModel);
+            }
+            var manageUserRolesViewModel = new ManageUserRolesViewModel()
+            {
+                User = new CBAUser(),
+                UserRoles = userRolesViewModels
+            };
+            return manageUserRolesViewModel;
+        }
+
+        public void SendAccountConfirmationEmail(string pathToFile, string callbackUrl, CBAUser user, string password)
+        {
+            var builder = new BodyBuilder();
+            using (StreamReader SourceReader = File.OpenText(pathToFile))
+            {
+                builder.HtmlBody = SourceReader.ReadToEnd();
+                builder.HtmlBody = string.Format(builder.HtmlBody, callbackUrl, user.UserName, user.Email, password, user.FirstName, user.LastName);
+            }
+            EmailMessage message = new EmailMessage
+            {
+                Sender = new MailboxAddress("CBA Admin", _emailMetadata.Sender),
+                Reciever = new MailboxAddress($"{user.FirstName} {user.LastName}", user.Email),
+                Subject = "Confirm your email",
+                Content = builder.ToMessageBody()
+            };
+            var mimeMessage = EmailMessage.CreateEmailMessage(message);
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.Connect(_emailMetadata.SmtpServer, _emailMetadata.Port, true);
+            smtpClient.Authenticate(_emailMetadata.UserName, _emailMetadata.Password);
+            smtpClient.Send(mimeMessage);
+            smtpClient.Disconnect(true);
+        }
+
+        public async Task UpdateUserRolesAsync(CBAUser user, List<string> userRoles)
+        {
+            await _userManager.AddToRolesAsync(user, userRoles);
         }
     }
 }
