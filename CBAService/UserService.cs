@@ -130,6 +130,16 @@ namespace CBAService
             smtpClient.Disconnect(true);
         }
 
+        public async Task UpdateUserAsync(string id, CBAUser user)
+        {
+            var formerUser = await _userManager.FindByIdAsync(id);
+            formerUser.FirstName = user.FirstName;
+            formerUser.LastName = user.LastName;
+            formerUser.UserName = user.UserName;
+            formerUser.IsEnabled = user.IsEnabled;
+            await _userManager.UpdateAsync(formerUser);
+        }
+
         public async Task UpdateUserRolesAsync(CBAUser user, List<string> userRoles)
         {
             await _userManager.AddToRolesAsync(user, userRoles);

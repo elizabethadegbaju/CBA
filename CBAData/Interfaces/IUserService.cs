@@ -17,5 +17,6 @@ namespace CBAData.Interfaces
         Task UpdateUserRolesAsync(CBAUser user, List<string> userRoles);
         void SendAccountConfirmationEmail(string pathToFile, string callbackUrl, CBAUser user, string password);
         Task DeleteUserAsync(string userId);
+        Task UpdateUserAsync(string id, CBAUser user);
     }
 }

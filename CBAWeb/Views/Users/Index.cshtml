@@ -48,6 +48,11 @@
                             </a>
                         </li>
                         <li>
+                            <a asp-controller="Users" asp-action="Edit" asp-route-id="@item.Id">
+                                <i class="material-icons">edit</i> Edit User
+                            </a>
+                        </li>
+                        <li>
                             <a asp-controller="Users" asp-action="Delete" asp-route-id="@item.Id">
                                 <i class="material-icons">delete</i> Delete User
                             </a>

@@ -109,23 +109,35 @@ namespace CBAWeb.Controllers
 
         // GET: UsersController/Edit/5
         [Authorize(Policy = "CBA002")]
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(string id)
         {
-            return View();
+            var user = await _userManager.FindByIdAsync(id);
+            return View(user);
         }
 
         // POST: UsersController/Edit/5
         [Authorize(Policy = "CBA002")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(string id, [Bind("Id,FirstName,LastName,UserName,IsEnabled")] CBAUser user)
         {
             try
             {
+                await _userService.UpdateUserAsync(id, user);
+                ViewBag.Message = new StatusMessage
+                {
+                    Type = StatusType.Success,
+                    Message = "User updated successfuly"
+                };
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception error)
             {
+                ViewBag.Message = new StatusMessage
+                {
+                    Type = StatusType.Error,
+                    Message = error.Message
+                };
                 return View();
             }
         }
