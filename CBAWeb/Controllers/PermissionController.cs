@@ -78,7 +78,7 @@ namespace CBAWeb.Controllers
         {
             var role = await _roleManager.FindByIdAsync(model.Role.Id);
             await _permissionService.EditRoleClaimsAsync(role, model.RoleClaims);
-            return RedirectToAction("Index", new { roleId = model.Role.Id });
+            return RedirectToAction(nameof(RolesController.Index), "Roles");
         }
 
         // GET: PermissionController/Delete/5
