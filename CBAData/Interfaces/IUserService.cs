@@ -1,5 +1,6 @@
 ﻿using CBAData.Models;
 using Microsoft.AspNetCore.Identity;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,10 @@ namespace CBAData.Interfaces
         Task UpdateUserRolesAsync(CBAUser user, List<string> userRoles);
 
         void SendAccountConfirmationEmail(string pathToFile, string callbackUrl, CBAUser user, string password);
+
+        void SendPasswordResetEmail(string pathToFile, string callbackUrl, CBAUser user);
+
+        void SendEmailFromTemplate(CBAUser user, string subject, MimeEntity content);
 
         Task DeleteUserAsync(string userId);
 

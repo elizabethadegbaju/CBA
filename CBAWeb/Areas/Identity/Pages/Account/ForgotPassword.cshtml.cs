@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using CBAData.Models;
+using System.IO;
+using CBAData.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 
 namespace CBAWeb.Areas.Identity.Pages.Account
 {
@@ -18,12 +21,16 @@ namespace CBAWeb.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<CBAUser> _userManager;
+        private readonly IUserService _userService;
         private readonly IEmailSender _emailSender;
+        private readonly IWebHostEnvironment _env;
 
-        public ForgotPasswordModel(UserManager<CBAUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<CBAUser> userManager, IUserService userService, IEmailSender emailSender, IWebHostEnvironment env)
         {
             _userManager = userManager;
+            _userService = userService;
             _emailSender = emailSender;
+            _env = env;
         }
 
         [BindProperty]
@@ -56,11 +63,18 @@ namespace CBAWeb.Areas.Identity.Pages.Account
                     pageHandler: null,
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
-
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                var pathToFile = _env.WebRootPath
+                    + Path.DirectorySeparatorChar.ToString()
+                    + "Templates"
+                    + Path.DirectorySeparatorChar.ToString()
+                    + "EmailTemplate"
+                    + Path.DirectorySeparatorChar.ToString()
+                    + "ForgotPassword.html";
+                _userService.SendPasswordResetEmail(pathToFile, callbackUrl, user);
+                //                await _emailSender.SendEmailAsync(
+                //                    Input.Email,
+                //                "Reset Password",
+                //                $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

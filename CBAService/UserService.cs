@@ -110,17 +110,20 @@ namespace CBAService
         public void SendAccountConfirmationEmail(string pathToFile, string callbackUrl, CBAUser user, string password)
         {
             var builder = new BodyBuilder();
-            using (StreamReader SourceReader = File.OpenText(pathToFile))
-            {
-                builder.HtmlBody = SourceReader.ReadToEnd();
-                builder.HtmlBody = string.Format(builder.HtmlBody, callbackUrl, user.UserName, user.Email, password, user.FirstName, user.LastName);
-            }
+            using StreamReader SourceReader = File.OpenText(pathToFile);
+            builder.HtmlBody = SourceReader.ReadToEnd();
+            builder.HtmlBody = string.Format(builder.HtmlBody, callbackUrl, user.UserName, user.Email, password, user.FirstName, user.LastName);
+            SendEmailFromTemplate(user, "Confirm your email", builder.ToMessageBody());
+        }
+
+        public void SendEmailFromTemplate(CBAUser user, string subject, MimeEntity content)
+        {
             EmailMessage message = new EmailMessage
             {
                 Sender = new MailboxAddress("CBA Admin", _emailMetadata.Sender),
                 Reciever = new MailboxAddress($"{user.FirstName} {user.LastName}", user.Email),
-                Subject = "Confirm your email",
-                Content = builder.ToMessageBody()
+                Subject = subject,
+                Content = content
             };
             var mimeMessage = EmailMessage.CreateEmailMessage(message);
             SmtpClient smtpClient = new SmtpClient();
@@ -128,6 +131,15 @@ namespace CBAService
             smtpClient.Authenticate(_emailMetadata.UserName, _emailMetadata.Password);
             smtpClient.Send(mimeMessage);
             smtpClient.Disconnect(true);
+        }
+
+        public void SendPasswordResetEmail(string pathToFile, string callbackUrl, CBAUser user)
+        {
+            var builder = new BodyBuilder();
+            using StreamReader SourceReader = File.OpenText(pathToFile);
+            builder.HtmlBody = SourceReader.ReadToEnd();
+            builder.HtmlBody = string.Format(builder.HtmlBody, callbackUrl, user.FirstName);
+            SendEmailFromTemplate(user, "Reset your Password", builder.ToMessageBody());
         }
 
         public async Task UpdateUserAsync(string id, CBAUser user)
