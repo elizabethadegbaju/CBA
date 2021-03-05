@@ -1,6 +1,7 @@
 ﻿using CBAData.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,6 +21,10 @@ namespace CBAWeb.Controllers
 
         public IActionResult Index()
         {
+            if (TempData["Message"]!=null)
+            {
+                ViewBag.Message = JsonConvert.DeserializeObject<StatusMessage>((string)TempData["Message"]);
+            }
             return View();
         }
 

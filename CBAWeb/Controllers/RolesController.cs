@@ -59,7 +59,6 @@ namespace CBAWeb.Controllers
                     string roleId = await _roleService.CreateRoleAsync(name);
                     return RedirectToAction(nameof(PermissionController.Index), "Permission", new { roleId = roleId });
                 }
-
                 ViewBag.Message = new StatusMessage
                 {
                     Type = StatusType.Error,

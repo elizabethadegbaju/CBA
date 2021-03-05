@@ -19,6 +19,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+using Newtonsoft.Json;
 
 namespace CBAWeb.Controllers
 {
@@ -97,8 +98,7 @@ namespace CBAWeb.Controllers
                     {
                         result = await _userManager.AddToRolesAsync(user, userRoles);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { area = "Identity", userId = user.Id, code = code }, HttpContext.Request.Scheme);
+                        var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { userId = user.Id, code = code }, HttpContext.Request.Scheme);
                         var pathToFile = _env.WebRootPath
                             + Path.DirectorySeparatorChar.ToString()
                             + "Templates"
@@ -215,8 +215,18 @@ namespace CBAWeb.Controllers
                 return View("Error");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            ViewData["Message"] = "Your email has been confirmed. Please Login now. ";
-            ViewData["MessageValue"] = "1";
+            var message = new StatusMessage();
+            if (result.Errors.Count() >= 1)
+            {
+                message.Type = StatusType.Error;
+                message.Message = "Unable to confirm your email.";
+            }
+            else
+            {
+                message.Type = StatusType.Success;
+                message.Message = "Your email has been confirmed. You can log in now.";
+            }
+            TempData["Message"] = JsonConvert.SerializeObject(message);
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
