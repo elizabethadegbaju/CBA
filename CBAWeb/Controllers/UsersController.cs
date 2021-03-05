@@ -107,18 +107,17 @@ namespace CBAWeb.Controllers
                             + Path.DirectorySeparatorChar.ToString()
                             + "ConfirmAccountRegistration.html";
                         var builder = new BodyBuilder();
-                        string messageBody = "";
                         using (StreamReader SourceReader = System.IO.File.OpenText(pathToFile))
                         {
                             builder.HtmlBody = SourceReader.ReadToEnd();
-                            messageBody = string.Format(builder.HtmlBody, callbackUrl, userName, user.Email, password, user.FirstName, user.LastName);
+                            builder.HtmlBody = string.Format(builder.HtmlBody, callbackUrl, userName, user.Email, password, user.FirstName, user.LastName);
                         }
                         EmailMessage message = new EmailMessage
                         {
                             Sender = new MailboxAddress("CBA Admin", _emailMetadata.Sender),
                             Reciever = new MailboxAddress($"{user.FirstName} {user.LastName}", modelUser.Email),
                             Subject = "Confirm your email",
-                            Content = messageBody
+                            Content = builder.ToMessageBody()
                         };
                         var mimeMessage = EmailMessage.CreateEmailMessage(message);
                         using (SmtpClient smtpClient = new SmtpClient())

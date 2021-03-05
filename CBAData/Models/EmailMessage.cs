@@ -11,7 +11,7 @@ namespace CBAData.Models
         public MailboxAddress Sender { get; set; }
         public MailboxAddress Reciever { get; set; }
         public string Subject { get; set; }
-        public string Content { get; set; }
+        public MimeEntity Content { get; set; }
 
         public static MimeMessage CreateEmailMessage(EmailMessage message)
         {
@@ -19,10 +19,7 @@ namespace CBAData.Models
             mimeMessage.From.Add(message.Sender);
             mimeMessage.To.Add(message.Reciever);
             mimeMessage.Subject = message.Subject;
-            mimeMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text)
-            {
-                Text = message.Content
-            };
+            mimeMessage.Body = message.Content;
             return mimeMessage;
         }
     }
