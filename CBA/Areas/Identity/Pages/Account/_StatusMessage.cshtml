@@ -1,9 +1,0 @@
-﻿@model string
-
-@if (!String.IsNullOrEmpty(Model))
-{
-    var statusMessageClass = Model.StartsWith("Error") ? "red" : "green";
-    <script>
-        M.toast({ html: @Model, classes: "rounded {@statusMessageClass}"});
-    </script>
-}
