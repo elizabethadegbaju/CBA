@@ -7,9 +7,6 @@ namespace CBAData.Models
 {
     public enum DefaultRoles
     {
-        SuperUser,
-        Admin,
-        Staff,
-        Customer
+        SuperUser
     }
 }

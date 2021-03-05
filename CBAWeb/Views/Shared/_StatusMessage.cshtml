@@ -1,0 +1,17 @@
+﻿@model StatusMessage
+
+@if (!String.IsNullOrEmpty(Model.Message))
+{
+    var statusMessageClass = "";
+    if (Model.Type == StatusType.Success)
+    {
+        statusMessageClass = "green";
+    }
+    else if (Model.Type == StatusType.Error)
+    {
+        statusMessageClass = "red";
+    }
+    <script>
+        M.toast({ html: "@Model.Message", classes: "@statusMessageClass", displayLength: 5000 });
+    </script>
+}
