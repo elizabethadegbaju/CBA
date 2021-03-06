@@ -24,12 +24,12 @@
                     <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-flat">Send verification email</button>
                 }
             </div>
-            <div class="input-field">
-                <label asp-for="Input.NewEmail"></label>
-                <input asp-for="Input.NewEmail" class="validate" />
-                <span asp-validation-for="Input.NewEmail" class="red-text"></span>
-            </div>
-            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn waves-effect waves-light">Change email</button>
+            @*<div class="input-field">
+                    <label asp-for="Input.NewEmail"></label>
+                    <input asp-for="Input.NewEmail" class="validate" />
+                    <span asp-validation-for="Input.NewEmail" class="red-text"></span>
+                </div>
+                <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn waves-effect waves-light">Change email</button>*@
         </form>
     </div>
 </div>
