@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+using CBAData.ViewModels;
 
 namespace CBAService
 {
@@ -46,7 +47,7 @@ namespace CBAService
             await _userManager.DeleteAsync(user);
         }
 
-        public async void EditUserRolesAsync(string userId, IList<UserRolesViewModel> userRolesViewModels, CBAUser currentUser)
+        public async Task EditUserRolesAsync(string userId, IList<UserRolesViewModel> userRolesViewModels, CBAUser currentUser)
         {
             var user = await _userManager.FindByIdAsync(userId);
             var roles = await _userManager.GetRolesAsync(user);

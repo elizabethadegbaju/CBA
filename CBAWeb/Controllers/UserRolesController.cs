@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CBAData.ViewModels;
 
 namespace CBAWeb.Controllers
 {
@@ -73,7 +74,7 @@ namespace CBAWeb.Controllers
         public async Task<IActionResult> Edit(ManageUserRolesViewModel model, string id)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            _userService.EditUserRolesAsync(id, model.UserRoles, currentUser);
+            await _userService.EditUserRolesAsync(id, model.UserRoles, currentUser);
             return RedirectToAction("Index", new { userId = id });
         }
 

@@ -1,4 +1,5 @@
 ﻿using CBAData.Models;
+using CBAData.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using MimeKit;
 using System;
@@ -12,7 +13,7 @@ namespace CBAData.Interfaces
     {
         Task<ManageUserRolesViewModel> ListUserRolesAsync(string userId);
 
-        void EditUserRolesAsync(string userId, IList<UserRolesViewModel> userRolesViewModels, CBAUser currentUser);
+        Task EditUserRolesAsync(string userId, IList<UserRolesViewModel> userRolesViewModels, CBAUser currentUser);
 
         Task<List<CBAUser>> ListUsersExceptSpecifiedUserAsync(CBAUser user);
 

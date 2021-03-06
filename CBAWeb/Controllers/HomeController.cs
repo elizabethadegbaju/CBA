@@ -1,4 +1,5 @@
 ﻿using CBAData.Models;
+using CBAData.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
