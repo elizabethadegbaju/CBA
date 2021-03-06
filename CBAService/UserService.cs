@@ -113,7 +113,7 @@ namespace CBAService
             using StreamReader SourceReader = File.OpenText(pathToFile);
             builder.HtmlBody = SourceReader.ReadToEnd();
             builder.HtmlBody = string.Format(builder.HtmlBody, callbackUrl, user.UserName, user.Email, password, user.FirstName, user.LastName);
-            SendEmailFromTemplate(user, "Confirm your email", builder.ToMessageBody());
+            SendEmailFromTemplate(user, "Confirm your Email", builder.ToMessageBody());
         }
 
         public void SendEmailFromTemplate(CBAUser user, string subject, MimeEntity content)
