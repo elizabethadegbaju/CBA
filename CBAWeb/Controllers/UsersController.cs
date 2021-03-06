@@ -119,7 +119,7 @@ namespace CBAWeb.Controllers
         [Authorize(Policy = "CBA002")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(string id, [Bind("Id,FirstName,LastName,UserName,IsEnabled")] CBAUser user)
+        public async Task<ActionResult> Edit(string id, [Bind("Id,FirstName,LastName,IsEnabled")] CBAUser user)
         {
             try
             {

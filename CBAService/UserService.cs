@@ -147,7 +147,6 @@ namespace CBAService
             var formerUser = await _userManager.FindByIdAsync(id);
             formerUser.FirstName = user.FirstName;
             formerUser.LastName = user.LastName;
-            formerUser.UserName = user.UserName;
             formerUser.IsEnabled = user.IsEnabled;
             await _userManager.UpdateAsync(formerUser);
         }
