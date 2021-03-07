@@ -14,7 +14,7 @@ namespace CBAData
     {
         public static async Task SeedRolesAsync(UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager)
         {
-            await roleManager.CreateAsync(new CBARole(DefaultRoles.SuperUser.ToString()));
+            await roleManager.CreateAsync(new CBARole(DefaultRole.SuperUser.ToString()));
         }
         public static async Task SeedSuperUserAsync(UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager)
         {
@@ -32,7 +32,7 @@ namespace CBAData
                     await userManager.CreateAsync(superUser, "Ade981_");
                     await userManager.AddToRolesAsync(superUser, new List<string>()
                         {
-                            DefaultRoles.SuperUser.ToString()
+                            DefaultRole.SuperUser.ToString()
                         });
                 }
                 await roleManager.SeedClaimsForSuperAdmin();
@@ -42,7 +42,7 @@ namespace CBAData
         {
             var superUserRole = await roleManager.FindByNameAsync("SuperUser");
             var claims = await roleManager.GetClaimsAsync(superUserRole);
-            MemberInfo[] permissionEnum = typeof(Permissions).GetMembers(BindingFlags.Public | BindingFlags.Static);
+            MemberInfo[] permissionEnum = typeof(Permission).GetMembers(BindingFlags.Public | BindingFlags.Static);
             foreach (var permission in permissionEnum)
             {
                 var name = ((DisplayAttribute)permission.GetCustomAttributes(typeof(DisplayAttribute), false)[0]).Name;
