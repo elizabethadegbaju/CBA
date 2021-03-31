@@ -1,0 +1,47 @@
+﻿@model IEnumerable<GLCategory>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table highlight">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsEnabled)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@for (int i = 0; i < Model.Count(); i++) {
+        <tr>
+            <td>
+                @Model.ElementAt(i).AccountType.ToString()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.ElementAt(i).Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.ElementAt(i).IsEnabled)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@Model.ElementAt(i).Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@Model.ElementAt(i).Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@Model.ElementAt(i).Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -34,10 +34,11 @@ namespace CBAWeb
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            
+
             services.AddTransient<IPermissionService, PermissionService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<IGLCategoryService, GLCategoryService>();
 
             services.AddDefaultIdentity<CBAUser>(options =>
             {
@@ -45,7 +46,7 @@ namespace CBAWeb
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
-            }) 
+            })
                 .AddRoles<CBARole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
@@ -115,9 +116,13 @@ namespace CBAWeb
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapAreaControllerRoute(
+                    name: "MyAreaGL",
+                    areaName: "GL",
+                    pattern: "GL/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}"); 
                 endpoints.MapRazorPages();
             });
         }
