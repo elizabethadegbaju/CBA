@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using CBAData;
 using CBAData.Models;
 using CBAData.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CBAWeb.Areas.GL.Controllers
 {
     [Area("GL")]
+    [Authorize(Policy = "CBA020")]
     public class CategoriesController : Controller
     {
         private readonly IGLCategoryService _gLCategoryService;
@@ -45,6 +47,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GLCategories/Create
+        [Authorize(Policy = "CBA018")]
         public IActionResult Create()
         {
             return View();
@@ -53,6 +56,7 @@ namespace CBAWeb.Areas.GL.Controllers
         // POST: GLCategories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Policy = "CBA018")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Type,Name,IsEnabled")] GLCategory gLCategory)
@@ -66,6 +70,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GLCategories/Edit/5
+        [Authorize(Policy = "CBA019")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,6 +89,7 @@ namespace CBAWeb.Areas.GL.Controllers
         // POST: GLCategories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Policy = "CBA019")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Name,IsEnabled")] GLCategory gLCategory)
@@ -116,6 +122,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GLCategories/Delete/5
+        [Authorize(Policy = "CBA019")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,6 +140,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // POST: GLCategories/Delete/5
+        [Authorize(Policy = "CBA019")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
