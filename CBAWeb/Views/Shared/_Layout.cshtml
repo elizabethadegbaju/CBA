@@ -28,6 +28,9 @@
                         <li>
                             <a asp-area="" asp-action="Index" asp-controller="Users" title="Manage Users">Users</a>
                         </li>
+                        <li>
+                            <a asp-area="GL" asp-action="Index" asp-controller="Categories" title="GL Category Management">Categories</a>
+                        </li>
                     </ul>
                     <ul class="right hide-on-med-and-down">
                         <partial name="_LoginPartial" />
@@ -47,6 +50,9 @@
             </li>
             <li>
                 <a asp-area="" asp-action="Index" asp-controller="Users">Users</a>
+            </li>
+            <li>
+                <a asp-area="GL" asp-action="Index" asp-controller="Categories">Categories</a>
             </li>
             <li><div class="divider"></div></li>
             <partial name="_LoginPartial" />
