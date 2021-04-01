@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace CBAData.Models
@@ -13,7 +14,9 @@ namespace CBAData.Models
         }
 
         public int Id { get; set; }
-        public AccountType AccountType { get; set; }
+
+        [EnumDataType(typeof(AccountType))]
+        public AccountType Type { get; set; }
         public string Name { get; set; }
 
         [DisplayName("Status")]

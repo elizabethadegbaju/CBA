@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AccountType)
+                @Html.DisplayNameFor(model => model.Type)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -28,13 +28,20 @@
 @for (int i = 0; i < Model.Count(); i++) {
         <tr>
             <td>
-                @Model.ElementAt(i).AccountType.ToString()
+                @Model.ElementAt(i).Type.ToString()
             </td>
             <td>
                 @Html.DisplayFor(modelItem => Model.ElementAt(i).Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.ElementAt(i).IsEnabled)
+                @{
+                    var status = "Enabled";
+                    if (!Model.ElementAt(i).IsEnabled)
+                    {
+                        status = "Disabled";
+                    };
+                }
+                @status
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@Model.ElementAt(i).Id">Edit</a> |

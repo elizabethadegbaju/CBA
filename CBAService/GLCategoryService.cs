@@ -24,7 +24,7 @@ namespace CBAService
             var category = new GLCategory
             {
                 Name = name,
-                AccountType = accountType
+                Type = accountType
             };
             _context.Add(category);
             await _context.SaveChangesAsync();

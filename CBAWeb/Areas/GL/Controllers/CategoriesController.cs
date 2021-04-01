@@ -55,11 +55,11 @@ namespace CBAWeb.Areas.GL.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AccountType,Name,IsEnabled")] GLCategory gLCategory)
+        public async Task<IActionResult> Create([Bind("Id,Type,Name,IsEnabled")] GLCategory gLCategory)
         {
             if (ModelState.IsValid)
             {
-                await _gLCategoryService.AddGLCategoryAsync(gLCategory.Name, gLCategory.AccountType);
+                await _gLCategoryService.AddGLCategoryAsync(gLCategory.Name, gLCategory.Type);
                 return RedirectToAction(nameof(Index));
             }
             return View(gLCategory);
