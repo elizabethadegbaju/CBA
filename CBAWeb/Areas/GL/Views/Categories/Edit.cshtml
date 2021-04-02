@@ -14,9 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="red-text"></div>
             <div>
                 <label asp-for="Type"></label>
-                <select asp-for="Type" asp-items="Html.GetEnumSelectList<AccountType>()" class="browser-default">
-                    <option selected disabled value="">Please select</option>
-                </select>
+                <select asp-for="Type" asp-items="Html.GetEnumSelectList<AccountType>()" class="browser-default" disabled></select>
                 <span asp-validation-for="Type" class="red-text"></span>
             </div>
             <div class="input-field">

@@ -92,7 +92,7 @@ namespace CBAWeb.Areas.GL.Controllers
         [Authorize(Policy = "CBA019")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Name,IsEnabled")] GLCategory gLCategory)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsEnabled")] GLCategory gLCategory)
         {
             if (id != gLCategory.Id)
             {
