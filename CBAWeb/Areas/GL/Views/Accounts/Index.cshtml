@@ -1,0 +1,75 @@
+﻿@model IEnumerable<CBAData.Models.GLAccount>
+
+@{
+    ViewData["Title"] = "GL Accounts";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table highlight">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActivated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User)
+            </td>
+            <td>
+                @{
+                    var status = "Enabled";
+                    if (!item.IsActivated)
+                    {
+                        status = "Disabled";
+                    };
+                }
+                @status
+            </td>
+            <td>
+                <a class="dropdown-trigger btn" href="#" data-target="@(item.Id)actions">Action</a>
+                <ul id="@(item.Id)actions" class="dropdown-content">
+                    <li>
+                        <a asp-action="Details" asp-route-id="@item.Id">
+                            <i class="material-icons">visibility</i> View Category
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Edit" asp-route-id="@item.Id">
+                            <i class="material-icons">edit</i> Edit Category
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Delete" asp-route-id="@item.Id">
+                            <i class="material-icons">delete</i> Delete Category
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
