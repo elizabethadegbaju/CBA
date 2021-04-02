@@ -13,6 +13,8 @@ namespace CBAData.Models
         }
 
         public int Id { get; set; }
+
+        [DisplayName("GL Category")]
         public GLCategory Category { get; set; }
 
         [DisplayName("Account Number")]

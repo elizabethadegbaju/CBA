@@ -19,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.AccountName)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.User)
             </th>
             <th>
@@ -35,6 +38,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AccountName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User)
@@ -54,17 +60,17 @@
                 <ul id="@(item.Id)actions" class="dropdown-content">
                     <li>
                         <a asp-action="Details" asp-route-id="@item.Id">
-                            <i class="material-icons">visibility</i> View Category
+                            <i class="material-icons">visibility</i> View Account
                         </a>
                     </li>
                     <li>
                         <a asp-action="Edit" asp-route-id="@item.Id">
-                            <i class="material-icons">edit</i> Edit Category
+                            <i class="material-icons">edit</i> Edit Account
                         </a>
                     </li>
                     <li>
                         <a asp-action="Delete" asp-route-id="@item.Id">
-                            <i class="material-icons">delete</i> Delete Category
+                            <i class="material-icons">delete</i> Delete Account
                         </a>
                     </li>
                 </ul>
