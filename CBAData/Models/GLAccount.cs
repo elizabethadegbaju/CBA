@@ -12,10 +12,10 @@ namespace CBAData.Models
             IsActivated = true;
         }
 
-        public int Id { get; set; }
+        public int GLAccountId { get; set; }
 
-        [DisplayName("GL Category")]
-        public GLCategory Category { get; set; }
+        public int GLCategoryId { get; set; }
+        public GLCategory GLCategory { get; set; }
 
         [DisplayName("Account Number")]
         public string AccountNumber { get; set; }

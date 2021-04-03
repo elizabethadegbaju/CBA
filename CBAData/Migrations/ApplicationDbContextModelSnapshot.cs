@@ -16,7 +16,7 @@ namespace CBAData.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("CBAData.Models.CBAUser", b =>
@@ -95,7 +95,7 @@ namespace CBAData.Migrations
 
             modelBuilder.Entity("CBAData.Models.GLAccount", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("GLAccountId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -106,7 +106,7 @@ namespace CBAData.Migrations
                     b.Property<string>("AccountNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("GLCategoryId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActivated")
@@ -115,9 +115,9 @@ namespace CBAData.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("GLAccountId");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("GLCategoryId");
 
                     b.HasIndex("UserId");
 
@@ -126,7 +126,7 @@ namespace CBAData.Migrations
 
             modelBuilder.Entity("CBAData.Models.GLCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("GLCategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -140,7 +140,7 @@ namespace CBAData.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("GLCategoryId");
 
                     b.ToTable("GLCategories");
                 });
@@ -298,15 +298,17 @@ namespace CBAData.Migrations
 
             modelBuilder.Entity("CBAData.Models.GLAccount", b =>
                 {
-                    b.HasOne("CBAData.Models.GLCategory", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId");
+                    b.HasOne("CBAData.Models.GLCategory", "GLCategory")
+                        .WithMany("GLAccounts")
+                        .HasForeignKey("GLCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CBAData.Models.CBAUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Category");
+                    b.Navigation("GLCategory");
 
                     b.Navigation("User");
                 });
@@ -360,6 +362,11 @@ namespace CBAData.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CBAData.Models.GLCategory", b =>
+                {
+                    b.Navigation("GLAccounts");
                 });
 #pragma warning restore 612, 618
         }

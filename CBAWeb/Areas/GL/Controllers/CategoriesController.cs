@@ -94,7 +94,7 @@ namespace CBAWeb.Areas.GL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsEnabled")] GLCategory gLCategory)
         {
-            if (id != gLCategory.Id)
+            if (id != gLCategory.GLCategoryId)
             {
                 return NotFound();
             }
@@ -107,7 +107,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _gLCategoryService.GLCategoryExists(gLCategory.Id))
+                    if (!await _gLCategoryService.GLCategoryExists(gLCategory.GLCategoryId))
                     {
                         return NotFound();
                     }

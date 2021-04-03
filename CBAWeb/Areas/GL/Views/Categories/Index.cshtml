@@ -44,20 +44,20 @@
                 @status
             </td>
             <td>
-                <a class="dropdown-trigger btn" href="#" data-target="@(Model.ElementAt(i).Id)actions">Action</a>
-                <ul id="@(Model.ElementAt(i).Id)actions" class="dropdown-content">
+                <a class="dropdown-trigger btn" href="#" data-target="@(Model.ElementAt(i).GLCategoryId)actions">Action</a>
+                <ul id="@(Model.ElementAt(i).GLCategoryId)actions" class="dropdown-content">
                     <li>
-                        <a asp-action="Details" asp-route-id="@Model.ElementAt(i).Id">
+                        <a asp-action="Details" asp-route-id="@Model.ElementAt(i).GLCategoryId">
                             <i class="material-icons">visibility</i> View Category
                         </a>
                     </li>
                     <li>
-                        <a asp-action="Edit" asp-route-id="@Model.ElementAt(i).Id">
+                        <a asp-action="Edit" asp-route-id="@Model.ElementAt(i).GLCategoryId">
                             <i class="material-icons">edit</i> Edit Category
                         </a>
                     </li>
                     <li>
-                        <a asp-action="Delete" asp-route-id="@Model.ElementAt(i).Id">
+                        <a asp-action="Delete" asp-route-id="@Model.ElementAt(i).GLCategoryId">
                             <i class="material-icons">delete</i> Delete Category
                         </a>
                     </li>

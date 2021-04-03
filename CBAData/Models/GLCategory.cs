@@ -13,7 +13,7 @@ namespace CBAData.Models
             IsEnabled = true;
         }
 
-        public int Id { get; set; }
+        public int GLCategoryId { get; set; }
 
         [EnumDataType(typeof(AccountType))]
         public AccountType Type { get; set; }
@@ -21,5 +21,7 @@ namespace CBAData.Models
 
         [DisplayName("Status")]
         public bool IsEnabled { get;set; }
+
+        public List<GLAccount> GLAccounts { get; set; }
     }
 }

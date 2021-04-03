@@ -23,11 +23,10 @@ namespace CBAService
 
         public async Task AddGLAccountAsync(AccountViewModel accountViewModel)
         {
-            var category = await _context.GLCategories.FirstOrDefaultAsync(mbox => mbox.Id == int.Parse(accountViewModel.CategoryId));
             var account = new GLAccount
             {
                 AccountName = accountViewModel.AccountName,
-                Category = category,
+                GLCategoryId = int.Parse(accountViewModel.CategoryId),
                 IsActivated = accountViewModel.IsActivated
             };
             _context.Add(account);
@@ -42,7 +41,7 @@ namespace CBAService
 
         public async Task<GLAccount> RetrieveGLAccountAsync(int id)
         {
-            var account = await _context.GLAccounts.FirstOrDefaultAsync(m => m.Id == id);
+            var account = await _context.GLAccounts.FirstOrDefaultAsync(m => m.GLAccountId == id);
             return account;
         }
 
@@ -76,7 +75,7 @@ namespace CBAService
 
         public async Task<bool> GLAccountExists(int id)
         {
-            return await _context.GLAccounts.AnyAsync(e => e.Id == id);
+            return await _context.GLAccounts.AnyAsync(e => e.GLAccountId == id);
         }
 
         public AccountViewModel GetAddGLAccount()
@@ -88,7 +87,7 @@ namespace CBAService
                 accountViewModel.GLCategories.Add(new SelectListItem()
                 {
                     Text = category.Name,
-                    Value = category.Id.ToString()
+                    Value = category.GLCategoryId.ToString()
                 });
             }
             return accountViewModel;

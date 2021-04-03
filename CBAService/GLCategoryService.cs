@@ -66,13 +66,13 @@ namespace CBAService
 
         public async Task<GLCategory> RetrieveGLCategoryAsync(int id)
         {
-            var category = await _context.GLCategories.FirstOrDefaultAsync(m => m.Id == id);
+            var category = await _context.GLCategories.FirstOrDefaultAsync(m => m.GLCategoryId == id);
             return category;
         }
 
         public async Task<bool> GLCategoryExists(int id)
         {
-            return await _context.GLCategories.AnyAsync(e => e.Id == id);
+            return await _context.GLCategories.AnyAsync(e => e.GLCategoryId == id);
         }
     }
 }

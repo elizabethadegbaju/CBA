@@ -90,7 +90,7 @@ namespace CBAWeb.Areas.GL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Category,AccountName,IsActivated")] GLAccount gLAccount)
         {
-            if (id != gLAccount.Id)
+            if (id != gLAccount.GLAccountId)
             {
                 return NotFound();
             }
@@ -103,7 +103,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _gLAccountService.GLAccountExists(gLAccount.Id))
+                    if (!await _gLAccountService.GLAccountExists(gLAccount.GLAccountId))
                     {
                         return NotFound();
                     }

@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.AccountName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                @Html.DisplayNameFor(model => model.GLCategory)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.User)
@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.AccountName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category)
+                @Html.DisplayFor(modelItem => item.GLCategory.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User)
@@ -56,20 +56,20 @@
                 @status
             </td>
             <td>
-                <a class="dropdown-trigger btn" href="#" data-target="@(item.Id)actions">Action</a>
-                <ul id="@(item.Id)actions" class="dropdown-content">
+                <a class="dropdown-trigger btn" href="#" data-target="@(item.GLAccountId)actions">Action</a>
+                <ul id="@(item.GLAccountId)actions" class="dropdown-content">
                     <li>
-                        <a asp-action="Details" asp-route-id="@item.Id">
+                        <a asp-action="Details" asp-route-id="@item.GLAccountId">
                             <i class="material-icons">visibility</i> View Account
                         </a>
                     </li>
                     <li>
-                        <a asp-action="Edit" asp-route-id="@item.Id">
+                        <a asp-action="Edit" asp-route-id="@item.GLAccountId">
                             <i class="material-icons">edit</i> Edit Account
                         </a>
                     </li>
                     <li>
-                        <a asp-action="Delete" asp-route-id="@item.Id">
+                        <a asp-action="Delete" asp-route-id="@item.GLAccountId">
                             <i class="material-icons">delete</i> Delete Account
                         </a>
                     </li>
