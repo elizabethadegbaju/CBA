@@ -75,12 +75,12 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var gLAccount = await _gLAccountService.RetrieveGLAccountAsync(id.Value);
-            if (gLAccount == null)
+            var gLAccountViewModel = await _gLAccountService.GetEditGLAccount(id.Value);
+            if (gLAccountViewModel == null)
             {
                 return NotFound();
             }
-            return View(gLAccount);
+            return View(gLAccountViewModel);
         }
 
         // POST: Accounts/Edit/5
@@ -88,9 +88,9 @@ namespace CBAWeb.Areas.GL.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Category,AccountName,IsActivated")] GLAccount gLAccount)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountName,IsActivated")] AccountViewModel accountViewModel)
         {
-            if (id != gLAccount.GLAccountId)
+            if (id != accountViewModel.Id)
             {
                 return NotFound();
             }
@@ -99,11 +99,11 @@ namespace CBAWeb.Areas.GL.Controllers
             {
                 try
                 {
-                    await _gLAccountService.EditGLAccountAsync(gLAccount);
+                    await _gLAccountService.EditGLAccountAsync(accountViewModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _gLAccountService.GLAccountExists(gLAccount.GLAccountId))
+                    if (!await _gLAccountService.GLAccountExists(accountViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -114,7 +114,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(gLAccount);
+            return View(accountViewModel);
         }
 
         // GET: Accounts/Delete/5

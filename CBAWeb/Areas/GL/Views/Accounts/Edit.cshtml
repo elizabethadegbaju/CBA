@@ -1,0 +1,51 @@
+﻿@model CBAData.ViewModels.AccountViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Account</h4>
+<hr />
+<div class="row">
+    <div class="col m4">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="red-text"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="input-field">
+                <label asp-for="AccountName"></label>
+                <input asp-for="AccountName" class="validate" />
+                <span asp-validation-for="AccountName" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="AccountNumber"></label>
+                <input asp-for="AccountNumber" disabled class="validate" />
+                <span asp-validation-for="AccountNumber" class="red-text"></span>
+            </div>
+            <div>
+                <label asp-for="CategoryId"></label>
+                <select asp-for="CategoryId" disabled asp-items="@Model.GLCategories" class="browser-default">
+                </select>
+                <span asp-validation-for="GLCategories" class="red-text"></span>
+            </div>
+            <div class="switch">
+                <label asp-for="IsActivated"></label>
+                <br />
+                <label>
+                    Deactivated
+                    <input asp-for="IsActivated" type="checkbox">
+                    <span class="lever"></span>
+                    Activated
+                </label>
+            </div>
+            <br />
+            <button type="submit" class="btn waves-effect waves-light">Save Account</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

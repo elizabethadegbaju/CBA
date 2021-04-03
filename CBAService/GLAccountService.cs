@@ -63,8 +63,11 @@ namespace CBAService
             return start + milliseconds.ToString();
         }
 
-        public async Task EditGLAccountAsync(GLAccount account)
+        public async Task EditGLAccountAsync(AccountViewModel accountViewModel)
         {
+            var account = await _context.GLAccounts.FindAsync(accountViewModel.Id);
+            account.AccountName = accountViewModel.AccountName;
+            account.IsActivated = accountViewModel.IsActivated;
             _context.Update(account);
             await _context.SaveChangesAsync();
         }
@@ -121,6 +124,24 @@ namespace CBAService
                     Value = category.GLCategoryId.ToString()
                 });
             }
+            return accountViewModel;
+        }
+        public async Task<AccountViewModel> GetEditGLAccount(int id)
+        {
+            var account = await RetrieveGLAccountAsync(id);
+            var accountViewModel = new AccountViewModel()
+            {
+                AccountName = account.AccountName,
+                AccountNumber = account.AccountNumber,
+                IsActivated = account.IsActivated,
+                CategoryId = account.GLCategoryId.ToString(),
+                Id = account.GLAccountId
+            };
+            accountViewModel.GLCategories.Add(new SelectListItem()
+            {
+                Text = account.GLCategory.Name,
+                Value = account.GLCategory.GLCategoryId.ToString()
+            });
             return accountViewModel;
         }
     }
