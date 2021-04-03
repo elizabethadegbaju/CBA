@@ -70,7 +70,8 @@ namespace CBAService
 
         public async Task<List<GLAccount>> ListGLAccountsAsync()
         {
-            return await _context.GLAccounts.ToListAsync();
+            var accounts = await _context.GLAccounts.Include(account => account.GLCategory).ToListAsync();
+            return accounts;
         }
 
         public async Task<bool> GLAccountExists(int id)
