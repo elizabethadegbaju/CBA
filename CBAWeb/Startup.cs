@@ -39,6 +39,7 @@ namespace CBAWeb
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IGLCategoryService, GLCategoryService>();
+            services.AddTransient<IGLAccountService, GLAccountService>();
 
             services.AddDefaultIdentity<CBAUser>(options =>
             {

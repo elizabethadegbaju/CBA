@@ -7,23 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CBAData;
 using CBAData.Models;
+using CBAData.Interfaces;
+using CBAData.ViewModels;
 
 namespace CBAWeb.Areas.GL.Controllers
 {
     [Area("GL")]
     public class AccountsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IGLAccountService _gLAccountService;
 
-        public AccountsController(ApplicationDbContext context)
+        public AccountsController(IGLAccountService gLAccountService)
         {
-            _context = context;
+            _gLAccountService = gLAccountService;
         }
 
         // GET: Accounts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.GLAccounts.ToListAsync());
+            return View(await _gLAccountService.ListGLAccountsAsync());
         }
 
         // GET: Accounts/Details/5
@@ -34,8 +36,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var gLAccount = await _context.GLAccounts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var gLAccount = await _gLAccountService.RetrieveGLAccountAsync(id.Value);
             if (gLAccount == null)
             {
                 return NotFound();
@@ -47,7 +48,8 @@ namespace CBAWeb.Areas.GL.Controllers
         // GET: Accounts/Create
         public IActionResult Create()
         {
-            return View();
+            var model = _gLAccountService.GetAddGLAccount();
+            return View(model);
         }
 
         // POST: Accounts/Create
@@ -55,15 +57,14 @@ namespace CBAWeb.Areas.GL.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AccountNumber,AccountName,IsActivated")] GLAccount gLAccount)
+        public async Task<IActionResult> Create([Bind("CategoryId,AccountName,IsActivated")] AccountViewModel accountViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(gLAccount);
-                await _context.SaveChangesAsync();
+                await _gLAccountService.AddGLAccountAsync(accountViewModel);
                 return RedirectToAction(nameof(Index));
             }
-            return View(gLAccount);
+            return View(accountViewModel);
         }
 
         // GET: Accounts/Edit/5
@@ -74,7 +75,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var gLAccount = await _context.GLAccounts.FindAsync(id);
+            var gLAccount = await _gLAccountService.RetrieveGLAccountAsync(id.Value);
             if (gLAccount == null)
             {
                 return NotFound();
@@ -87,7 +88,7 @@ namespace CBAWeb.Areas.GL.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountNumber,AccountName,IsActivated")] GLAccount gLAccount)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Category,AccountName,IsActivated")] GLAccount gLAccount)
         {
             if (id != gLAccount.Id)
             {
@@ -98,12 +99,11 @@ namespace CBAWeb.Areas.GL.Controllers
             {
                 try
                 {
-                    _context.Update(gLAccount);
-                    await _context.SaveChangesAsync();
+                    await _gLAccountService.EditGLAccountAsync(gLAccount);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GLAccountExists(gLAccount.Id))
+                    if (!await _gLAccountService.GLAccountExists(gLAccount.Id))
                     {
                         return NotFound();
                     }
@@ -125,8 +125,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var gLAccount = await _context.GLAccounts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var gLAccount = await _gLAccountService.RetrieveGLAccountAsync(id.Value);
             if (gLAccount == null)
             {
                 return NotFound();
@@ -140,15 +139,8 @@ namespace CBAWeb.Areas.GL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var gLAccount = await _context.GLAccounts.FindAsync(id);
-            _context.GLAccounts.Remove(gLAccount);
-            await _context.SaveChangesAsync();
+            await _gLAccountService.DeleteGLAccountAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool GLAccountExists(int id)
-        {
-            return _context.GLAccounts.Any(e => e.Id == id);
         }
     }
 }
