@@ -23,14 +23,44 @@ namespace CBAService
 
         public async Task AddGLAccountAsync(AccountViewModel accountViewModel)
         {
+            var categoryId = int.Parse(accountViewModel.CategoryId);
+            var category = await _context.GLCategories.FindAsync(categoryId);
             var account = new GLAccount
             {
+                AccountNumber = GenerateAccountNumber(category.Type),
                 AccountName = accountViewModel.AccountName,
-                GLCategoryId = int.Parse(accountViewModel.CategoryId),
+                GLCategoryId = categoryId,
                 IsActivated = accountViewModel.IsActivated
             };
             _context.Add(account);
             await _context.SaveChangesAsync();
+        }
+
+        private string GenerateAccountNumber(AccountType type)
+        {
+            long milliseconds = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var start = "";
+            switch (type)
+            {
+                case AccountType.Assets:
+                    start = "1";
+                    break;
+                case AccountType.Liability:
+                    start = "2";
+                    break;
+                case AccountType.Capital:
+                    start = "3";
+                    break;
+                case AccountType.Income:
+                    start = "4";
+                    break;
+                case AccountType.Expense:
+                    start = "5";
+                    break;
+                default:
+                    break;
+            }
+            return start + milliseconds.ToString();
         }
 
         public async Task EditGLAccountAsync(GLAccount account)
