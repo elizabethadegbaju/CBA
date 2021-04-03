@@ -71,7 +71,7 @@ namespace CBAService
 
         public async Task<GLAccount> RetrieveGLAccountAsync(int id)
         {
-            var account = await _context.GLAccounts.FirstOrDefaultAsync(m => m.GLAccountId == id);
+            var account = await _context.GLAccounts.Include(account => account.GLCategory).FirstOrDefaultAsync(m => m.GLAccountId == id);
             return account;
         }
 
