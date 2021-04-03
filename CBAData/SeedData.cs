@@ -46,9 +46,9 @@ namespace CBAData
             foreach (var permission in permissionEnum)
             {
                 var name = ((DisplayAttribute)permission.GetCustomAttributes(typeof(DisplayAttribute), false)[0]).Name;
-                if (!claims.Any(a => a.Type == permission.ToString() && a.Value == name))
+                if (!claims.Any(a => a.Type == permission.Name && a.Value == name))
                 {
-                    await roleManager.AddClaimAsync(superUserRole, new Claim(permission.ToString(),name));
+                    await roleManager.AddClaimAsync(superUserRole, new Claim(permission.Name,name));
                 }
             }
         }
