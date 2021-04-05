@@ -210,6 +210,8 @@ namespace CBAWeb.Controllers
             }
             else
             {
+                user.IsEnabled = true;
+                await _userManager.UpdateAsync(user);
                 message.Type = StatusType.Success;
                 message.Message = "Your email has been confirmed. You can log in now.";
             }

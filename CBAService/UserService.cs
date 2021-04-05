@@ -36,7 +36,12 @@ namespace CBAService
         {
             MailAddress address = new MailAddress(modelUser.Email);
             string userName = address.User;
-            var user = new CBAUser { UserName = userName, Email = modelUser.Email, FirstName = modelUser.FirstName, LastName = modelUser.LastName };
+            var user = new CBAUser { 
+                UserName = userName, 
+                Email = modelUser.Email, 
+                FirstName = modelUser.FirstName, 
+                LastName = modelUser.LastName
+            };
             await _userManager.CreateAsync(user, password);
             return await _userManager.FindByIdAsync(user.Id);
         }
