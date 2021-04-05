@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace CBAWeb.Controllers
 {
-    [Authorize(Roles = "Superuser")]
+    [Authorize(Roles = "SuperUser")]
     public class PermissionController : Controller
     {
         private readonly IPermissionService _permissionService;

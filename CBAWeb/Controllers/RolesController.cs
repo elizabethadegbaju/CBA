@@ -13,7 +13,7 @@ using CBAData.ViewModels;
 
 namespace CBAWeb.Controllers
 {
-    [Authorize(Roles = "Superuser")]
+    [Authorize(Roles = "SuperUser")]
     public class RolesController : Controller
     {
         private readonly RoleManager<CBARole> _roleManager;
