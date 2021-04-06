@@ -23,6 +23,7 @@ namespace CBAData.Models
         [DisplayName("Account Name")]
         public string AccountName { get; set; }
         public CBAUser User { get; set; }
+        public string CBAUserId { get; set; }
 
         [DisplayName("Account Status")]
         public bool IsActivated { get; set; }

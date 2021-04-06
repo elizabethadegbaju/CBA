@@ -18,5 +18,7 @@ namespace CBAData.Models
         [DisplayName("Enabled")]
         public bool IsEnabled { get; set; }
 
+        public GLAccount Till { get; set; }
+
     }
 }
