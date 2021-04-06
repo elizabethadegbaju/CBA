@@ -6,6 +6,7 @@
 <h1>@ViewData["Title"] for @Model.Role.Name Role</h1>
 
 <p>
+    <a asp-controller="Roles" asp-action="Details" asp-route-id="@Model.Role.Id">View Role</a> |
     <a asp-controller="Roles">Back to Roles</a>
 </p>
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CBAWeb.Data.Migrations
+namespace CBAData.Migrations
 {
     public partial class CustomUserProperties : Migration
     {

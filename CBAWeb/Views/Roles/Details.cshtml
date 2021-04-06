@@ -1,7 +1,7 @@
-﻿@model RoleViewModel
+﻿@model ManageRoleUsersViewModel
 
 @{
-    ViewData["Title"] = $"Details for {Model.Name} Role";
+    ViewData["Title"] = $"Details for {Model.Role.Name} Role";
 }
 <h1>@ViewData["Title"]</h1>
 
@@ -10,22 +10,22 @@
     <hr />
     <dl class="row">
         <dt class="col s2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Role.Name)
         </dt>
         <dd class="col s10">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Role.Name)
         </dd>
         <dt class="col s2">
-            @Html.DisplayNameFor(model => model.IsEnabled)
+            @Html.DisplayNameFor(model => model.Role.IsEnabled)
         </dt>
         <dd class="col s10">
             <form class="inline">
                 <div class="switch">
                     <label>
-                        Off
-                        <input disabled asp-for="@Model.IsEnabled" type="checkbox">
+                        Disabled
+                        <input disabled asp-for="@Model.Role.IsEnabled" type="checkbox">
                         <span class="lever"></span>
-                        On
+                        Enabled
                     </label>
                 </div>
             </form>
@@ -33,22 +33,28 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Role.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model.Role.Id">Delete</a> |
+    <a asp-controller="Permission" asp-action="Index" asp-route-roleId="@Model.Role.Id">Manage Permissions</a> |
     <a asp-action="Index">Back to Roles</a>
 </div>
 <br />
 
-@if (Model.AuthorizedUsers.Any())
+@if (Model.RoleUsers.Any(roleUser => roleUser.IsAuthorized == true))
 {
     <ul class="collection with-header">
         <li class="collection-header"><h4>Authorized Users</h4></li>
-        @foreach (var user in Model.AuthorizedUsers)
-        {
-            <li class="collection-item">@user</li>
+        @{
+            var roleUsers = Model.RoleUsers.Where(roleUser => roleUser.IsAuthorized == true).ToList();
+            for (int i = 0; i < roleUsers.Count(); i++)
+            {
+
+                <li class="collection-item">@roleUsers[i].User.Email</li>
+            }
         }
     </ul>
 }
 else
 {
-    <h5 class="card-title">No Users found with @Model.Name Role</h5>
+    <h5 class="card-title">No Users found with @Model.Role.Name Role</h5>
 }

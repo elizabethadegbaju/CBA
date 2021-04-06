@@ -1,0 +1,59 @@
+﻿@model CBAUser
+
+@{
+    ViewData["Title"] = $"Edit {Model.UserName}";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>User</h4>
+<hr />
+<div class="row">
+    <div class="col m4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="input-group">
+                <label class="control-label">User Status</label>
+                <div class="switch">
+                    <label>
+                        Disabled
+                        <input asp-for="IsEnabled" type="checkbox">
+                        <span class="lever"></span>
+                        Enabled
+                    </label>
+                </div>
+            </div>
+            <br />
+            <input type="hidden" asp-for="Id" />
+            <div class="input-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="validate" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="input-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="validate" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="input-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="validate" disabled />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="input-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="validate" disabled />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="input-group">
+                <button type="submit" class="btn waves-effect waves-light">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<br />
+

@@ -1,5 +1,6 @@
 ﻿using CBAData.Interfaces;
 using CBAData.Models;
+using CBAData.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace CBAWeb.Controllers
 {
-    [Authorize(Roles = "Superuser")]
+    [Authorize(Roles = "SuperUser")]
     public class PermissionController : Controller
     {
         private readonly IPermissionService _permissionService;

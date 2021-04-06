@@ -1,5 +1,5 @@
 ﻿using CBAData.Models;
-using CBAData.Interfaces;  
+using CBAData.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,17 +9,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CBAData.ViewModels;
 
 namespace CBAWeb.Controllers
 {
-    [Authorize(Roles = "Superuser")]
+    [Authorize(Roles = "SuperUser")]
     public class RolesController : Controller
     {
         private readonly RoleManager<CBARole> _roleManager;
         private readonly UserManager<CBAUser> _userManager;
         private readonly IRoleService _roleService;
 
-        public RolesController(IRoleService roleService, RoleManager<CBARole> roleManager,UserManager<CBAUser> userManager)
+        public RolesController(IRoleService roleService, RoleManager<CBARole> roleManager, UserManager<CBAUser> userManager)
         {
             _roleService = roleService;
             _roleManager = roleManager;
@@ -59,7 +60,6 @@ namespace CBAWeb.Controllers
                     string roleId = await _roleService.CreateRoleAsync(name);
                     return RedirectToAction(nameof(PermissionController.Index), "Permission", new { roleId = roleId });
                 }
-
                 ViewBag.Message = new StatusMessage
                 {
                     Type = StatusType.Error,
@@ -85,9 +85,9 @@ namespace CBAWeb.Controllers
         // POST: RolesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(string id, RoleViewModel model)
+        public async Task<ActionResult> Edit(string id, ManageRoleUsersViewModel model)
         {
-            if (id != model.Id)
+            if (id != model.Role.Id)
             {
                 return NotFound();
             }
@@ -96,11 +96,11 @@ namespace CBAWeb.Controllers
             {
                 try
                 {
-                    await _roleService.EditRoleAsync(model.Id, model.IsEnabled, model.Name);
+                    await _roleService.EditRoleAsync(model.Role.Id, model.Role.IsEnabled, model.Role.Name);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!(await _roleService.CheckRoleExistsAsync(model.Name)))
+                    if (!(await _roleService.CheckRoleExistsAsync(model.Role.Name)))
                     {
                         return NotFound();
                     }
@@ -109,9 +109,19 @@ namespace CBAWeb.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit));
             }
             return View(model);
+        }
+
+        // POST: RolesController/ManageUsers/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageUsers(string id, ManageRoleUsersViewModel model)
+        {
+            var roleUsers = model.RoleUsers;
+            await _roleService.ManageRoleUsers(id, roleUsers);
+            return RedirectToAction(nameof(Details), new { id });
         }
 
         // GET: RolesController/Delete/5
@@ -143,7 +153,6 @@ namespace CBAWeb.Controllers
             var role = await _roleManager.FindByIdAsync(id);
             try
             {
-
                 await _roleManager.DeleteAsync(role);
                 return RedirectToAction(nameof(Index));
             }

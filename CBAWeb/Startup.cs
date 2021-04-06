@@ -34,17 +34,22 @@ namespace CBAWeb
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
-
+            
             services.AddTransient<IPermissionService, PermissionService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRoleService, RoleService>();
 
-            services.AddDefaultIdentity<CBAUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<CBAUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+            }) 
                 .AddRoles<CBARole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
-            services.AddControllersWithViews();
 
             services.AddAuthorization(options =>
             {
@@ -81,6 +86,9 @@ namespace CBAWeb
                 options.AddPolicy("CBA031", policy => policy.RequireClaim("CBA031"));
                 options.AddPolicy("CBA032", policy => policy.RequireClaim("CBA032"));
             });
+
+            services.AddSingleton(Configuration.GetSection("EmailMetadata").Get<EmailMetadata>());
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
