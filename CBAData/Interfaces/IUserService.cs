@@ -20,6 +20,7 @@ namespace CBAData.Interfaces
         ManageUserRolesViewModel LoadEmptyUser();
 
         Task<CBAUser> CreateUserAsync(CBAUser modelUser, string password);
+        Task<UserViewModel> GetCreateUserAsync();
 
         Task UpdateUserRolesAsync(CBAUser user, List<string> userRoles);
 
@@ -31,6 +32,13 @@ namespace CBAData.Interfaces
 
         Task DeleteUserAsync(string userId);
 
-        Task UpdateUserAsync(string id, CBAUser user);
+        Task EditUserAsync(string id, UserViewModel userViewModel);
+        Task<UserViewModel> GetEditUserAsync(string id);
+
+        Task<List<GLAccount>> FetchTills();
+        
+        Task AssignTill(int tillId, CBAUser user);
+        
+        Task UnAssignTill(int tillId);
     }
 }

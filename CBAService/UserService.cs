@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 using CBAData.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CBAService
 {
@@ -23,13 +24,23 @@ namespace CBAService
         private readonly UserManager<CBAUser> _userManager;
         private readonly RoleManager<CBARole> _roleManager;
         private readonly EmailMetadata _emailMetadata;
+        private readonly ApplicationDbContext _context;
 
-        public UserService(SignInManager<CBAUser> signInManager, UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager, EmailMetadata emailMetadata)
+        public UserService(SignInManager<CBAUser> signInManager, UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager, EmailMetadata emailMetadata, ApplicationDbContext context)
         {
             _signInManager = signInManager;
             _roleManager = roleManager;
             _userManager = userManager;
             _emailMetadata = emailMetadata;
+            _context = context;
+        }
+
+        public async Task AssignTill(int tillId, CBAUser user)
+        {
+            var till = await _context.GLAccounts.FindAsync(tillId);
+            till.User = user;
+            _context.Update(till);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<CBAUser> CreateUserAsync(CBAUser modelUser, string password)
@@ -55,6 +66,12 @@ namespace CBAService
             result = await _userManager.AddToRolesAsync(user, userRolesViewModels.Where(a => a.IsSelected).Select(b => b.Name));
             await _signInManager.RefreshSignInAsync(currentUser);
             await SeedData.SeedSuperUserAsync(_userManager, _roleManager);
+        }
+
+        public async Task<List<GLAccount>> FetchTills()
+        {
+            var cashAssetsCategory = _context.GLCategories.Where(c => (c.Type == AccountType.Assets) & (c.Name.ToLower() == "cash assets")).FirstOrDefault();
+            return await _context.GLAccounts.Where(t => t.GLCategory == cashAssetsCategory).ToListAsync();
         }
 
         public async Task<ManageUserRolesViewModel> ListUserRolesAsync(string userId)
@@ -143,18 +160,72 @@ namespace CBAService
             SendEmailFromTemplate(user, "Reset your Password", builder.ToMessageBody());
         }
 
-        public async Task UpdateUserAsync(string id, CBAUser user)
+        public async Task UnAssignTill(int tillId)
         {
-            var formerUser = await _userManager.FindByIdAsync(id);
-            formerUser.FirstName = user.FirstName;
-            formerUser.LastName = user.LastName;
-            formerUser.IsEnabled = user.IsEnabled;
-            await _userManager.UpdateAsync(formerUser);
+            var till = await _context.GLAccounts.FindAsync(tillId);
+            till.User = null;
+            _context.Update(till);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EditUserAsync(string id, UserViewModel userViewModel)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            user.FirstName = userViewModel.FirstName;
+            user.LastName = userViewModel.LastName;
+            user.IsEnabled = userViewModel.IsEnabled;
+            await _userManager.UpdateAsync(user);
+            if (userViewModel.TillId > 0)
+            {
+                var till = await _context.GLAccounts.FindAsync(userViewModel.TillId);
+                till.CBAUserId = user.Id;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateUserRolesAsync(CBAUser user, List<string> userRoles)
         {
             await _userManager.AddToRolesAsync(user, userRoles);
+        }
+
+        public Task<UserViewModel> GetCreateUserAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<UserViewModel> GetEditUserAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userViewModel = new UserViewModel ()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                UserName = user.UserName,
+                IsEnabled = user.IsEnabled,
+                TillId = -1
+            };
+            if (user.Till != null)
+            {
+                userViewModel.TillId = user.Till.GLAccountId;
+            }
+            var tills = await FetchTills();
+            userViewModel.Tills.Add(new SelectListItem()
+            {
+                Text = "-----",
+                Value = "-1"
+            });
+            foreach (var till in tills)
+            {
+                userViewModel.Tills.Add(new SelectListItem()
+                {
+                    Text = "(" + till.AccountNumber.ToString() + ") " + till.AccountName,
+                    Value = till.GLAccountId.ToString()
+                });
+            }
+            return userViewModel;
         }
     }
 }

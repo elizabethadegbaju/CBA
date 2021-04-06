@@ -1,4 +1,4 @@
-﻿@model CBAUser
+﻿@model UserViewModel
 
 @{
     ViewData["Title"] = $"Edit {Model.UserName}";
@@ -44,6 +44,12 @@
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="validate" disabled />
                 <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="TillId"></label>
+                <select asp-for="TillId" asp-items="@Model.Tills" class="browser-default">
+                </select>
+                <span asp-validation-for="Tills" class="red-text"></span>
             </div>
             <div class="input-group">
                 <button type="submit" class="btn waves-effect waves-light">Save</button>
