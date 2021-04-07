@@ -37,4 +37,18 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $('form')
+            .each(function () {
+                $(this).data('serialized', $(this).serialize())
+            })
+            .on('change input', function () {
+                $(this)
+                    .find('#update-profile-button')
+                    .prop('disabled', $(this).serialize() == $(this).data('serialized'))
+                    ;
+            })
+            .find('#update-profile-button')
+            .prop('disabled', true);
+    </script>
 }
