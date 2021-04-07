@@ -16,10 +16,12 @@ namespace CBAService
     public class PermissionService: IPermissionService
     {
         private readonly RoleManager<CBARole> _roleManager;
+        private readonly SignInManager<CBAUser> _signInManager;
 
-        public PermissionService(RoleManager<CBARole> roleManager)
+        public PermissionService(RoleManager<CBARole> roleManager, SignInManager<CBAUser> signInManager)
         {
             _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         public async Task<List<RoleClaimsViewModel>> ListRoleClaimsAsync(CBARole role)
@@ -45,11 +47,11 @@ namespace CBAService
             return permissions;
         }
 
-        public async Task EditRoleClaimsAsync(CBARole role, IEnumerable<RoleClaimsViewModel> roleClaims)
+        public async Task EditRoleClaimsAsync(CBARole role, IEnumerable<RoleClaimsViewModel> roleClaims, CBAUser user)
         {
             var claims = await _roleManager.GetClaimsAsync(role);
             foreach (var claim in claims)
-            {
+            {   
                 await _roleManager.RemoveClaimAsync(role, claim);
             }
             var selectedClaims = roleClaims.Where(a => a.IsSelected).ToList();
@@ -58,6 +60,7 @@ namespace CBAService
                 MemberInfo member = typeof(Permissions).GetMember(claim.Type)[0];
                 var name = ((DisplayAttribute)member.GetCustomAttributes(typeof(DisplayAttribute), false)[0]).Name;
                 await _roleManager.AddClaimAsync(role, new Claim(claim.Type, name));
+                await _signInManager.RefreshSignInAsync(user);
             }
         }
     }

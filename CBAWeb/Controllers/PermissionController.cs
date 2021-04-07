@@ -20,11 +20,13 @@ namespace CBAWeb.Controllers
     {
         private readonly IPermissionService _permissionService;
         private readonly RoleManager<CBARole> _roleManager;
+        private readonly UserManager<CBAUser> _userManager;
 
-        public PermissionController(IPermissionService permissionService, RoleManager<CBARole> roleManager)
+        public PermissionController(IPermissionService permissionService, RoleManager<CBARole> roleManager, UserManager<CBAUser> userManager)
         {
             _permissionService = permissionService;
             _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         // GET: PermissionController
@@ -78,7 +80,8 @@ namespace CBAWeb.Controllers
         public async Task<IActionResult> Edit(PermissionViewModel model)
         {
             var role = await _roleManager.FindByIdAsync(model.Role.Id);
-            await _permissionService.EditRoleClaimsAsync(role, model.RoleClaims);
+            var user = await _userManager.GetUserAsync(User);
+            await _permissionService.EditRoleClaimsAsync(role, model.RoleClaims, user);
             return RedirectToAction(nameof(RolesController.Index), "Roles");
         }
 
