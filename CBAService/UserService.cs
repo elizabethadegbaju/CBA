@@ -201,7 +201,7 @@ namespace CBAService
 
         public async Task<UserViewModel> GetEditUserAsync(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _context.Users.Include(u => u.Till).SingleOrDefaultAsync(c => c.Id == id);
             var userViewModel = new UserViewModel ()
             {
                 Id = user.Id,
