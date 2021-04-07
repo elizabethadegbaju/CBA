@@ -39,8 +39,7 @@ namespace CBAWeb.Controllers
         [Authorize(Policy = "CBA005")]
         public async Task<IActionResult> Index()
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-            var allOtherUsers = await _userService.ListUsersExceptSpecifiedUserAsync(currentUser);
+            var allOtherUsers = await _userService.ListUsersAsync();
             if (TempData["Message"] != null)
             {
                 ViewBag.Message = JsonConvert.DeserializeObject<StatusMessage>((string)TempData["Message"]);

@@ -40,24 +40,37 @@
                     @item.LastName
                 </td>
                 <td>
-                    <a class="dropdown-trigger btn" href="#" data-target="@(item.Id)actions">Action</a>
-                    <ul id="@(item.Id)actions" class="dropdown-content">
-                        <li>
-                            <a asp-controller="UserRoles" asp-action="Index" asp-route-userId="@item.Id">
-                                <i class="material-icons">build</i> Manage Roles
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Users" asp-action="Edit" asp-route-id="@item.Id">
-                                <i class="material-icons">edit</i> Edit User
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Users" asp-action="Delete" asp-route-id="@item.Id">
-                                <i class="material-icons">delete</i> Delete User
-                            </a>
-                        </li>
-                    </ul>
+                    @if (item.UserName != "superuser")
+                    {
+                        <a class="dropdown-trigger btn" href="#" data-target="@(item.Id)actions">Action</a>
+                        <ul id="@(item.Id)actions" class="dropdown-content">
+                            <li>
+                                <a asp-controller="UserRoles" asp-action="Index" asp-route-userId="@item.Id">
+                                    <i class="material-icons">build</i> Manage Roles
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Users" asp-action="Edit" asp-route-id="@item.Id">
+                                    <i class="material-icons">edit</i> Edit User
+                                </a>
+                            </li>
+                            @if (!User.Claims.Any(c => c.Value == item.Email))
+                            {
+                                <li>
+                                    <a asp-controller="Users" asp-action="Delete" asp-route-id="@item.Id">
+                                        <i class="material-icons">delete</i> Delete User
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    }
+                    else
+                    {
+                        <a class="dropdown-trigger btn disabled" href="#" data-target="@(item.Id)actions">Action</a>
+                        <ul id="@(item.Id)actions" class="dropdown-content">
+                        </ul>
+                    }
                 </td>
             </tr>
         }
