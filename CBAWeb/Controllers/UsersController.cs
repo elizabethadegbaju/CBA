@@ -217,5 +217,12 @@ namespace CBAWeb.Controllers
             TempData["Message"] = JsonConvert.SerializeObject(message);
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
+
+        // GET: UsersController/RemoveTill/4
+        public async Task<ActionResult> RemoveTill(string userId)
+        {
+            await _userService.UnAssignTill(userId);
+            return RedirectToAction(nameof(Edit), new { id = userId });
+        }
     }
 }

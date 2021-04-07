@@ -31,6 +31,7 @@ namespace CBAData.ViewModels
         public bool IsEnabled { get; set; }
 
         public int TillId { get; set; }
+        public string TillAccountNo { get; set; }
         public IList<SelectListItem> Tills { get; set; }
 
     }

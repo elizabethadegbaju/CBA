@@ -47,16 +47,17 @@ namespace CBAService
         {
             MailAddress address = new MailAddress(modelUser.Email);
             string userName = address.User;
-            var user = new CBAUser { 
-                UserName = userName, 
-                Email = modelUser.Email, 
-                FirstName = modelUser.FirstName, 
+            var user = new CBAUser
+            {
+                UserName = userName,
+                Email = modelUser.Email,
+                FirstName = modelUser.FirstName,
                 LastName = modelUser.LastName
             };
             await _userManager.CreateAsync(user, password);
             return await _userManager.FindByIdAsync(user.Id);
         }
-        
+
         public async Task DeleteUserAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -73,10 +74,10 @@ namespace CBAService
             await SeedData.SeedSuperUserAsync(_userManager, _roleManager);
         }
 
-        public async Task<List<GLAccount>> FetchTills()
+        public async Task<List<GLAccount>> FetchAvailableTills()
         {
             var cashAssetsCategory = _context.GLCategories.Where(c => (c.Type == AccountType.Assets) & (c.Name.ToLower() == "cash assets")).FirstOrDefault();
-            return await _context.GLAccounts.Where(t => t.GLCategory == cashAssetsCategory).ToListAsync();
+            return await _context.GLAccounts.Where(t => (t.GLCategory == cashAssetsCategory) & (t.CBAUserId == null)).ToListAsync();
         }
 
         public async Task<ManageUserRolesViewModel> ListUserRolesAsync(string userId)
@@ -165,9 +166,10 @@ namespace CBAService
             SendEmailFromTemplate(user, "Reset your Password", builder.ToMessageBody());
         }
 
-        public async Task UnAssignTill(int tillId)
+        public async Task UnAssignTill(string userId)
         {
-            var till = await _context.GLAccounts.FindAsync(tillId);
+            var user = await _context.Users.Include(u => u.Till).FirstOrDefaultAsync(c => c.Id == userId);
+            var till = await _context.GLAccounts.FindAsync(user.Till.GLAccountId);
             till.User = null;
             _context.Update(till);
             await _context.SaveChangesAsync();
@@ -202,7 +204,7 @@ namespace CBAService
         public async Task<UserViewModel> GetEditUserAsync(string id)
         {
             var user = await _context.Users.Include(u => u.Till).SingleOrDefaultAsync(c => c.Id == id);
-            var userViewModel = new UserViewModel ()
+            var userViewModel = new UserViewModel()
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -212,23 +214,29 @@ namespace CBAService
                 IsEnabled = user.IsEnabled,
                 TillId = -1
             };
-            if (user.Till != null)
-            {
-                userViewModel.TillId = user.Till.GLAccountId;
-            }
-            var tills = await FetchTills();
+
             userViewModel.Tills.Add(new SelectListItem()
             {
                 Text = "-----",
                 Value = "-1"
             });
-            foreach (var till in tills)
+
+            if (user.Till != null)
             {
-                userViewModel.Tills.Add(new SelectListItem()
+                userViewModel.TillId = user.Till.GLAccountId;
+                userViewModel.TillAccountNo = user.Till.AccountNumber;
+            }
+            else
+            {
+                var tills = await FetchAvailableTills();
+                foreach (var till in tills)
                 {
-                    Text = "(" + till.AccountNumber.ToString() + ") " + till.AccountName,
-                    Value = till.GLAccountId.ToString()
-                });
+                    userViewModel.Tills.Add(new SelectListItem()
+                    {
+                        Text = "(" + till.AccountNumber.ToString() + ") " + till.AccountName,
+                        Value = till.GLAccountId.ToString()
+                    });
+                }
             }
             return userViewModel;
         }

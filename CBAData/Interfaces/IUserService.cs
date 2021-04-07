@@ -35,10 +35,10 @@ namespace CBAData.Interfaces
         Task EditUserAsync(string id, UserViewModel userViewModel);
         Task<UserViewModel> GetEditUserAsync(string id);
 
-        Task<List<GLAccount>> FetchTills();
+        Task<List<GLAccount>> FetchAvailableTills();
         
         Task AssignTill(int tillId, CBAUser user);
         
-        Task UnAssignTill(int tillId);
+        Task UnAssignTill(string userId);
     }
 }
