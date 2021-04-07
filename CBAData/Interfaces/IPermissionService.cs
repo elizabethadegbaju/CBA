@@ -10,6 +10,6 @@ namespace CBAData.Interfaces
     public interface IPermissionService
     {
         Task<List<RoleClaimsViewModel>> ListRoleClaimsAsync(CBARole role);
-        Task EditRoleClaimsAsync(CBARole role, IEnumerable<RoleClaimsViewModel> roleClaims);
+        Task EditRoleClaimsAsync(CBARole role, IEnumerable<RoleClaimsViewModel> roleClaims, CBAUser user);
     }
 }
