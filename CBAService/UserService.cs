@@ -47,11 +47,16 @@ namespace CBAService
         {
             MailAddress address = new MailAddress(modelUser.Email);
             string userName = address.User;
-            var user = new CBAUser { UserName = userName, Email = modelUser.Email, FirstName = modelUser.FirstName, LastName = modelUser.LastName };
+            var user = new CBAUser { 
+                UserName = userName, 
+                Email = modelUser.Email, 
+                FirstName = modelUser.FirstName, 
+                LastName = modelUser.LastName
+            };
             await _userManager.CreateAsync(user, password);
             return await _userManager.FindByIdAsync(user.Id);
         }
-
+        
         public async Task DeleteUserAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -99,10 +104,10 @@ namespace CBAService
             return manageUserRolesViewModel;
         }
 
-        public async Task<List<CBAUser>> ListUsersExceptSpecifiedUserAsync(CBAUser currentUser)
+        public async Task<List<CBAUser>> ListUsersAsync()
         {
-            var allOtherUsers = _userManager.Users.Where(user => user.Id != currentUser.Id);
-            return await allOtherUsers.ToListAsync();
+            var allOtherUsers = await _userManager.Users.ToListAsync();
+            return allOtherUsers;
         }
 
         public ManageUserRolesViewModel LoadEmptyUser()

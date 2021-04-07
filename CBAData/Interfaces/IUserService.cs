@@ -15,7 +15,7 @@ namespace CBAData.Interfaces
 
         Task EditUserRolesAsync(string userId, IList<UserRolesViewModel> userRolesViewModels, CBAUser currentUser);
 
-        Task<List<CBAUser>> ListUsersExceptSpecifiedUserAsync(CBAUser user);
+        Task<List<CBAUser>> ListUsersAsync();
 
         ManageUserRolesViewModel LoadEmptyUser();
 

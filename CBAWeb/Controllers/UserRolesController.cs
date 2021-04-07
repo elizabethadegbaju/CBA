@@ -28,6 +28,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: UserRolesController
+        [Authorize(Policy = "CBA002")]
         public async Task<IActionResult> Index(string userId)
         {
             var model = await _userService.ListUserRolesAsync(userId);
@@ -75,7 +76,7 @@ namespace CBAWeb.Controllers
         {
             var currentUser = await _userManager.GetUserAsync(User);
             await _userService.EditUserRolesAsync(id, model.UserRoles, currentUser);
-            return RedirectToAction("Index", new { userId = id });
+            return RedirectToAction(nameof(UsersController.Index), "Users");
         }
 
         // GET: UserRolesController/Delete/5
