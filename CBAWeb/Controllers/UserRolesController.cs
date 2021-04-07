@@ -28,6 +28,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: UserRolesController
+        [Authorize(Policy = "CBA002")]
         public async Task<IActionResult> Index(string userId)
         {
             var model = await _userService.ListUserRolesAsync(userId);
