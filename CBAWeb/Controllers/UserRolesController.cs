@@ -75,7 +75,7 @@ namespace CBAWeb.Controllers
         {
             var currentUser = await _userManager.GetUserAsync(User);
             await _userService.EditUserRolesAsync(id, model.UserRoles, currentUser);
-            return RedirectToAction("Index", new { userId = id });
+            return RedirectToAction(nameof(UsersController.Index), "Users");
         }
 
         // GET: UserRolesController/Delete/5
