@@ -4,14 +4,16 @@ using CBAData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CBAData.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210407220035_accountconfigurations")]
+    partial class accountconfigurations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,25 +28,25 @@ namespace CBAData.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<float?>("CurrentMaxDailyWithdrawal")
+                    b.Property<float>("CurrentMaxDailyWithdrawal")
                         .HasColumnType("real");
 
-                    b.Property<float?>("CurrentMinBalance")
+                    b.Property<float>("CurrentMinBalance")
                         .HasColumnType("real");
 
                     b.Property<DateTime>("FinancialDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<float?>("LoanInterestRate")
+                    b.Property<float>("LoanInterestRate")
                         .HasColumnType("real");
 
-                    b.Property<float?>("SavingsInterestRate")
+                    b.Property<float>("SavingsInterestRate")
                         .HasColumnType("real");
 
-                    b.Property<float?>("SavingsMaxDailyWithdrawal")
+                    b.Property<float>("SavingsMaxDailyWithdrawal")
                         .HasColumnType("real");
 
-                    b.Property<float?>("SavingsMinBalance")
+                    b.Property<float>("SavingsMinBalance")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -59,9 +61,6 @@ namespace CBAData.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<string>("CBARoleId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -117,8 +116,6 @@ namespace CBAData.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CBARoleId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -335,16 +332,7 @@ namespace CBAData.Migrations
 
                     b.HasDiscriminator().HasValue("CBARole");
                 });
-                
-            modelBuilder.Entity("CBAData.Models.CBAUser", b =>
-                {
-                    b.HasOne("CBAData.Models.CBARole", "CBARole")
-                        .WithMany("Users")
-                        .HasForeignKey("CBARoleId");
 
-                    b.Navigation("CBARole");
-                 });
-                    
             modelBuilder.Entity("CBAData.Models.GLAccount", b =>
                 {
                     b.HasOne("CBAData.Models.CBAUser", "User")
@@ -413,11 +401,6 @@ namespace CBAData.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CBAData.Models.CBARole", b =>
-                {
-                    b.Navigation("Users");
-                });
-                
             modelBuilder.Entity("CBAData.Models.CBAUser", b =>
                 {
                     b.Navigation("Till");
@@ -427,7 +410,6 @@ namespace CBAData.Migrations
                 {
                     b.Navigation("GLAccounts");
                 });
-                
 #pragma warning restore 612, 618
         }
     }

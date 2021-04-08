@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CBAData.Models
 {
-    public enum Permissions
+    public enum Permission
     {
         [Description("Allows the current user to add new users to the system"), Display(Name = "Add new user")]
         CBA001,

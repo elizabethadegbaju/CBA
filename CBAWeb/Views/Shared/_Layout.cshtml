@@ -23,10 +23,16 @@
                             <a asp-area="" asp-controller="Home" asp-action="Privacy" title="Privacy">Privacy</a>
                         </li>
                         <li>
-                            <a asp-action="Index" asp-controller="Roles" title="Manage Roles">Roles</a>
+                            <a asp-area="" asp-action="Index" asp-controller="Roles" title="Manage Roles">Roles</a>
                         </li>
                         <li>
-                            <a asp-action="Index" asp-controller="Users" title="Manage Users">Users</a>
+                            <a asp-area="" asp-action="Index" asp-controller="Users" title="Manage Users">Users</a>
+                        </li>
+                        <li>
+                            <a asp-area="GL" asp-action="Index" asp-controller="Categories" title="GL Category Management">Categories</a>
+                        </li>
+                        <li>
+                            <a asp-area="GL" asp-action="Index" asp-controller="Accounts" title="GL Account Management">Accounts</a>
                         </li>
                     </ul>
                     <ul class="right hide-on-med-and-down">
@@ -43,10 +49,16 @@
                 <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </li>
             <li>
-                <a asp-action="Index" asp-controller="Roles">Roles</a>
+                <a asp-area="" asp-action="Index" asp-controller="Roles">Roles</a>
             </li>
             <li>
-                <a asp-action="Index" asp-controller="Users">Users</a>
+                <a asp-area="" asp-action="Index" asp-controller="Users">Users</a>
+            </li>
+            <li>
+                <a asp-area="GL" asp-action="Index" asp-controller="Categories">Categories</a>
+            </li>
+            <li>
+                <a asp-area="GL" asp-action="Index" asp-controller="Accounts">Accounts</a>
             </li>
             <li><div class="divider"></div></li>
             <partial name="_LoginPartial" />

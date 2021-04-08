@@ -1,0 +1,69 @@
+﻿@model IEnumerable<GLCategory>
+
+@{
+    ViewData["Title"] = "GL Categories";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table highlight">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsEnabled)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@for (int i = 0; i < Model.Count(); i++) {
+        <tr>
+            <td>
+                @Model.ElementAt(i).Type.ToString()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.ElementAt(i).Name)
+            </td>
+            <td>
+                @{
+                    var status = "Enabled";
+                    if (!Model.ElementAt(i).IsEnabled)
+                    {
+                        status = "Disabled";
+                    };
+                }
+                @status
+            </td>
+            <td>
+                <a class="dropdown-trigger btn" href="#" data-target="@(Model.ElementAt(i).GLCategoryId)actions">Action</a>
+                <ul id="@(Model.ElementAt(i).GLCategoryId)actions" class="dropdown-content">
+                    <li>
+                        <a asp-action="Details" asp-route-id="@Model.ElementAt(i).GLCategoryId">
+                            <i class="material-icons">visibility</i> View Category
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Edit" asp-route-id="@Model.ElementAt(i).GLCategoryId">
+                            <i class="material-icons">edit</i> Edit Category
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Delete" asp-route-id="@Model.ElementAt(i).GLCategoryId">
+                            <i class="material-icons">delete</i> Delete Category
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

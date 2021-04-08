@@ -27,7 +27,7 @@ namespace CBAService
         public async Task<List<RoleClaimsViewModel>> ListRoleClaimsAsync(CBARole role)
         {
             var permissions = new List<RoleClaimsViewModel>();
-            MemberInfo[] permissionEnum = typeof(Permissions).GetMembers(BindingFlags.Public | BindingFlags.Static);
+            MemberInfo[] permissionEnum = typeof(Permission).GetMembers(BindingFlags.Public | BindingFlags.Static);
             foreach (var permission in permissionEnum)
             {
                 var name = ((DisplayAttribute)permission.GetCustomAttributes(typeof(DisplayAttribute), false)[0]).Name;
@@ -57,7 +57,7 @@ namespace CBAService
             var selectedClaims = roleClaims.Where(a => a.IsSelected).ToList();
             foreach (var claim in selectedClaims)
             {
-                MemberInfo member = typeof(Permissions).GetMember(claim.Type)[0];
+                MemberInfo member = typeof(Permission).GetMember(claim.Type)[0];
                 var name = ((DisplayAttribute)member.GetCustomAttributes(typeof(DisplayAttribute), false)[0]).Name;
                 await _roleManager.AddClaimAsync(role, new Claim(claim.Type, name));
                 await _signInManager.RefreshSignInAsync(user);

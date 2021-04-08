@@ -1,0 +1,44 @@
+﻿@model CBAData.Models.GLCategory
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Category</h4>
+<hr />
+<div class="row">
+    <div class="col m4">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="red-text"></div>
+            <div>
+                <label asp-for="Type"></label>
+                <select asp-for="Type" asp-items="Html.GetEnumSelectList<AccountType>()" class="browser-default" disabled></select>
+                <span asp-validation-for="Type" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="validate" />
+                <span asp-validation-for="Name" class="red-text"></span>
+            </div>
+            <div class="switch">
+                <label asp-for="IsEnabled"></label>
+                <br />
+                <label>
+                    Disabled
+                    <input asp-for="IsEnabled" type="checkbox">
+                    <span class="lever"></span>
+                    Enabled
+                </label>
+            </div>
+            <br />
+            <button type="submit" class="btn waves-effect waves-light">Save Category</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
