@@ -20,7 +20,6 @@ namespace CBAData.Interfaces
         UserRoleViewModel GetCreateUserAsync();
 
         Task<CBAUser> CreateUserAsync(CBAUser modelUser, string password);
-        Task<UserViewModel> GetCreateUserAsync();
 
         Task UpdateUserRoleAsync(CBAUser user, string role);
 

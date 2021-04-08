@@ -188,11 +188,6 @@ namespace CBAService
             return userRoleViewModel;
         }
 
-        public Task<UserViewModel> GetCreateUserAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<UserViewModel> GetEditUserAsync(string id)
         {
             var user = await _context.Users.Include(u => u.Till).SingleOrDefaultAsync(c => c.Id == id);
