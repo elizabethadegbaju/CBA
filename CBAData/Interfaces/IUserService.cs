@@ -34,7 +34,7 @@ namespace CBAData.Interfaces
         Task EditUserAsync(string id, UserViewModel userViewModel);
         Task<UserViewModel> GetEditUserAsync(string id);
 
-        Task<List<GLAccount>> FetchAvailableTills();
+        Task<List<InternalAccount>> FetchAvailableTills();
         
         Task AssignTill(int tillId, CBAUser user);
         

@@ -1,7 +1,7 @@
-﻿@model IEnumerable<CBAData.Models.GLAccount>
+﻿@model IEnumerable<CBAData.Models.InternalAccount>
 
 @{
-    ViewData["Title"] = "GL Accounts";
+    ViewData["Title"] = "Internal GL Accounts";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AccountNumber)
+                @Html.DisplayNameFor(model => model.AccountCode)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AccountName)
@@ -34,7 +34,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AccountNumber)
+                @Html.DisplayFor(modelItem => item.AccountCode)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AccountName)

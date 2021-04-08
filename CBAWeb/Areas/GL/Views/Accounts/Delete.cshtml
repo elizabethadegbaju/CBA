@@ -1,4 +1,4 @@
-﻿@model CBAData.Models.GLAccount
+﻿@model CBAData.Models.InternalAccount
 
 @{
     ViewData["Title"] = "Delete";
@@ -12,10 +12,10 @@
     <hr />
     <dl class="row">
         <dt class="col s2">
-            @Html.DisplayNameFor(model => model.AccountNumber)
+            @Html.DisplayNameFor(model => model.AccountCode)
         </dt>
         <dd class="col s10">
-            @Html.DisplayFor(model => model.AccountNumber)
+            @Html.DisplayFor(model => model.AccountCode)
         </dd>
         <dt class="col s2">
             @Html.DisplayNameFor(model => model.AccountName)

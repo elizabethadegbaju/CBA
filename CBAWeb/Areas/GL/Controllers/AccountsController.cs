@@ -61,7 +61,7 @@ namespace CBAWeb.Areas.GL.Controllers
         [Authorize(Policy = "CBA021")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryId,AccountName,IsActivated")] AccountViewModel accountViewModel)
+        public async Task<IActionResult> Create([Bind("CategoryId,AccountName,IsActivated")] InternalAccountViewModel accountViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace CBAWeb.Areas.GL.Controllers
         [Authorize(Policy = "CBA022")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountName,IsActivated")] AccountViewModel accountViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountName,IsActivated")] InternalAccountViewModel accountViewModel)
         {
             if (id != accountViewModel.Id)
             {

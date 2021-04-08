@@ -9,15 +9,15 @@ namespace CBAData.Interfaces
 {
     public interface IGLAccountService
     {
-        public Task AddGLAccountAsync(AccountViewModel accountViewModel);
-        public Task EditGLAccountAsync(AccountViewModel accountViewModel);
-        public Task<GLAccount> RetrieveGLAccountAsync(int id);
+        public Task AddGLAccountAsync(InternalAccountViewModel accountViewModel);
+        public Task EditGLAccountAsync(InternalAccountViewModel accountViewModel);
+        public Task<InternalAccount> RetrieveGLAccountAsync(int id);
         public Task DeleteGLAccountAsync(int id);
         public Task ActivateGLAccountAsync(int id);
         public Task DeactivateGLAccountAsync(int id);
-        public Task<List<GLAccount>> ListGLAccountsAsync();
+        public Task<List<InternalAccount>> ListGLAccountsAsync();
         public Task<bool> GLAccountExists(int id);
-        public AccountViewModel GetAddGLAccount();
-        public Task<AccountViewModel> GetEditGLAccount(int id);
+        public InternalAccountViewModel GetAddGLAccount();
+        public Task<InternalAccountViewModel> GetEditGLAccount(int id);
     }
 }

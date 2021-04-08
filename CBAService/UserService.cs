@@ -37,7 +37,7 @@ namespace CBAService
 
         public async Task AssignTill(int tillId, CBAUser user)
         {
-            var till = await _context.GLAccounts.FindAsync(tillId);
+            var till = await _context.InternalAccounts.FindAsync(tillId);
             till.User = user;
             _context.Update(till);
             await _context.SaveChangesAsync();
@@ -75,10 +75,10 @@ namespace CBAService
             await _context.SaveChangesAsync();
         }
         
-        public async Task<List<GLAccount>> FetchAvailableTills()
+        public async Task<List<InternalAccount>> FetchAvailableTills()
         {
             var cashAssetsCategory = _context.GLCategories.Where(c => (c.Type == AccountType.Assets) & (c.Name.ToLower() == "cash assets")).FirstOrDefault();
-            return await _context.GLAccounts.Where(t => (t.GLCategory == cashAssetsCategory) & (t.CBAUserId == null)).ToListAsync();
+            return await _context.InternalAccounts.Where(t => (t.GLCategory == cashAssetsCategory) & (t.CBAUserId == null)).ToListAsync();
         }
         
         public async Task<UserRoleViewModel> ViewUserRoleAsync(string userId)
@@ -144,7 +144,7 @@ namespace CBAService
         public async Task UnAssignTill(string userId)
         {
             var user = await _context.Users.Include(u => u.Till).FirstOrDefaultAsync(c => c.Id == userId);
-            var till = await _context.GLAccounts.FindAsync(user.Till.GLAccountId);
+            var till = await _context.InternalAccounts.FindAsync(user.Till.GLAccountId);
             till.User = null;
             _context.Update(till);
             await _context.SaveChangesAsync();
@@ -159,7 +159,7 @@ namespace CBAService
             await _userManager.UpdateAsync(user);
             if (userViewModel.TillId > 0)
             {
-                var till = await _context.GLAccounts.FindAsync(userViewModel.TillId);
+                var till = await _context.InternalAccounts.FindAsync(userViewModel.TillId);
                 till.CBAUserId = user.Id;
                 _context.Update(user);
                 await _context.SaveChangesAsync();
@@ -211,7 +211,7 @@ namespace CBAService
             if (user.Till != null)
             {
                 userViewModel.TillId = user.Till.GLAccountId;
-                userViewModel.TillAccountNo = user.Till.AccountNumber;
+                userViewModel.TillAccountNo = user.Till.AccountCode;
             }
             else
             {
@@ -220,7 +220,7 @@ namespace CBAService
                 {
                     userViewModel.Tills.Add(new SelectListItem()
                     {
-                        Text = "(" + till.AccountNumber.ToString() + ") " + till.AccountName,
+                        Text = "(" + till.AccountCode.ToString() + ") " + till.AccountName,
                         Value = till.GLAccountId.ToString()
                     });
                 }

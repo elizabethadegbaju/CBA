@@ -7,16 +7,16 @@ using System.Text;
 
 namespace CBAData.ViewModels
 {
-    public class AccountViewModel
+    public class InternalAccountViewModel
     {
-        public AccountViewModel()
+        public InternalAccountViewModel()
         {
             GLCategories = new List<SelectListItem>();
             Users = new List<SelectListItem>();
         }
 
         [DisplayName("Account Number")]
-        public string AccountNumber { get; set; }
+        public string AccountCode { get; set; }
 
         [DisplayName("Account Name")]
         public string AccountName { get; set; }
