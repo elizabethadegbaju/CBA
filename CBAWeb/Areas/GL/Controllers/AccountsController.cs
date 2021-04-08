@@ -9,10 +9,12 @@ using CBAData;
 using CBAData.Models;
 using CBAData.Interfaces;
 using CBAData.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CBAWeb.Areas.GL.Controllers
 {
     [Area("GL")]
+    [Authorize(Policy = "CBA023")]
     public class AccountsController : Controller
     {
         private readonly IGLAccountService _gLAccountService;
@@ -46,6 +48,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: Accounts/Create
+        [Authorize(Policy = "CBA021")]
         public IActionResult Create()
         {
             var model = _gLAccountService.GetAddGLAccount();
@@ -55,6 +58,7 @@ namespace CBAWeb.Areas.GL.Controllers
         // POST: Accounts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Policy = "CBA021")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CategoryId,AccountName,IsActivated")] AccountViewModel accountViewModel)
@@ -68,6 +72,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: Accounts/Edit/5
+        [Authorize(Policy = "CBA022")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +91,7 @@ namespace CBAWeb.Areas.GL.Controllers
         // POST: Accounts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Policy = "CBA022")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AccountName,IsActivated")] AccountViewModel accountViewModel)
