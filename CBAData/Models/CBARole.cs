@@ -20,5 +20,7 @@ namespace CBAData.Models
 
         [DisplayName("Enabled")]
         public bool IsEnabled { get; set; }
+
+        public List<CBAUser> Users { get; set; }
     }
 }

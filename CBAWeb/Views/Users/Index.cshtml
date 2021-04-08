@@ -22,6 +22,9 @@
                 @Html.DisplayNameFor(model => model.LastName)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.CBARole)
+            </th>
+            <th>
                 Actions
             </th>
         </tr>
@@ -40,13 +43,19 @@
                     @item.LastName
                 </td>
                 <td>
+                    @if (item.CBARole != null)
+                    {
+                        @item.CBARole.Name
+                    }
+                </td>
+                <td>
                     @if (item.UserName != "superuser")
                     {
                         <a class="dropdown-trigger btn" href="#" data-target="@(item.Id)actions">Action</a>
                         <ul id="@(item.Id)actions" class="dropdown-content">
                             <li>
-                                <a asp-controller="UserRoles" asp-action="Index" asp-route-userId="@item.Id">
-                                    <i class="material-icons">build</i> Manage Roles
+                                <a asp-controller="UserRole" asp-action="Index" asp-route-userId="@item.Id">
+                                    <i class="material-icons">build</i> Manage Role
                                 </a>
                             </li>
                             <li>

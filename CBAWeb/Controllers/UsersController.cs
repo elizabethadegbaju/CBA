@@ -39,12 +39,12 @@ namespace CBAWeb.Controllers
         [Authorize(Policy = "CBA005")]
         public async Task<IActionResult> Index()
         {
-            var allOtherUsers = await _userService.ListUsersAsync();
+            var users = await _userService.ListUsersAsync();
             if (TempData["Message"] != null)
             {
                 ViewBag.Message = JsonConvert.DeserializeObject<StatusMessage>((string)TempData["Message"]);
             }
-            return View(allOtherUsers);
+            return View(users);
         }
 
         // GET: UsersController/Details/5
@@ -57,7 +57,7 @@ namespace CBAWeb.Controllers
         [Authorize(Policy = "CBA001")]
         public ActionResult Create()
         {
-            var model = _userService.LoadEmptyUser();
+            var model = _userService.GetCreateUserAsync();
             return View(model);
         }
 
@@ -65,7 +65,7 @@ namespace CBAWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "CBA001")]
-        public async Task<ActionResult> Create(ManageUserRolesViewModel model)
+        public async Task<ActionResult> Create(UserRoleViewModel model)
         {
             try
             {
@@ -73,8 +73,8 @@ namespace CBAWeb.Controllers
                 {
                     var password = Password.Generate(10, 4);
                     var user = await _userService.CreateUserAsync(model.User, password);
-                    var userRoles = model.UserRoles.Where(a => a.IsSelected).Select(b => b.Name);
-                    await _userService.UpdateUserRolesAsync(user, userRoles.ToList());
+                    var role = await _roleManager.FindByIdAsync(model.RoleId);
+                    await _userService.UpdateUserRoleAsync(user, role.Name);
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { userId = user.Id, code = code }, HttpContext.Request.Scheme);

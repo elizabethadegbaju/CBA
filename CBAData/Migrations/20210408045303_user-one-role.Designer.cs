@@ -4,53 +4,22 @@ using CBAData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CBAData.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210408045303_user-one-role")]
+    partial class useronerole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("CBAData.Models.AccountConfiguration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<float?>("CurrentMaxDailyWithdrawal")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("CurrentMinBalance")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("FinancialDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<float?>("LoanInterestRate")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("SavingsInterestRate")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("SavingsMaxDailyWithdrawal")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("SavingsMinBalance")
-                        .HasColumnType("real");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AccountConfigurations");
-                });
 
             modelBuilder.Entity("CBAData.Models.CBAUser", b =>
                 {
@@ -129,60 +98,6 @@ namespace CBAData.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("CBAData.Models.GLAccount", b =>
-                {
-                    b.Property<int>("GLAccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AccountName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AccountNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CBAUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("GLCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActivated")
-                        .HasColumnType("bit");
-
-                    b.HasKey("GLAccountId");
-
-                    b.HasIndex("CBAUserId")
-                        .IsUnique()
-                        .HasFilter("[CBAUserId] IS NOT NULL");
-
-                    b.HasIndex("GLCategoryId");
-
-                    b.ToTable("GLAccounts");
-                });
-
-            modelBuilder.Entity("CBAData.Models.GLCategory", b =>
-                {
-                    b.Property<int>("GLCategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("GLCategoryId");
-
-                    b.ToTable("GLCategories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -335,7 +250,7 @@ namespace CBAData.Migrations
 
                     b.HasDiscriminator().HasValue("CBARole");
                 });
-                
+
             modelBuilder.Entity("CBAData.Models.CBAUser", b =>
                 {
                     b.HasOne("CBAData.Models.CBARole", "CBARole")
@@ -343,23 +258,6 @@ namespace CBAData.Migrations
                         .HasForeignKey("CBARoleId");
 
                     b.Navigation("CBARole");
-                 });
-                    
-            modelBuilder.Entity("CBAData.Models.GLAccount", b =>
-                {
-                    b.HasOne("CBAData.Models.CBAUser", "User")
-                        .WithOne("Till")
-                        .HasForeignKey("CBAData.Models.GLAccount", "CBAUserId");
-
-                    b.HasOne("CBAData.Models.GLCategory", "GLCategory")
-                        .WithMany("GLAccounts")
-                        .HasForeignKey("GLCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GLCategory");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -417,17 +315,6 @@ namespace CBAData.Migrations
                 {
                     b.Navigation("Users");
                 });
-                
-            modelBuilder.Entity("CBAData.Models.CBAUser", b =>
-                {
-                    b.Navigation("Till");
-                });
-
-            modelBuilder.Entity("CBAData.Models.GLCategory", b =>
-                {
-                    b.Navigation("GLAccounts");
-                });
-                
 #pragma warning restore 612, 618
         }
     }

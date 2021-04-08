@@ -11,18 +11,18 @@ namespace CBAData.Interfaces
 { 
     public interface IUserService
     {
-        Task<ManageUserRolesViewModel> ListUserRolesAsync(string userId);
+        Task<UserRoleViewModel> ViewUserRoleAsync(string userId);
 
-        Task EditUserRolesAsync(string userId, IList<UserRolesViewModel> userRolesViewModels, CBAUser currentUser);
+        Task EditUserRoleAsync(UserRoleViewModel userRoleViewModel);
 
         Task<List<CBAUser>> ListUsersAsync();
 
-        ManageUserRolesViewModel LoadEmptyUser();
+        UserRoleViewModel GetCreateUserAsync();
 
         Task<CBAUser> CreateUserAsync(CBAUser modelUser, string password);
         Task<UserViewModel> GetCreateUserAsync();
 
-        Task UpdateUserRolesAsync(CBAUser user, List<string> userRoles);
+        Task UpdateUserRoleAsync(CBAUser user, string role);
 
         void SendAccountConfirmationEmail(string pathToFile, string callbackUrl, CBAUser user, string password);
 

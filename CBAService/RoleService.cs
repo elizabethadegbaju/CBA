@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -68,7 +69,7 @@ namespace CBAService
                 Role = role,
                 RoleUsers = new List<RoleUsersViewModel>()
             };
-            foreach (var user in _userManager.Users)
+            foreach (var user in _userManager.Users.Where(u => u.CBARoleId == null || u.CBARoleId == roleId))
             {
                 if (await _userManager.IsInRoleAsync(user, role.Name))
                 {
