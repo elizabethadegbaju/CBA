@@ -4,14 +4,16 @@ using CBAData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CBAData.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210407220035_accountconfigurations")]
+    partial class accountconfigurations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,25 +28,25 @@ namespace CBAData.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<float?>("CurrentMaxDailyWithdrawal")
+                    b.Property<float>("CurrentMaxDailyWithdrawal")
                         .HasColumnType("real");
 
-                    b.Property<float?>("CurrentMinBalance")
+                    b.Property<float>("CurrentMinBalance")
                         .HasColumnType("real");
 
                     b.Property<DateTime>("FinancialDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<float?>("LoanInterestRate")
+                    b.Property<float>("LoanInterestRate")
                         .HasColumnType("real");
 
-                    b.Property<float?>("SavingsInterestRate")
+                    b.Property<float>("SavingsInterestRate")
                         .HasColumnType("real");
 
-                    b.Property<float?>("SavingsMaxDailyWithdrawal")
+                    b.Property<float>("SavingsMaxDailyWithdrawal")
                         .HasColumnType("real");
 
-                    b.Property<float?>("SavingsMinBalance")
+                    b.Property<float>("SavingsMinBalance")
                         .HasColumnType("real");
 
                     b.HasKey("Id");

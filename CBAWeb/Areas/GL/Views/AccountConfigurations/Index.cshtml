@@ -1,0 +1,56 @@
+﻿@model CBAData.Models.AccountConfiguration
+
+@{
+    ViewData["Title"] = "Account Configurations";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (Model != null)
+{
+<div>
+    <dl class="row">
+        <dt class="col s3">
+            @Html.DisplayNameFor(model => model.FinancialDate)
+        </dt>
+        <dd class="col s9">
+            @Html.DisplayFor(model => model.FinancialDate)
+        </dd>
+    </dl>
+    <h4>Savings Account Configurations</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col s3">@Html.DisplayNameFor(model => model.SavingsInterestRate)</dt>
+        <dd class="col s9">@Html.DisplayFor(model => model.SavingsInterestRate) </dd>
+        <dt class="col s3">@Html.DisplayNameFor(model => model.SavingsMinBalance)</dt>
+        <dd class="col s9">@Html.DisplayFor(model => model.SavingsMinBalance) </dd>
+        <dt class="col s3">@Html.DisplayNameFor(model => model.SavingsMaxDailyWithdrawal)</dt>
+        <dd class="col s9">@Html.DisplayFor(model => model.SavingsMaxDailyWithdrawal) </dd>
+    </dl>
+    <h4>Current Account Configurations</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col s3">@Html.DisplayNameFor(model => model.CurrentMinBalance)</dt>
+        <dd class="col s9">@Html.DisplayFor(model => model.CurrentMinBalance)</dd>
+        <dt class="col s3">@Html.DisplayNameFor(model => model.CurrentMaxDailyWithdrawal)</dt>
+        <dd class="col s9">@Html.DisplayFor(model => model.CurrentMaxDailyWithdrawal)</dd>
+    </dl>
+    <h4>Loan Account Configurations</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col s3">@Html.DisplayNameFor(model => model.LoanInterestRate)</dt>
+        <dd class="col s9">@Html.DisplayFor(model => model.LoanInterestRate)</dd>
+    </dl>
+</div>
+    <div>
+        <a asp-action="Edit">Edit</a> |
+        <a asp-action="Clear">Clear all Configurations</a>
+    </div>
+}
+else
+{
+    <div>
+        <a asp-action="Edit">Click to configure Savings, Current, and Loan Accounts</a>
+    </div>
+}
+

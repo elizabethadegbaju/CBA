@@ -18,5 +18,6 @@ namespace CBAData
         new public DbSet<CBARole> Roles { get; set; }
         public DbSet<GLCategory> GLCategories { get; set; }
         public DbSet<GLAccount> GLAccounts { get; set; }
+        public DbSet<AccountConfiguration> AccountConfigurations { get; set; }
     }
 }

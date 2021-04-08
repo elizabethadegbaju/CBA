@@ -1,0 +1,71 @@
+﻿@model CBAData.Models.AccountConfiguration
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="red-text"></div>
+    
+    @if (Model==null)
+    {
+        <input type="hidden" name="Id" id="Id" value="0"/>
+    }
+    else
+    {
+        <input type="hidden" asp-for="Id" />
+    }
+    <h4>Savings Account Configurations</h4>
+    <hr />
+    <div class="row">
+        <div class="col m4">
+            <div class="input-field">
+                <label asp-for="SavingsInterestRate"></label>
+                <input asp-for="SavingsInterestRate" class="validate" />
+                <span asp-validation-for="SavingsInterestRate" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="SavingsMinBalance"></label>
+                <input asp-for="SavingsMinBalance" class="validate" />
+                <span asp-validation-for="SavingsMinBalance" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="SavingsMaxDailyWithdrawal"></label>
+                <input asp-for="SavingsMaxDailyWithdrawal" class="validate" />
+                <span asp-validation-for="SavingsMaxDailyWithdrawal" class="red-text"></span>
+            </div>
+        </div>
+    </div>
+    <h4>Current Account Configurations</h4>
+    <hr />
+    <div class="row">
+        <div class="col m4">
+            <div class="input-field">
+                <label asp-for="CurrentMinBalance"></label>
+                <input asp-for="CurrentMinBalance" class="validate" />
+                <span asp-validation-for="CurrentMinBalance" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="CurrentMaxDailyWithdrawal"></label>
+                <input asp-for="CurrentMaxDailyWithdrawal" class="validate" />
+                <span asp-validation-for="CurrentMaxDailyWithdrawal" class="red-text"></span>
+            </div>
+        </div>
+    </div>
+    <h4>Loan Account Configurations</h4>
+    <hr />
+    <div class="row">
+        <div class="col m4">
+            <div class="input-field">
+                <label asp-for="LoanInterestRate"></label>
+                <input asp-for="LoanInterestRate" class="validate" />
+                <span asp-validation-for="LoanInterestRate" class="red-text"></span>
+            </div>
+            <br />
+            <button type="submit" class="btn waves-effect waves-light">Save Configurations</button>
+        </div>
+    </div>
+</form>
+
