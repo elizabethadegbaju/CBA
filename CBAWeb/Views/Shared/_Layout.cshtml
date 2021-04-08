@@ -53,24 +53,38 @@
                 </div>
             </div>
         </nav>
-        <ul id="slide-out" class="sidenav">
+        <ul id="slide-out" class="sidenav collapsible">
             <li>
-                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" title="CBA Home">Home</a>
             </li>
             <li>
-                <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <a asp-area="" asp-action="Index" asp-controller="Roles" title="Manage Roles">Roles</a>
             </li>
             <li>
-                <a asp-area="" asp-action="Index" asp-controller="Roles">Roles</a>
+                <a asp-area="" asp-action="Index" asp-controller="Users" title="Manage Users">Users</a>
             </li>
             <li>
-                <a asp-area="" asp-action="Index" asp-controller="Users">Users</a>
+                <a href="#!" class="collapsible-header">GL Accounts</a>
+                <div class="collapsible-body" style="display:block;">
+                    <ul>
+                        <li>
+                            <a asp-area="GL" asp-action="Index" asp-controller="Categories" title="GL Category Management">Categories</a>
+                        </li>
+                        <li>
+                            <a asp-area="GL" asp-action="Index" asp-controller="Accounts" title="Internal Account Management">Internal Accounts</a>
+                        </li>
+                        <li>
+                            <a asp-area="GL" asp-action="Index" asp-controller="Accounts" title="Customer Account Management">Customer Accounts</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a asp-area="GL" asp-action="Index" asp-controller="AccountConfigurations" title="Savings, Current, and Loan Account Configurations">Configurations</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
             <li>
-                <a asp-area="GL" asp-action="Index" asp-controller="Categories">Categories</a>
-            </li>
-            <li>
-                <a asp-area="GL" asp-action="Index" asp-controller="Accounts">Accounts</a>
+                <a asp-area="" asp-action="Index" asp-controller="Customers" title="Manage Customers">Customers</a>
             </li>
             <li><div class="divider"></div></li>
             <partial name="_LoginPartial" />
