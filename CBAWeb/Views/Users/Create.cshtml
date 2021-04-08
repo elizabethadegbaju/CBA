@@ -1,4 +1,4 @@
-﻿@model ManageUserRolesViewModel
+﻿@model UserRoleViewModel
 @{
     ViewData["Title"] = "Create User";
 }
@@ -26,26 +26,13 @@
                 <input asp-for="@Model.User.Email" class="validate" />
                 <span asp-validation-for="@Model.User.Email" class="red-text"></span>
             </div>
-            <h5>Assign roles:</h5>
-            <dl class="row">
-                @for (int i = 0; i < Model.UserRoles.Count(); i++)
-                {
-                <dt class="col s4">
-                    @Model.UserRoles[i].Name
-                    <input hidden asp-for="@Model.UserRoles[i].Name" type="text">
-                </dt>
-                    <dd class="col s8">
-                        <div class="switch">
-                            <label>
-                                Off
-                                <input asp-for="@Model.UserRoles[i].IsSelected" type="checkbox">
-                                <span class="lever"></span>
-                                On
-                            </label>
-                        </div>
-                    </dd>
-                }
-            </dl>
+            <div>
+                <label asp-for="RoleId">Role</label>
+                <select asp-for="RoleId" asp-items="@Model.Roles" class="browser-default">
+                </select>
+                <span asp-validation-for="Roles" class="red-text"></span>
+            </div>
+            <br />
             <button type="submit" class="btn waves-effect waves-light">Create User</button>
         </form>
     </div>

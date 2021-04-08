@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 using CBAData.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CBAService
 {
@@ -23,94 +24,72 @@ namespace CBAService
         private readonly UserManager<CBAUser> _userManager;
         private readonly RoleManager<CBARole> _roleManager;
         private readonly EmailMetadata _emailMetadata;
+        private readonly ApplicationDbContext _context;
 
-        public UserService(SignInManager<CBAUser> signInManager, UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager, EmailMetadata emailMetadata)
+        public UserService(SignInManager<CBAUser> signInManager, UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager, EmailMetadata emailMetadata, ApplicationDbContext context)
         {
             _signInManager = signInManager;
             _roleManager = roleManager;
             _userManager = userManager;
             _emailMetadata = emailMetadata;
+            _context = context;
         }
 
         public async Task<CBAUser> CreateUserAsync(CBAUser modelUser, string password)
         {
             MailAddress address = new MailAddress(modelUser.Email);
             string userName = address.User;
-            var user = new CBAUser { 
-                UserName = userName, 
-                Email = modelUser.Email, 
-                FirstName = modelUser.FirstName, 
+            var user = new CBAUser
+            {
+                UserName = userName,
+                Email = modelUser.Email,
+                FirstName = modelUser.FirstName,
                 LastName = modelUser.LastName
             };
             await _userManager.CreateAsync(user, password);
             return await _userManager.FindByIdAsync(user.Id);
         }
-        
+
         public async Task DeleteUserAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             await _userManager.DeleteAsync(user);
         }
 
-        public async Task EditUserRolesAsync(string userId, IList<UserRolesViewModel> userRolesViewModels, CBAUser currentUser)
+        public async Task EditUserRoleAsync(UserRoleViewModel userRoleViewModel)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            var roles = await _userManager.GetRolesAsync(user);
-            var result = await _userManager.RemoveFromRolesAsync(user, roles);
-            result = await _userManager.AddToRolesAsync(user, userRolesViewModels.Where(a => a.IsSelected).Select(b => b.Name));
-            await _signInManager.RefreshSignInAsync(currentUser);
-            await SeedData.SeedSuperUserAsync(_userManager, _roleManager);
+            CBAUser user = await _userManager.FindByIdAsync(userRoleViewModel.User.Id);
+            CBARole role = await _roleManager.FindByIdAsync(userRoleViewModel.RoleId);
+            await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
+            await _userManager.AddToRoleAsync(user, role.Name);
+            user.CBARole = role;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<ManageUserRolesViewModel> ListUserRolesAsync(string userId)
+        public async Task<UserRoleViewModel> ViewUserRoleAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            var userRolesViewModels = new List<UserRolesViewModel>();
+            var userRoleViewModel = new UserRoleViewModel()
+            {
+                RoleId = user.CBARoleId,
+                User = user
+            };
             foreach (var role in _roleManager.Roles)
             {
-                var userRolesViewModel = new UserRolesViewModel
+                userRoleViewModel.Roles.Add(new SelectListItem()
                 {
-                    Name = role.Name,
-                    IsSelected = false
-                };
-                if (await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    userRolesViewModel.IsSelected = true;
-                }
-                userRolesViewModels.Add(userRolesViewModel);
+                    Text = role.Name,
+                    Value = role.Id
+                });
             }
-            var manageUserRolesViewModel = new ManageUserRolesViewModel()
-            {
-                User = user,
-                UserRoles = userRolesViewModels
-            };
-            return manageUserRolesViewModel;
+            return userRoleViewModel;
         }
 
         public async Task<List<CBAUser>> ListUsersAsync()
         {
-            var allOtherUsers = await _userManager.Users.ToListAsync();
-            return allOtherUsers;
-        }
-
-        public ManageUserRolesViewModel LoadEmptyUser()
-        {
-            var userRolesViewModels = new List<UserRolesViewModel>();
-            foreach (var role in _roleManager.Roles)
-            {
-                var userRolesViewModel = new UserRolesViewModel
-                {
-                    Name = role.Name,
-                    IsSelected = false
-                };
-                userRolesViewModels.Add(userRolesViewModel);
-            }
-            var manageUserRolesViewModel = new ManageUserRolesViewModel()
-            {
-                User = new CBAUser(),
-                UserRoles = userRolesViewModels
-            };
-            return manageUserRolesViewModel;
+            var users = await _context.Users.Include(u => u.CBARole).ToListAsync();
+            return users;
         }
 
         public void SendAccountConfirmationEmail(string pathToFile, string callbackUrl, CBAUser user, string password)
@@ -157,9 +136,26 @@ namespace CBAService
             await _userManager.UpdateAsync(formerUser);
         }
 
-        public async Task UpdateUserRolesAsync(CBAUser user, List<string> userRoles)
+        public async Task UpdateUserRoleAsync(CBAUser user, string role)
         {
-            await _userManager.AddToRolesAsync(user, userRoles);
+            user.CBARole = await _roleManager.FindByNameAsync(role);
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+            await _userManager.AddToRoleAsync(user, role);
+        }
+
+        public UserRoleViewModel GetCreateUserAsync()
+        {
+            var userRoleViewModel = new UserRoleViewModel();
+            foreach (var role in _roleManager.Roles)
+            {
+                userRoleViewModel.Roles.Add(new SelectListItem()
+                {
+                    Text = role.Name,
+                    Value = role.Id
+                });
+            }
+            return userRoleViewModel;
         }
     }
 }

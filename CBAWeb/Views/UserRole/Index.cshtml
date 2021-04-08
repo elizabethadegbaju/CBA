@@ -1,0 +1,27 @@
+﻿@model UserRoleViewModel
+@{
+    ViewData["Title"] = "User Role";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Manage @Model.User.UserName's Role</h1>
+
+<div id="viewAll">
+    <form asp-controller="UserRole" method="post" asp-action="Edit" asp-route-id="@Model.User.Id" class="d-inline">
+        <input asp-for="User.Id" type="hidden" />
+        <div>
+            <label asp-for="RoleId">Role</label>
+            <select asp-for="RoleId" asp-items="@Model.Roles" class="browser-default">
+            </select>
+            <span asp-validation-for="Roles" class="red-text"></span>
+        </div>
+        <br />
+        <div>
+            <button type="submit" id="save" class="btn waves-effect waves-light">
+                Save
+                <i class="material-icons right">check</i>
+            </button>
+        </div>
+    </form>
+    <br/>
+</div>
