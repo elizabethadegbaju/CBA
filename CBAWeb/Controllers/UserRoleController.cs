@@ -12,14 +12,14 @@ using CBAData.ViewModels;
 
 namespace CBAWeb.Controllers
 {
-    public class UserRolesController : Controller
+    public class UserRoleController : Controller
     {
         private readonly SignInManager<CBAUser> _signInManager;
         private readonly RoleManager<CBARole> _roleManager;
         private readonly UserManager<CBAUser> _userManager;
         private readonly IUserService _userService;
 
-        public UserRolesController(SignInManager<CBAUser> signInManager, RoleManager<CBARole> roleManager, UserManager<CBAUser> userManager, IUserService userService)
+        public UserRoleController(SignInManager<CBAUser> signInManager, RoleManager<CBARole> roleManager, UserManager<CBAUser> userManager, IUserService userService)
         {
             _signInManager = signInManager;
             _roleManager = roleManager;
@@ -31,7 +31,7 @@ namespace CBAWeb.Controllers
         [Authorize(Policy = "CBA002")]
         public async Task<IActionResult> Index(string userId)
         {
-            var model = await _userService.ListUserRolesAsync(userId);
+            var model = await _userService.ViewUserRoleAsync(userId);
             return View(model);
         }
 
@@ -72,10 +72,9 @@ namespace CBAWeb.Controllers
         [Authorize(Policy = "CBA002")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ManageUserRolesViewModel model, string id)
+        public async Task<IActionResult> Edit([Bind("User,RoleId,Roles")] UserRoleViewModel model, string id)
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-            await _userService.EditUserRolesAsync(id, model.UserRoles, currentUser);
+            await _userService.EditUserRoleAsync(model);
             return RedirectToAction(nameof(UsersController.Index), "Users");
         }
 

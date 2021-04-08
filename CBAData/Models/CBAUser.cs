@@ -18,5 +18,9 @@ namespace CBAData.Models
         [DisplayName("Enabled")]
         public bool IsEnabled { get; set; }
 
+        public string CBARoleId { get; set; }
+
+        [DisplayName("Role")]
+        public CBARole CBARole { get; set; }
     }
 }
