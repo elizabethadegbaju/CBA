@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CBAData;
 using CBAData.Models;
 using CBAData.Interfaces;
+using Newtonsoft.Json;
 
 namespace CBAWeb.Areas.GL.Controllers
 {
@@ -25,6 +26,10 @@ namespace CBAWeb.Areas.GL.Controllers
         public async Task<IActionResult> Index()
         {
             var accountConfiguration = await _accountConfigurationService.RetrieveAccountConfiguration();
+            if (TempData["Message"] != null)
+            {
+                ViewBag.Message = JsonConvert.DeserializeObject<StatusMessage>((string)TempData["Message"]);
+            }
             return View(accountConfiguration);
         }
 
@@ -41,7 +46,8 @@ namespace CBAWeb.Areas.GL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([Bind("Id,SavingsInterestRate,LoanInterestRate,SavingsMinBalance,CurrentMinBalance,SavingsMaxDailyWithdrawal,CurrentMaxDailyWithdrawal")] AccountConfiguration accountConfiguration)
-        {if (ModelState.IsValid)
+        {
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -64,9 +70,30 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GL/AccountConfigurations/Clear
-        public async Task<IActionResult> Clear() 
+        public async Task<IActionResult> Clear()
         {
             await _accountConfigurationService.ClearAccountConfiguration();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: GL.AccountConfigurations/RunEOD
+        public IActionResult RunEOD()
+        {
+            var statusMessage = new StatusMessage
+            {
+                Type = StatusType.Error,
+                Message = "Unable to run EOD. Account configurations incomplete."
+            };
+            if (_accountConfigurationService.IsAccountConfigurationComplete())
+            {
+                _accountConfigurationService.RunEOD();
+                statusMessage = new StatusMessage
+                {
+                    Type = StatusType.Success,
+                    Message = "EOD successfully completed."
+                };
+            }
+            TempData["Message"] = JsonConvert.SerializeObject(statusMessage);
             return RedirectToAction(nameof(Index));
         }
     }

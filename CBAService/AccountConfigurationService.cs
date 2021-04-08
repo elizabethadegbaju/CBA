@@ -4,6 +4,7 @@ using CBAData.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,9 +37,17 @@ namespace CBAService
             return await _context.AccountConfigurations.FirstOrDefaultAsync();
         }
 
-        public Task<bool> IsAccountConfigurationComplete()
+        public bool IsAccountConfigurationComplete()
         {
-            throw new NotImplementedException();
+            var incomplete = _context.AccountConfigurations.Any(
+                a => a.CurrentMaxDailyWithdrawal == null
+                || a.CurrentMinBalance == null
+                || a.FinancialDate == null
+                || a.LoanInterestRate == null
+                || a.SavingsInterestRate == null
+                || a.SavingsMaxDailyWithdrawal == null
+                || a.SavingsMinBalance == null);
+            return !incomplete;
         }
 
         public async Task UpdateAccountConfiguration(AccountConfiguration accountConfiguration)
@@ -50,6 +59,14 @@ namespace CBAService
                 await _context.SaveChangesAsync();
                 return;
             }
+            _context.Update(accountConfiguration);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RunEOD()
+        {
+            var accountConfiguration = await RetrieveAccountConfiguration();
+            accountConfiguration.FinancialDate = accountConfiguration.FinancialDate.AddDays(1);
             _context.Update(accountConfiguration);
             await _context.SaveChangesAsync();
         }

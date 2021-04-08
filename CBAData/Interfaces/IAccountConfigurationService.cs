@@ -10,7 +10,8 @@ namespace CBAData.Interfaces
     {
         public Task UpdateAccountConfiguration(AccountConfiguration accountConfiguration);
         public Task<AccountConfiguration> RetrieveAccountConfiguration();
-        public Task<bool> IsAccountConfigurationComplete();
+        public bool IsAccountConfigurationComplete();
         public Task ClearAccountConfiguration();
+        public Task RunEOD();
     }
 }
