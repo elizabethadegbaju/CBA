@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CBAData.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210408165620_InternalAccount-and-CustomerAccount")]
-    partial class InternalAccountandCustomerAccount
+    [Migration("20210410074841_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -135,10 +135,13 @@ namespace CBAData.Migrations
 
             modelBuilder.Entity("CBAData.Models.Customer", b =>
                 {
-                    b.Property<long>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -147,6 +150,9 @@ namespace CBAData.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CustomerId");
@@ -355,8 +361,8 @@ namespace CBAData.Migrations
                     b.Property<string>("AccountNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("CustomerId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
 
                     b.HasIndex("CustomerId");
 

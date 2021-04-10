@@ -133,9 +133,9 @@ namespace CBAData.Migrations
 
             modelBuilder.Entity("CBAData.Models.Customer", b =>
                 {
-                    b.Property<long>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Email")
@@ -172,7 +172,7 @@ namespace CBAData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GLCategoryId")
+                    b.Property<int?>("GLCategoryId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActivated")
@@ -359,8 +359,8 @@ namespace CBAData.Migrations
                     b.Property<string>("AccountNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("CustomerId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
 
                     b.HasIndex("CustomerId");
 
@@ -407,9 +407,7 @@ namespace CBAData.Migrations
                 {
                     b.HasOne("CBAData.Models.GLCategory", "GLCategory")
                         .WithMany("GLAccounts")
-                        .HasForeignKey("GLCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GLCategoryId");
 
                     b.Navigation("GLCategory");
                 });

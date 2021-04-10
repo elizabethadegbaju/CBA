@@ -7,7 +7,7 @@ namespace CBAData.Models
 {
     public class Customer
     {
-        public long CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         [DisplayName("First Name")]
         public string FirstName { get; set; }
