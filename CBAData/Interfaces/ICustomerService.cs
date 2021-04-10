@@ -10,9 +10,9 @@ namespace CBAData.Interfaces
     {
         public Task AddCustomerAsync(Customer customer);
         public Task EditCustomerAsync(Customer customer);
-        public Task<Customer> RetrieveCustomerAsync(long id);
-        public Task DeleteCustomerAsync(long id);
+        public Task<Customer> RetrieveCustomerAsync(int id);
+        public Task DeleteCustomerAsync(int id);
         public Task<List<Customer>> ListCustomersAsync();
-        public Task<bool> CustomerExists(long id);
+        public Task<bool> CustomerExists(int id);
     }
 }

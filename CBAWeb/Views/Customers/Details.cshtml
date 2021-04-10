@@ -10,31 +10,31 @@
     <h4>Customer</h4>
     <hr />
     <dl class="row">
-        <dt class = "col s2">
+        <dt class="col s2">
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
-        <dd class = "col s10">
+        <dd class="col s10">
             @Html.DisplayFor(model => model.FirstName)
         </dd>
-        <dt class = "col s2">
+        <dt class="col s2">
             @Html.DisplayNameFor(model => model.LastName)
         </dt>
-        <dd class = "col s10">
+        <dd class="col s10">
             @Html.DisplayFor(model => model.LastName)
         </dd>
-        <dt class = "col s2">
+        <dt class="col s2">
             @Html.DisplayNameFor(model => model.Email)
         </dt>
-        <dd class = "col s10">
+        <dd class="col s10">
             @Html.DisplayFor(model => model.Email)
         </dd>
-        <dt class = "col s2">
+        <dt class="col s2">
             @Html.DisplayNameFor(model => model.Phone)
         </dt>
-        <dd class = "col s10">
+        <dd class="col s10">
             @Html.DisplayFor(model => model.Phone)
         </dd>
-        <dt class = "col s2">
+        <dt class="col s2">
             @Html.DisplayNameFor(model => model.IsActivated)
         </dt>
         <dd class="col s10">
@@ -51,5 +51,7 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.CustomerId">Edit</a> |
+    <a asp-action="Create" asp-area="GL" asp-controller="CustomerAccounts" asp-route-customerId="@Model.CustomerId" asp-route-accountClass="Savings">Create Savings Account</a> |
+    <a asp-action="Create" asp-area="GL" asp-controller="CustomerAccounts" asp-route-customerId="@Model.CustomerId" asp-route-accountClass="Current">Create Current Account</a> |
     <a asp-action="Index">Back to List</a>
 </div>

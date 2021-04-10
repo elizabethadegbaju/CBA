@@ -27,7 +27,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: Customers/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -65,7 +65,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: Customers/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -85,7 +85,7 @@ namespace CBAWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("CustomerId,FirstName,LastName,Email,Phone,IsActivated")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,FirstName,LastName,Email,Phone,IsActivated")] Customer customer)
         {
             if (id != customer.CustomerId)
             {
@@ -115,7 +115,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: Customers/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -134,13 +134,13 @@ namespace CBAWeb.Controllers
         // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _customerService.DeleteCustomerAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> CustomerExists(long id)
+        private async Task<bool> CustomerExists(int id)
         {
             return await _customerService.CustomerExists(id);
         }

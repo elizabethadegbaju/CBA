@@ -24,12 +24,12 @@ namespace CBAService
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> CustomerExists(long id)
+        public async Task<bool> CustomerExists(int id)
         {
             return await _context.Customers.AnyAsync(e => e.CustomerId == id);
         }
 
-        public async Task DeleteCustomerAsync(long id)
+        public async Task DeleteCustomerAsync(int id)
         {
             var customer = await RetrieveCustomerAsync(id);
             _context.Customers.Remove(customer);
@@ -48,7 +48,7 @@ namespace CBAService
             return customers;
         }
 
-        public async Task<Customer> RetrieveCustomerAsync(long id)
+        public async Task<Customer> RetrieveCustomerAsync(int id)
         {
             var customer = await _context.Customers.FirstOrDefaultAsync(m => m.CustomerId == id);
             return customer;

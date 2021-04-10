@@ -1,0 +1,55 @@
+﻿@model CBAData.Models.CustomerAccount
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Customer @Html.DisplayFor(model => model.AccountClass) Account</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col s2">
+            @Html.DisplayNameFor(model => model.Customer)
+        </dt>
+        <dd class = "col s10">
+            @Html.DisplayFor(model => model.Customer.CustomerId)
+        </dd>
+        <dt class = "col s2">
+            @Html.DisplayNameFor(model => model.AccountNumber)
+        </dt>
+        <dd class = "col s10">
+            @Html.DisplayFor(model => model.AccountNumber)
+        </dd>
+        <dt class = "col s2">
+            @Html.DisplayNameFor(model => model.AccountClass)
+        </dt>
+        <dd class = "col s10">
+            @Html.DisplayFor(model => model.AccountClass)
+        </dd>
+        <dt class = "col s2">
+            @Html.DisplayNameFor(model => model.AccountName)
+        </dt>
+        <dd class = "col s10">
+            @Html.DisplayFor(model => model.AccountName)
+        </dd>
+        <dt class = "col s2">
+            @Html.DisplayNameFor(model => model.IsActivated)
+        </dt>
+        <dd class="col s10">
+            @{
+                var status = "Activated";
+                if (!Model.IsActivated)
+                {
+                    status = "Deactivated";
+                };
+            }
+            @status
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.GLAccountId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

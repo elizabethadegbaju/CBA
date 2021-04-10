@@ -5,32 +5,31 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CBAData;
 using CBAData.Models;
+using CBAService;
 using CBAData.Interfaces;
 using CBAData.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 
 namespace CBAWeb.Areas.GL.Controllers
 {
     [Area("GL")]
-    [Authorize(Policy = "CBA023")]
-    public class AccountsController : Controller
+    public class CustomerAccountsController : Controller
     {
         private readonly IGLAccountService _gLAccountService;
 
-        public AccountsController(IGLAccountService gLAccountService)
+        public CustomerAccountsController(IGLAccountService gLAccountService)
         {
             _gLAccountService = gLAccountService;
         }
 
-        // GET: Accounts
+        // GET: GL/CustomerAccounts
         public async Task<IActionResult> Index()
         {
-            return View(await _gLAccountService.ListInternalAccountsAsync());
+            var accounts = await _gLAccountService.ListCustomerAccountsAsync();
+            return View(accounts);
         }
 
-        // GET: Accounts/Details/5
+        // GET: GL/CustomerAccounts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -38,41 +37,38 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var gLAccount = await _gLAccountService.RetrieveInternalAccountAsync(id.Value);
-            if (gLAccount == null)
+            var customerAccount = await _gLAccountService.RetrieveCustomerAccountAsync(id.Value);
+            if (customerAccount == null)
             {
                 return NotFound();
             }
 
-            return View(gLAccount);
+            return View(customerAccount);
         }
 
-        // GET: Accounts/Create
-        [Authorize(Policy = "CBA021")]
-        public IActionResult Create()
+        // GET: GL/CustomerAccounts/Create
+        public IActionResult Create(int customerId,AccountClass accountClass)
         {
-            var model = _gLAccountService.GetAddInternalAccount();
-            return View(model);
+            var viewModel = _gLAccountService.GetAddCustomerAccount(customerId,accountClass);
+            return View(viewModel);
         }
 
-        // POST: Accounts/Create
+        // POST: GL/CustomerAccounts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Policy = "CBA021")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryId,AccountName,IsActivated")] InternalAccountViewModel accountViewModel)
+        public async Task<IActionResult> Create([Bind("CustomerId,AccountClass,AccountName,IsActivated")] CustomerAccountViewModel accountViewModel)
         {
             if (ModelState.IsValid)
             {
-                await _gLAccountService.AddInternalAccountAsync(accountViewModel);
+                var account = await _gLAccountService.AddCustomerAccountAsync(accountViewModel);
                 return RedirectToAction(nameof(Index));
             }
             return View(accountViewModel);
         }
 
-        // GET: Accounts/Edit/5
-        [Authorize(Policy = "CBA022")]
+        // GET: GL/CustomerAccounts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,21 +76,20 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var gLAccountViewModel = await _gLAccountService.GetEditInternalAccount(id.Value);
-            if (gLAccountViewModel == null)
+            var accountViewModel = await _gLAccountService.GetEditCustomerAccount(id.Value);
+            if (accountViewModel == null)
             {
                 return NotFound();
             }
-            return View(gLAccountViewModel);
+            return View(accountViewModel);
         }
 
-        // POST: Accounts/Edit/5
+        // POST: GL/CustomerAccounts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Policy = "CBA022")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountName,IsActivated")] InternalAccountViewModel accountViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountName,IsActivated")] CustomerAccountViewModel accountViewModel)
         {
             if (id != accountViewModel.Id)
             {
@@ -105,7 +100,7 @@ namespace CBAWeb.Areas.GL.Controllers
             {
                 try
                 {
-                    await _gLAccountService.EditInternalAccountAsync(accountViewModel);
+                    await _gLAccountService.EditCustomerAccountAsync(accountViewModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,7 +118,7 @@ namespace CBAWeb.Areas.GL.Controllers
             return View(accountViewModel);
         }
 
-        // GET: Accounts/Delete/5
+        // GET: GL/CustomerAccounts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,16 +126,16 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var gLAccount = await _gLAccountService.RetrieveInternalAccountAsync(id.Value);
-            if (gLAccount == null)
+            var customerAccount = await _gLAccountService.RetrieveCustomerAccountAsync(id.Value);
+            if (customerAccount == null)
             {
                 return NotFound();
             }
 
-            return View(gLAccount);
+            return View(customerAccount);
         }
 
-        // POST: Accounts/Delete/5
+        // POST: GL/CustomerAccounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

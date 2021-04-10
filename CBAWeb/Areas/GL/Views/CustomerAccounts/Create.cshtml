@@ -1,27 +1,30 @@
-﻿@model CBAData.ViewModels.InternalAccountViewModel
+﻿@model CustomerAccountViewModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>Create</h1>
 
-<h4>Account</h4>
+<h4>@Model.AccountClass Account</h4>
 <hr />
 <div class="row">
     <div class="col m4">
-        <form asp-action="Create" method="post">
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="red-text"></div>
+            <div class="input-field">
+                <label asp-for="CustomerId"></label>
+                <input asp-for="CustomerId" class="validate" />
+                <span asp-validation-for="CustomerId" class="red-text"></span>
+            </div>
+            <div>
+                <label asp-for="AccountClass"></label>
+                <select asp-for="AccountClass" asp-items="Html.GetEnumSelectList<AccountClass>()" class="browser-default"></select>
+            </div>
             <div class="input-field">
                 <label asp-for="AccountName"></label>
                 <input asp-for="AccountName" class="validate" />
                 <span asp-validation-for="AccountName" class="red-text"></span>
-            </div>
-            <div>
-                <label asp-for="CategoryId"></label>
-                <select asp-for="CategoryId" asp-items="@Model.GLCategories" class="browser-default">
-                </select>
-                <span asp-validation-for="GLCategories" class="red-text"></span>
             </div>
             <div class="switch">
                 <label asp-for="IsActivated"></label>
