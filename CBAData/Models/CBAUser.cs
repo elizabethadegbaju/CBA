@@ -25,5 +25,6 @@ namespace CBAData.Models
         
         public InternalAccount Till { get; set; }
 
+        public List<Posting> Postings { get; set; }
     }
 }

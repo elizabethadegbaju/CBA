@@ -22,5 +22,6 @@ namespace CBAData.Models
 
         public int? GLCategoryId { get; set; }
         public GLCategory GLCategory { get; set; }
+        public List<Posting> Postings { get; set; }
     }
 }
