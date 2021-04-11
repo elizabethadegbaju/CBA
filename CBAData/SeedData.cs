@@ -23,6 +23,7 @@ namespace CBAData
                 Email = "superuser@appzonegroup.com",
                 UserName = "superuser",
                 EmailConfirmed = true,
+                IsEnabled = true
             };
             if (!userManager.Users.Any(user => user.Id == superUser.Id))
             {
