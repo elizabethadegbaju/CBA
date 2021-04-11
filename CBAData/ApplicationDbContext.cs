@@ -22,5 +22,6 @@ namespace CBAData
         public DbSet<CustomerAccount> CustomerAccounts { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<AccountConfiguration> AccountConfigurations { get; set; }
+        public DbSet<Posting> Postings { get; set; }
     }
 }

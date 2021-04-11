@@ -1,0 +1,55 @@
+﻿@model GLPostingViewModel
+
+@{
+    ViewData["Title"] = "Create GL Posting";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Account</h4>
+<hr />
+<div class="row">
+    <div class="col m4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="red-text"></div>
+            <div class="input-field">
+                <label asp-for="TransactionId"></label>
+                <input asp-for="TransactionId" class="validate" />
+                <span asp-validation-for="TransactionId" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="TransactionDate"></label>
+                <input asp-for="TransactionDate" class="validate" />
+                <span asp-validation-for="TransactionDate" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="Amount"></label>
+                <input asp-for="Amount" class="validate" />
+                <span asp-validation-for="Amount" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="DebitAccountCode"></label>
+                <input asp-for="DebitAccountCode" class="validate" />
+                <span asp-validation-for="DebitAccountCode" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="CreditAccountCode"></label>
+                <input asp-for="CreditAccountCode" class="validate" />
+                <span asp-validation-for="CreditAccountCode" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="Notes"></label>
+                <input asp-for="Notes" class="validate" />
+                <span asp-validation-for="Notes" class="red-text"></span>
+            </div>
+            <br />
+            <button type="submit" class="btn waves-effect waves-light">Post Transaction</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<br />
+

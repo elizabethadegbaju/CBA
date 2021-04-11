@@ -17,6 +17,9 @@ namespace CBAData.Models
         [DisplayName("Account Name")]
         public string AccountName { get; set; }
 
+        [DisplayName("Account Balance")]
+        public float AccountBalance { get; set; }
+
         [DisplayName("Account Status")]
         public bool IsActivated { get; set; }
 
