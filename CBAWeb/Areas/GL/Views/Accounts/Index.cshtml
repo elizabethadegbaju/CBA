@@ -59,6 +59,11 @@
                 <a class="dropdown-trigger btn" href="#" data-target="@(item.GLAccountId)actions">Action</a>
                 <ul id="@(item.GLAccountId)actions" class="dropdown-content">
                     <li>
+                        <a asp-action="Index" asp-area="" asp-controller="GLPostings" asp-route-accountCode="@item.AccountCode">
+                            <i class="material-icons">receipt_long</i> Transaction History
+                        </a>
+                    </li>
+                    <li>
                         <a asp-action="Details" asp-route-id="@item.GLAccountId">
                             <i class="material-icons">visibility</i> View Account
                         </a>

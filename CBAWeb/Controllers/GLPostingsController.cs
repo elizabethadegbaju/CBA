@@ -19,20 +19,31 @@ namespace CBAWeb.Controllers
             _postingService = postingService;
         }
 
-        // GET: PostingsController
+        [Route("GLPostings")]
+        // GET: GLPostingsController
         public async Task<ActionResult> Index()
         {
             var postings = await _postingService.ListGLPostings();
+            ViewData["Title"] = "GL Postings";
             return View(postings);
         }
 
-        // GET: PostingsController/Create
+        [Route("GLPostings/{accountCode}")]
+        // GET: GLPostingsController/1234567890
+        public async Task<ActionResult> Index(string accountCode)
+        {
+            var postings = await _postingService.GLAccountListPostings(accountCode);
+            ViewData["Title"] = "Transaction History for " + accountCode;
+            return View(postings);
+        }
+
+        // GET: GLPostingsController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: PostingsController/Create
+        // POST: GLPostingsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind("")] GLPostingViewModel viewModel)

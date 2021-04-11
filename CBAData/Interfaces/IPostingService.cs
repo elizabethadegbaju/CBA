@@ -11,5 +11,7 @@ namespace CBAData.Interfaces
     {
         public Task<List<Posting>> ListGLPostings();
         public Task CreateGLPosting(string userId, GLPostingViewModel gLPostingViewModel);
+
+        public Task<List<Posting>> GLAccountListPostings(string AccountCode);
     }
 }

@@ -108,6 +108,12 @@ namespace CBAService
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Posting>> GLAccountListPostings(string AccountCode)
+        {
+            var postings = await _context.Postings.Include(p=>p.PostedBy).Where(p => p.AccountCode == AccountCode).ToListAsync();
+            return postings;
+        }
+
         public async Task<List<Posting>> ListGLPostings()
         {
             var postings = await _context.Postings.Include(p=>p.PostedBy).Where(p => p.AccountCode != null).ToListAsync();
