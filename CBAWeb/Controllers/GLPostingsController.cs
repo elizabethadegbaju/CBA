@@ -1,5 +1,6 @@
 ﻿using CBAData.Interfaces;
 using CBAData.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,6 +21,7 @@ namespace CBAWeb.Controllers
         }
 
         [Route("GLPostings")]
+        [Authorize(Policy = "CBA025")]
         // GET: GLPostingsController
         public async Task<ActionResult> Index()
         {
@@ -29,6 +31,7 @@ namespace CBAWeb.Controllers
         }
 
         [Route("GLPostings/{accountCode:long}")]
+        [Authorize(Policy = "CBA025")]
         // GET: GLPostingsController/1234567890
         public async Task<ActionResult> Index(long accountCode)
         {
@@ -38,6 +41,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: GLPostingsController/Create
+        [Authorize(Policy = "CBA024")]
         public ActionResult Create()
         {
             return View();
@@ -46,6 +50,7 @@ namespace CBAWeb.Controllers
         // POST: GLPostingsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "CBA024")]
         public async Task<ActionResult> Create([Bind("TransactionId,TransactionDate,Amount,DebitAccountCode,DebitAccountCode,Notes")] GLPostingViewModel viewModel)
         {
             try
