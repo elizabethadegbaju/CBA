@@ -9,6 +9,7 @@ using CBAData.Models;
 using CBAService;
 using CBAData.Interfaces;
 using CBAData.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CBAWeb.Areas.GL.Controllers
 {
@@ -23,6 +24,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GL/CustomerAccounts
+        [Authorize(Policy = "CBA014")]
         public async Task<IActionResult> Index()
         {
             var accounts = await _gLAccountService.ListCustomerAccountsAsync();
@@ -30,6 +32,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GL/CustomerAccounts/Details/5
+        [Authorize(Policy = "CBA014")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,6 +50,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GL/CustomerAccounts/Create
+        [Authorize(Policy = "CBA011")]
         public IActionResult Create(int customerId,AccountClass accountClass)
         {
             var viewModel = _gLAccountService.GetAddCustomerAccount(customerId,accountClass);
@@ -56,6 +60,7 @@ namespace CBAWeb.Areas.GL.Controllers
         // POST: GL/CustomerAccounts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Policy = "CBA011")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerId,AccountClass,AccountName,IsActivated")] CustomerAccountViewModel accountViewModel)
@@ -69,6 +74,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GL/CustomerAccounts/Edit/5
+        [Authorize(Policy = "CBA012")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -87,6 +93,7 @@ namespace CBAWeb.Areas.GL.Controllers
         // POST: GL/CustomerAccounts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Policy = "CBA012")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AccountName,IsActivated")] CustomerAccountViewModel accountViewModel)
@@ -119,6 +126,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GL/CustomerAccounts/Delete/5
+        [Authorize(Policy = "CBA013")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -136,6 +144,7 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // POST: GL/CustomerAccounts/Delete/5
+        [Authorize(Policy = "CBA013")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
