@@ -118,6 +118,11 @@ namespace CBAService
             {
                 throw new Exception("You cannot post  a customer transaction. There is no Till associated with this account.");
             }
+            if (await _context.Postings.AnyAsync(p => p.TransactionSlipNo == viewModel.TransactionSlipNo))
+            {
+                throw new Exception("Duplicate Transaction. A transaction with this Slip Number has already been posted.");
+            }
+
             InternalAccount vault = await _context.InternalAccounts.SingleOrDefaultAsync(i => i.AccountCode == "10000000000000");
             AccountConfiguration settings = _context.AccountConfigurations.First();
             CustomerAccount customerAccount;
@@ -150,6 +155,14 @@ namespace CBAService
                     customerAccount = await _context.CustomerAccounts
                         .Where(i => i.AccountNumber == viewModel.AccountNumber)
                         .FirstOrDefaultAsync();
+                    if (!customerAccount.IsActivated)
+                    {
+                        throw new Exception("Unable to post transaction. Customer Account is deactivated.");
+                    }
+                    if (tellerAccount.AccountBalance < viewModel.Amount)
+                    {
+                        throw new Exception("Unable to post transaction. Insufficient funds in Till.");
+                    }
                     switch (customerAccount.AccountClass)
                     {
                         case AccountClass.Savings:
@@ -186,6 +199,10 @@ namespace CBAService
                     customerAccount = await _context.CustomerAccounts
                         .Where(i => i.AccountNumber == viewModel.AccountNumber)
                         .FirstOrDefaultAsync();
+                    if (!customerAccount.IsActivated)
+                    {
+                        throw new Exception("Unable to post transaction. Customer Account is deactivated.");
+                    }
                     creditBalance = customerAccount.AccountBalance + viewModel.Amount;
                     debitBalance = tellerAccount.AccountBalance + viewModel.Amount;
 
