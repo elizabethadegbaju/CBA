@@ -219,6 +219,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: UsersController/RemoveTill/4
+        [Authorize(Policy = "CBA006")]
         public async Task<ActionResult> RemoveTill(string userId)
         {
             await _userService.UnAssignTill(userId);
