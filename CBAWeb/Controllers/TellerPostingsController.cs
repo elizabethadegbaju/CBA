@@ -59,7 +59,7 @@ namespace CBAWeb.Controllers
                 await _postingService.CreateTellerPosting(User.FindFirstValue(ClaimTypes.NameIdentifier), viewModel);
                 return RedirectToAction(nameof(Index));
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 ViewBag.Message = new StatusMessage
                 {
