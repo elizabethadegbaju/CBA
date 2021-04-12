@@ -1,6 +1,7 @@
 ﻿using CBAData.Interfaces;
 using CBAData.Models;
 using CBAData.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,6 +22,7 @@ namespace CBAWeb.Controllers
         }
 
         [Route("TellerPostings")]
+        [Authorize(Policy = "CBA027")]
         // GET: TellerPostingsController
         public async Task<ActionResult> Index()
         {
@@ -30,6 +32,7 @@ namespace CBAWeb.Controllers
         }
 
         [Route("TellerPostings/{accountNumber:long}")]
+        [Authorize(Policy = "CBA027")]
         // GET: TellerPostingsController/1234567890
         public async Task<ActionResult> Index(long accountNumber)
         {
@@ -39,24 +42,14 @@ namespace CBAWeb.Controllers
         }
 
         // GET: TellerPostingsController/Create
+        [Authorize(Policy = "CBA026")]
         public ActionResult Create()
         {
             return View();
         }
 
-        // GET: TellerPostingsController/VaultIn
-        public ActionResult VaultIn()
-        {
-            return View();
-        }
-
-        // GET: TellerPostingsController/VaultIn
-        public ActionResult VaultOut()
-        {
-            return View();
-        }
-
         // POST: TellerPostingsController/Create
+        [Authorize(Policy = "CBA026")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind("TransactionId,TransactionDate,TransactionType,Amount,AccountNumber,Notes")] TellerPostingViewModel viewModel)
@@ -75,6 +68,12 @@ namespace CBAWeb.Controllers
                 };
                 return View(viewModel);
             }
+        }
+
+        // GET: TellerPostingsController/VaultIn
+        public ActionResult VaultIn()
+        {
+            return View();
         }
 
         // POST: TellerPostingsController/VaultIn
@@ -96,6 +95,12 @@ namespace CBAWeb.Controllers
                 };
                 return View(viewModel);
             }
+        }
+
+        // GET: TellerPostingsController/VaultIn
+        public ActionResult VaultOut()
+        {
+            return View();
         }
 
         // POST: TellerPostingsController/VaultOut
