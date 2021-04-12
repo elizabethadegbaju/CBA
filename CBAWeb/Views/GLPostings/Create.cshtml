@@ -19,12 +19,12 @@
             </div>
             <div class="input-field">
                 <label asp-for="DebitAccountCode"></label>
-                <input asp-for="DebitAccountCode" class="validate" />
+                <input asp-for="DebitAccountCode" class="autocomplete validate" />
                 <span asp-validation-for="DebitAccountCode" class="red-text"></span>
             </div>
             <div class="input-field">
                 <label asp-for="CreditAccountCode"></label>
-                <input asp-for="CreditAccountCode" class="validate" />
+                <input asp-for="CreditAccountCode" class="autocomplete validate" />
                 <span asp-validation-for="CreditAccountCode" class="red-text"></span>
             </div>
             <div class="input-field">
@@ -43,3 +43,20 @@
 </div>
 <br />
 
+@section scripts{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.autocomplete');
+            var customerAccounts = @Json.Serialize(Model.AccountCodes);
+            var count = customerAccounts.length;
+            var accounts = {};
+            for (var i = 0; i < count; i++) {
+                accounts[customerAccounts[i]] = null;
+            };
+            var options = {
+                data: accounts,
+            };
+            var instances = M.Autocomplete.init(elems, options);
+        });
+    </script>
+}

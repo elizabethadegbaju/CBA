@@ -43,9 +43,10 @@ namespace CBAWeb.Controllers
 
         // GET: TellerPostingsController/Create
         [Authorize(Policy = "CBA026")]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var viewModel = await _postingService.GetCreateTellerPosting();
+            return View(viewModel);
         }
 
         // POST: TellerPostingsController/Create
@@ -81,9 +82,10 @@ namespace CBAWeb.Controllers
 
         // GET: TellerPostingsController/VaultIn
         [Authorize(Policy = "CBA024")]
-        public ActionResult VaultIn()
+        public async Task<ActionResult> VaultIn()
         {
-            return View();
+            var viewModel = await _postingService.GetCreateTellerPosting();
+            return View(viewModel);
         }
 
         // POST: TellerPostingsController/VaultIn
@@ -119,9 +121,10 @@ namespace CBAWeb.Controllers
 
         // GET: TellerPostingsController/VaultIn
         [Authorize(Policy = "CBA024")]
-        public ActionResult VaultOut()
+        public async Task<ActionResult> VaultOut()
         {
-            return View();
+            var viewModel = await _postingService.GetCreateTellerPosting();
+            return View(viewModel);
         }
 
         // POST: TellerPostingsController/VaultOut

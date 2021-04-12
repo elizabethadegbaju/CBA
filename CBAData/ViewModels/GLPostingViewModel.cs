@@ -15,5 +15,7 @@ namespace CBAData.ViewModels
 
         [DisplayName("Credit Account Code")]
         public string CreditAccountCode { get; set; }
+
+        public List<string> AccountCodes { get; set; }
     }
 }

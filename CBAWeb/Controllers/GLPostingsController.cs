@@ -1,4 +1,5 @@
 ﻿using CBAData.Interfaces;
+using CBAData.Models;
 using CBAData.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -42,9 +43,10 @@ namespace CBAWeb.Controllers
 
         // GET: GLPostingsController/Create
         [Authorize(Policy = "CBA024")]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var viewModel = await _postingService.GetCreateGLPosting();
+            return View(viewModel);
         }
 
         // POST: GLPostingsController/Create
@@ -58,9 +60,23 @@ namespace CBAWeb.Controllers
                 await _postingService.CreateGLPosting(User.FindFirstValue(ClaimTypes.NameIdentifier), viewModel);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (NullReferenceException)
             {
-                return View();
+                ViewBag.Message = new StatusMessage
+                {
+                    Type = StatusType.Error,
+                    Message = "Internal GL Account not found."
+                };
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                ViewBag.Message = new StatusMessage
+                {
+                    Type = StatusType.Error,
+                    Message = e.Message
+                };
+                return View(viewModel);
             }
         }
     }

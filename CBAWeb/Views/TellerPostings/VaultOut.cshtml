@@ -19,7 +19,7 @@
             </div>
             <div class="input-field">
                 <label asp-for="AccountCode"></label>
-                <input asp-for="AccountCode" class="validate" />
+                <input asp-for="AccountCode" class="autocomplete validate" />
                 <span asp-validation-for="AccountCode" class="red-text"></span>
             </div>
             <input asp-for="TransactionType" value="VaultOut" class="validate" hidden />
@@ -34,3 +34,20 @@
 </div>
 <br />
 
+@section scripts{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.autocomplete');
+            var customerAccounts = @Json.Serialize(Model.AccountCodes);
+            var count = customerAccounts.length;
+            var accounts = {};
+            for (var i = 0; i < count; i++) {
+                accounts[customerAccounts[i]] = null;
+            };
+            var options = {
+                data: accounts,
+            };
+            var instances = M.Autocomplete.init(elems, options);
+        });
+    </script>
+}

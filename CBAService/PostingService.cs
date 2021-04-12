@@ -3,6 +3,7 @@ using CBAData.Interfaces;
 using CBAData.Models;
 using CBAData.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -286,6 +287,28 @@ namespace CBAService
         {
             var postings = await _context.Postings.Include(p => p.PostedBy).Where(p => p.AccountNumber == accountNumber).ToListAsync();
             return postings;
+        }
+
+        public async Task<GLPostingViewModel> GetCreateGLPosting()
+        {
+            var accountCodes = await _context.InternalAccounts.Select(a => a.AccountCode).ToListAsync();
+            var viewModel = new GLPostingViewModel()
+            {
+                AccountCodes = accountCodes
+            };
+            return viewModel;
+        }
+
+        public async Task<TellerPostingViewModel> GetCreateTellerPosting()
+        {
+            var accountNumbers = await _context.CustomerAccounts.Select(a => a.AccountNumber).ToListAsync();
+            var accountCodes = await _context.InternalAccounts.Select(a => a.AccountCode).ToListAsync();
+            var viewModel = new TellerPostingViewModel()
+            {
+                AccountNumbers = accountNumbers,
+                AccountCodes = accountCodes
+            };
+            return viewModel;
         }
 
         public async Task<List<Posting>> GLAccountListPostings(string accountCode)

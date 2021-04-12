@@ -13,11 +13,15 @@ namespace CBAData.Interfaces
 
         public Task CreateGLPosting(string userId, GLPostingViewModel gLPostingViewModel);
 
+        public Task<GLPostingViewModel> GetCreateGLPosting();
+
         public Task<List<Posting>> GLAccountListPostings(string accountCode);
 
         public Task<List<Posting>> ListTellerPostings();
 
         public Task CreateTellerPosting(string userId, TellerPostingViewModel tellerPostingViewModel);
+
+        public Task<TellerPostingViewModel> GetCreateTellerPosting();
 
         public Task<List<Posting>> CustomerAccountListPostings(string accountNumber);
     }
