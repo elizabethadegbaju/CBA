@@ -52,12 +52,21 @@ namespace CBAWeb.Controllers
         [Authorize(Policy = "CBA026")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind("TransactionId,TransactionDate,TransactionType,Amount,AccountNumber,Notes")] TellerPostingViewModel viewModel)
+        public async Task<ActionResult> Create([Bind("TransactionSlipNo,TransactionDate,TransactionType,Amount,AccountNumber,Notes")] TellerPostingViewModel viewModel)
         {
             try
             {
                 await _postingService.CreateTellerPosting(User.FindFirstValue(ClaimTypes.NameIdentifier), viewModel);
                 return RedirectToAction(nameof(Index));
+            }
+            catch (NullReferenceException e)
+            {
+                ViewBag.Message = new StatusMessage
+                {
+                    Type = StatusType.Error,
+                    Message = "Customer Account not found."
+                };
+                return View(viewModel);
             }
             catch(Exception e)
             {
