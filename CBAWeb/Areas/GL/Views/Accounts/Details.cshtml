@@ -56,5 +56,9 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.GLAccountId">Edit</a> |
+    @if (Model.AccountName.ToLower() == "vault" || Model.CBAUserId != null) {
+        <a asp-action="VaultIn" asp-area="" asp-controller="TellerPostings">Vault In</a> @("|")
+        <a asp-action="VaultOut" asp-area="" asp-controller="TellerPostings">Vault Out</a> @("|")
+    }
     <a asp-action="Index">Back to List</a>
 </div>

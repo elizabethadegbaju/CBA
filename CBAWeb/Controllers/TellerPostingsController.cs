@@ -80,6 +80,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: TellerPostingsController/VaultIn
+        [Authorize(Policy = "CBA024")]
         public ActionResult VaultIn()
         {
             return View();
@@ -88,6 +89,7 @@ namespace CBAWeb.Controllers
         // POST: TellerPostingsController/VaultIn
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "CBA024")]
         public async Task<ActionResult> VaultIn([Bind("TransactionType,Amount")] TellerPostingViewModel viewModel)
         {
             try
@@ -107,12 +109,14 @@ namespace CBAWeb.Controllers
         }
 
         // GET: TellerPostingsController/VaultIn
+        [Authorize(Policy = "CBA024")]
         public ActionResult VaultOut()
         {
             return View();
         }
 
         // POST: TellerPostingsController/VaultOut
+        [Authorize(Policy = "CBA024")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> VaultOut([Bind("TransactionType,Amount")] TellerPostingViewModel viewModel)
