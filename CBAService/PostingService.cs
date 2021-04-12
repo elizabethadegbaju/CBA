@@ -78,15 +78,15 @@ namespace CBAService
             _context.Update(debitAccount);
             await _context.SaveChangesAsync();
 
+            var now = DateTime.Now;
             var creditPosting = new Posting
             {
-                TransactionDate = viewModel.TransactionDate,
-                TransactionId = viewModel.TransactionId,
+                TransactionDate = now,
                 Credit = viewModel.Amount,
                 Notes = viewModel.Notes,
                 AccountCode = viewModel.CreditAccountCode,
                 Balance = creditBalance,
-                PostingDate = DateTime.Now,
+                PostingDate = now,
                 CBAUserId = userId,
                 GLAccount = creditAccount
             };
@@ -94,13 +94,12 @@ namespace CBAService
 
             var debitPosting = new Posting
             {
-                TransactionDate = viewModel.TransactionDate,
-                TransactionId = viewModel.TransactionId,
+                TransactionDate = now,
                 Debit = viewModel.Amount,
                 Notes = viewModel.Notes,
                 AccountCode = viewModel.DebitAccountCode,
                 Balance = debitBalance,
-                PostingDate = DateTime.Now,
+                PostingDate = now,
                 CBAUserId = userId,
                 GLAccount = debitAccount
             };

@@ -13,7 +13,7 @@ namespace CBAData.Models
         public DateTime TransactionDate { get; set; }
 
         [DisplayName("Transaction ID")]
-        public long TransactionId { get; set; }
+        public long? TransactionId { get; set; }
         public float? Debit { get; set; }
         public float? Credit { get; set; }
         public float Balance { get; set; }
