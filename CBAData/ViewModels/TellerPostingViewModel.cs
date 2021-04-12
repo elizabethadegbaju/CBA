@@ -12,7 +12,7 @@ namespace CBAData.ViewModels
         public DateTime TransactionDate { get; set; }
 
         [DisplayName("Transaction Slip Number")]
-        public long TransactionSlipNo { get; set; }
+        public long? TransactionSlipNo { get; set; }
         public float Amount { get; set; }
         public string Notes { get; set; }
 
