@@ -12,8 +12,8 @@ namespace CBAData.Models
         [DisplayName("Transaction Date")]
         public DateTime TransactionDate { get; set; }
 
-        [DisplayName("Transaction ID")]
-        public long? TransactionId { get; set; }
+        [DisplayName("Transaction Slip Number")]
+        public long? TransactionSlipNo { get; set; }
         public float? Debit { get; set; }
         public float? Credit { get; set; }
         public float Balance { get; set; }

@@ -125,7 +125,7 @@ namespace CBAService
             var creditPosting = new Posting
             {
                 TransactionDate = viewModel.TransactionDate,
-                TransactionId = viewModel.TransactionId,
+                TransactionSlipNo = viewModel.TransactionSlipNo,
                 Credit = viewModel.Amount,
                 Notes = viewModel.Notes,
                 Balance = creditBalance,
@@ -136,7 +136,7 @@ namespace CBAService
             var debitPosting = new Posting
             {
                 TransactionDate = viewModel.TransactionDate,
-                TransactionId = viewModel.TransactionId,
+                TransactionSlipNo = viewModel.TransactionSlipNo,
                 Debit = viewModel.Amount,
                 Notes = viewModel.Notes,
                 Balance = debitBalance,
