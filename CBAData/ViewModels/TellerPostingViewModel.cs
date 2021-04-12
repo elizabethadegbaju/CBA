@@ -19,6 +19,9 @@ namespace CBAData.ViewModels
         [DisplayName("Account Number")]
         public string AccountNumber { get; set; }
 
+        [DisplayName("Account Code")]
+        public string AccountCode { get; set; }
+
         [DisplayName("Transaction Type")]
         public TransactionType TransactionType { get; set; }
     }

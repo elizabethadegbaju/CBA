@@ -90,12 +90,21 @@ namespace CBAWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "CBA024")]
-        public async Task<ActionResult> VaultIn([Bind("TransactionType,Amount")] TellerPostingViewModel viewModel)
+        public async Task<ActionResult> VaultIn([Bind("TransactionType,AccountCode,Amount")] TellerPostingViewModel viewModel)
         {
             try
             {
                 await _postingService.CreateTellerPosting(User.FindFirstValue(ClaimTypes.NameIdentifier), viewModel);
                 return RedirectToAction(nameof(Index));
+            }
+            catch (NullReferenceException)
+            {
+                ViewBag.Message = new StatusMessage
+                {
+                    Type = StatusType.Error,
+                    Message = "Vault In not successful. No account found with this Account Code"
+                };
+                return View(viewModel);
             }
             catch(Exception e)
             {
@@ -119,12 +128,21 @@ namespace CBAWeb.Controllers
         [Authorize(Policy = "CBA024")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VaultOut([Bind("TransactionType,Amount")] TellerPostingViewModel viewModel)
+        public async Task<ActionResult> VaultOut([Bind("TransactionType,AccountCode,Amount")] TellerPostingViewModel viewModel)
         {
             try
             {
                 await _postingService.CreateTellerPosting(User.FindFirstValue(ClaimTypes.NameIdentifier), viewModel);
                 return RedirectToAction(nameof(Index));
+            }
+            catch (NullReferenceException)
+            {
+                ViewBag.Message = new StatusMessage
+                {
+                    Type = StatusType.Error,
+                    Message = "Vault Out not successful. No account found with this Account Code"
+                };
+                return View(viewModel);
             }
             catch(Exception e)
             {

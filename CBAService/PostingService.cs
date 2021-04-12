@@ -23,14 +23,14 @@ namespace CBAService
         {
             float creditBalance = 0;
             float debitBalance = 0;
-            
-            var creditAccount = await _context.InternalAccounts.Include(i=>i.GLCategory)
+
+            var creditAccount = await _context.InternalAccounts.Include(i => i.GLCategory)
                 .Where(i => i.AccountCode == viewModel.CreditAccountCode)
                 .FirstOrDefaultAsync();
-            var debitAccount = await _context.InternalAccounts.Include(i=>i.GLCategory)
+            var debitAccount = await _context.InternalAccounts.Include(i => i.GLCategory)
                 .Where(i => i.AccountCode == viewModel.DebitAccountCode)
                 .FirstOrDefaultAsync();
-            
+
             switch (creditAccount.GLCategory.Type)
             {
                 case AccountType.Assets:
@@ -114,10 +114,6 @@ namespace CBAService
 
             CBAUser user = await _context.Users.Include(u => u.Till).FirstOrDefaultAsync(u => u.Id == userId);
             InternalAccount tellerAccount = user.Till;
-            if (tellerAccount==null)
-            {
-                throw new Exception("You cannot post  a customer transaction. There is no Till associated with this account.");
-            }
             if (await _context.Postings.AnyAsync(p => p.TransactionSlipNo == viewModel.TransactionSlipNo))
             {
                 throw new Exception("Duplicate Transaction. A transaction with this Slip Number has already been posted.");
@@ -152,6 +148,10 @@ namespace CBAService
             switch (viewModel.TransactionType)
             {
                 case TransactionType.Withdrawal:
+                    if (tellerAccount == null)
+                    {
+                        throw new Exception("You cannot post  a customer transaction. There is no Till associated with this account.");
+                    }
                     customerAccount = await _context.CustomerAccounts
                         .Where(i => i.AccountNumber == viewModel.AccountNumber)
                         .FirstOrDefaultAsync();
@@ -196,6 +196,10 @@ namespace CBAService
                     _context.Update(customerAccount);
                     break;
                 case TransactionType.Deposit:
+                    if (tellerAccount == null)
+                    {
+                        throw new Exception("You cannot post  a customer transaction. There is no Till associated with this account.");
+                    }
                     customerAccount = await _context.CustomerAccounts
                         .Where(i => i.AccountNumber == viewModel.AccountNumber)
                         .FirstOrDefaultAsync();
@@ -217,6 +221,11 @@ namespace CBAService
                     _context.Update(customerAccount);
                     break;
                 case TransactionType.VaultIn:
+                    tellerAccount = await _context.InternalAccounts.FirstOrDefaultAsync(a => a.AccountCode == viewModel.AccountCode);
+                    if (tellerAccount.AccountBalance < viewModel.Amount)
+                    {
+                        throw new Exception("Unable to post transaction. Insufficient funds in Till.");
+                    }
                     creditBalance = tellerAccount.AccountBalance - viewModel.Amount;
                     debitBalance = vault.AccountBalance + viewModel.Amount;
 
@@ -226,19 +235,30 @@ namespace CBAService
                     creditPosting.GLAccount = tellerAccount;
                     debitPosting.GLAccount = vault;
 
+                    creditPosting.TransactionDate = DateTime.Now;
+                    debitPosting.TransactionDate = DateTime.Now;
+
                     tellerAccount.AccountBalance = creditBalance;
                     vault.AccountBalance = debitBalance;
                     _context.Update(vault);
                     break;
                 case TransactionType.VaultOut:
-                    creditBalance = vault.AccountBalance + viewModel.Amount;
-                    debitBalance = tellerAccount.AccountBalance - viewModel.Amount;
+                    tellerAccount = await _context.InternalAccounts.FirstOrDefaultAsync(a => a.AccountCode == viewModel.AccountCode);
+                    if (vault.AccountBalance < viewModel.Amount)
+                    {
+                        throw new Exception("Unable to post transaction. Insufficient funds in Vault.");
+                    }
+                    creditBalance = vault.AccountBalance - viewModel.Amount;
+                    debitBalance = tellerAccount.AccountBalance + viewModel.Amount;
 
                     creditPosting.AccountCode = vault.AccountCode;
                     debitPosting.AccountCode = tellerAccount.AccountCode;
 
                     creditPosting.GLAccount = vault;
                     debitPosting.GLAccount = tellerAccount;
+
+                    creditPosting.TransactionDate = DateTime.Now;
+                    debitPosting.TransactionDate = DateTime.Now;
 
                     tellerAccount.AccountBalance = debitBalance;
                     vault.AccountBalance = creditBalance;
@@ -253,6 +273,10 @@ namespace CBAService
 
             creditPosting.TransactionDate = DateTime.Now;
             debitPosting.TransactionDate = DateTime.Now;
+
+            creditPosting.Balance = creditBalance;
+            debitPosting.Balance = debitBalance;
+
             _context.Add(creditPosting);
             _context.Add(debitPosting);
             await _context.SaveChangesAsync();
@@ -260,25 +284,25 @@ namespace CBAService
 
         public async Task<List<Posting>> CustomerAccountListPostings(string accountNumber)
         {
-            var postings = await _context.Postings.Include(p=>p.PostedBy).Where(p => p.AccountNumber == accountNumber).ToListAsync();
+            var postings = await _context.Postings.Include(p => p.PostedBy).Where(p => p.AccountNumber == accountNumber).ToListAsync();
             return postings;
         }
 
         public async Task<List<Posting>> GLAccountListPostings(string accountCode)
         {
-            var postings = await _context.Postings.Include(p=>p.PostedBy).Where(p => p.AccountCode == accountCode).ToListAsync();
+            var postings = await _context.Postings.Include(p => p.PostedBy).Where(p => p.AccountCode == accountCode).ToListAsync();
             return postings;
         }
 
         public async Task<List<Posting>> ListGLPostings()
         {
-            var postings = await _context.Postings.Include(p=>p.PostedBy).Where(p => p.AccountCode != null).ToListAsync();
+            var postings = await _context.Postings.Include(p => p.PostedBy).Where(p => p.AccountCode != null).ToListAsync();
             return postings;
         }
 
         public async Task<List<Posting>> ListTellerPostings()
         {
-            var postings = await _context.Postings.Include(p=>p.PostedBy).Where(p => p.AccountNumber != null).ToListAsync();
+            var postings = await _context.Postings.Include(p => p.PostedBy).Where(p => p.AccountNumber != null).ToListAsync();
             return postings;
         }
     }
