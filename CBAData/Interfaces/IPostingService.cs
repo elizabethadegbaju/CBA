@@ -10,8 +10,15 @@ namespace CBAData.Interfaces
     public interface IPostingService
     {
         public Task<List<Posting>> ListGLPostings();
+
         public Task CreateGLPosting(string userId, GLPostingViewModel gLPostingViewModel);
 
-        public Task<List<Posting>> GLAccountListPostings(string AccountCode);
+        public Task<List<Posting>> GLAccountListPostings(string accountCode);
+
+        public Task<List<Posting>> ListTellerPostings();
+
+        public Task CreateTellerPosting(string userId, TellerPostingViewModel tellerPostingViewModel);
+
+        public Task<List<Posting>> CustomerAccountListPostings(string accountNumber);
     }
 }
