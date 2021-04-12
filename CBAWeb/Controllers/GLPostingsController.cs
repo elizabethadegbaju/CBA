@@ -28,11 +28,11 @@ namespace CBAWeb.Controllers
             return View(postings);
         }
 
-        [Route("GLPostings/{accountCode}")]
+        [Route("GLPostings/{accountCode:long}")]
         // GET: GLPostingsController/1234567890
-        public async Task<ActionResult> Index(string accountCode)
+        public async Task<ActionResult> Index(long accountCode)
         {
-            var postings = await _postingService.GLAccountListPostings(accountCode);
+            var postings = await _postingService.GLAccountListPostings(accountCode.ToString());
             ViewData["Title"] = "Transaction History for " + accountCode;
             return View(postings);
         }
@@ -46,7 +46,7 @@ namespace CBAWeb.Controllers
         // POST: GLPostingsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind("")] GLPostingViewModel viewModel)
+        public async Task<ActionResult> Create([Bind("TransactionId,TransactionDate,Amount,DebitAccountCode,DebitAccountCode,Notes")] GLPostingViewModel viewModel)
         {
             try
             {
