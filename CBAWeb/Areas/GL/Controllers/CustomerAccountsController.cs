@@ -63,7 +63,7 @@ namespace CBAWeb.Areas.GL.Controllers
         [Authorize(Policy = "CBA011")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,AccountClass,AccountName,IsActivated")] CustomerAccountViewModel accountViewModel)
+        public async Task<IActionResult> Create([Bind("CustomerId,AccountClass,IsActivated")] CustomerAccountViewModel accountViewModel)
         {
             if (ModelState.IsValid)
             {

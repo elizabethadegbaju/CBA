@@ -155,12 +155,17 @@ namespace CBAService
 
         public async Task<CustomerAccount> AddCustomerAccountAsync(CustomerAccountViewModel accountViewModel)
         {
+            var customer = await _context.Customers.Include(c => c.Accounts).FirstOrDefaultAsync(c => c.CustomerId == accountViewModel.CustomerId);
+            if (customer.Accounts.Any(a => a.AccountClass == accountViewModel.AccountClass))
+            {
+                throw new Exception($"Unable to create account. Customer already has a {accountViewModel.AccountClass} account in the system.");
+            }
             var customerAccount = new CustomerAccount()
             {
                 CustomerId = accountViewModel.CustomerId,
                 IsActivated = accountViewModel.IsActivated,
                 AccountClass = accountViewModel.AccountClass,
-                AccountName = accountViewModel.AccountName
+                AccountName = $"{customer.FirstName} {customer.LastName}"
             };
             _context.Add(customerAccount);
             await _context.SaveChangesAsync();

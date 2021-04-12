@@ -21,11 +21,6 @@
                 <label asp-for="AccountClass"></label>
                 <select asp-for="AccountClass" asp-items="Html.GetEnumSelectList<AccountClass>()" class="browser-default"></select>
             </div>
-            <div class="input-field">
-                <label asp-for="AccountName"></label>
-                <input asp-for="AccountName" class="validate" />
-                <span asp-validation-for="AccountName" class="red-text"></span>
-            </div>
             <div class="switch">
                 <label asp-for="IsActivated"></label>
                 <br />
