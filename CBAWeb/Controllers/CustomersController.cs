@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CBAData;
 using CBAData.Models;
 using CBAData.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CBAWeb.Controllers
 {
@@ -21,12 +22,14 @@ namespace CBAWeb.Controllers
         }
 
         // GET: Customers
+        [Authorize(Policy = "CBA010")]
         public async Task<IActionResult> Index()
         {
             return View(await _customerService.ListCustomersAsync());
         }
 
         // GET: Customers/Details/5
+        [Authorize(Policy = "CBA010")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,6 +47,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: Customers/Create
+        [Authorize(Policy = "CBA008")]
         public IActionResult Create()
         {
             return View();
@@ -52,6 +56,7 @@ namespace CBAWeb.Controllers
         // POST: Customers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Policy = "CBA008")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerId,FirstName,LastName,Email,Phone,IsActivated")] Customer customer)
@@ -65,6 +70,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: Customers/Edit/5
+        [Authorize(Policy = "CBA009")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -83,6 +89,7 @@ namespace CBAWeb.Controllers
         // POST: Customers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Policy = "CBA009")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CustomerId,FirstName,LastName,Email,Phone,IsActivated")] Customer customer)
@@ -115,6 +122,7 @@ namespace CBAWeb.Controllers
         }
 
         // GET: Customers/Delete/5
+        [Authorize(Policy = "CBA009")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -132,6 +140,7 @@ namespace CBAWeb.Controllers
         }
 
         // POST: Customers/Delete/5
+        [Authorize(Policy = "CBA009")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
