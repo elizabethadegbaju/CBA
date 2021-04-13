@@ -165,7 +165,8 @@ namespace CBAService
                 CustomerId = accountViewModel.CustomerId,
                 IsActivated = accountViewModel.IsActivated,
                 AccountClass = accountViewModel.AccountClass,
-                AccountName = $"{customer.FirstName} {customer.LastName}"
+                AccountName = $"{customer.FirstName} {customer.LastName}",
+                DateOpened = DateTime.Now
             };
             _context.Add(customerAccount);
             await _context.SaveChangesAsync();
