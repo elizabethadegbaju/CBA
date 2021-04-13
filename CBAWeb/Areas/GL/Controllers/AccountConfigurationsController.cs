@@ -9,6 +9,7 @@ using CBAData;
 using CBAData.Models;
 using CBAData.Interfaces;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CBAWeb.Areas.GL.Controllers
 {
@@ -34,6 +35,9 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GL/AccountConfigurations/Edit/5
+        [Authorize(Policy = "CBA015")]
+        [Authorize(Policy = "CBA016")]
+        [Authorize(Policy = "CBA017")]
         public async Task<IActionResult> Edit()
         {
             var accountConfiguration = await _accountConfigurationService.RetrieveAccountConfiguration();
@@ -45,6 +49,9 @@ namespace CBAWeb.Areas.GL.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "CBA015")]
+        [Authorize(Policy = "CBA016")]
+        [Authorize(Policy = "CBA017")]
         public async Task<IActionResult> Edit([Bind("Id,SavingsInterestRate,LoanInterestRate,SavingsMinBalance,CurrentMinBalance,SavingsMaxDailyWithdrawal,CurrentMaxDailyWithdrawal")] AccountConfiguration accountConfiguration)
         {
             if (ModelState.IsValid)
@@ -70,6 +77,9 @@ namespace CBAWeb.Areas.GL.Controllers
         }
 
         // GET: GL/AccountConfigurations/Clear
+        [Authorize(Policy = "CBA015")]
+        [Authorize(Policy = "CBA016")]
+        [Authorize(Policy = "CBA017")]
         public async Task<IActionResult> Clear()
         {
             await _accountConfigurationService.ClearAccountConfiguration();

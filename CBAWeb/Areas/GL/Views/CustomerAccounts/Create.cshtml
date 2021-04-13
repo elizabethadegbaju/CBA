@@ -1,0 +1,44 @@
+﻿@model CustomerAccountViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>@Model.AccountClass Account</h4>
+<hr />
+<div class="row">
+    <div class="col m4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="red-text"></div>
+            <div class="input-field">
+                <label asp-for="CustomerId"></label>
+                <input asp-for="CustomerId" class="validate" />
+                <span asp-validation-for="CustomerId" class="red-text"></span>
+            </div>
+            <div>
+                <label asp-for="AccountClass"></label>
+                <select asp-for="AccountClass" asp-items="Html.GetEnumSelectList<AccountClass>().Take(2)" class="browser-default"></select>
+            </div>
+            <div class="switch">
+                <label asp-for="IsActivated"></label>
+                <br />
+                <label>
+                    Deactivated
+                    <input asp-for="IsActivated" type="checkbox">
+                    <span class="lever"></span>
+                    Activated
+                </label>
+            </div>
+            <br />
+            <button type="submit" class="btn waves-effect waves-light">Create Account</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<br />
+

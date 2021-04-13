@@ -23,7 +23,8 @@ namespace CBAData.Models
         [DisplayName("Role")]
         public CBARole CBARole { get; set; }
         
-        public GLAccount Till { get; set; }
+        public InternalAccount Till { get; set; }
 
+        public List<Posting> Postings { get; set; }
     }
 }

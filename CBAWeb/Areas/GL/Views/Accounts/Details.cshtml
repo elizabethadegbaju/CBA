@@ -1,4 +1,4 @@
-﻿@model CBAData.Models.GLAccount
+﻿@model CBAData.Models.InternalAccount
 
 @{
     ViewData["Title"] = "Details";
@@ -11,16 +11,22 @@
     <hr />
     <dl class="row">
         <dt class="col s2">
-            @Html.DisplayNameFor(model => model.AccountNumber)
+            @Html.DisplayNameFor(model => model.AccountCode)
         </dt>
         <dd class="col s10">
-            @Html.DisplayFor(model => model.AccountNumber)
+            @Html.DisplayFor(model => model.AccountCode)
         </dd>
         <dt class="col s2">
             @Html.DisplayNameFor(model => model.AccountName)
         </dt>
         <dd class="col s10">
             @Html.DisplayFor(model => model.AccountName)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.AccountBalance)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.AccountBalance)
         </dd>
         <dt class="col s2">
             @Html.DisplayNameFor(model => model.GLCategory)
@@ -56,5 +62,9 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.GLAccountId">Edit</a> |
+    @if (Model.AccountName.ToLower() == "vault" || Model.CBAUserId != null) {
+        <a asp-action="VaultIn" asp-area="" asp-controller="TellerPostings">Vault In</a> @("|")
+        <a asp-action="VaultOut" asp-area="" asp-controller="TellerPostings">Vault Out</a> @("|")
+    }
     <a asp-action="Index">Back to List</a>
 </div>

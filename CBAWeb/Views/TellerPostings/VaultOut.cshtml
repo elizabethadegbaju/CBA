@@ -1,0 +1,53 @@
+﻿@model TellerPostingViewModel
+
+@{
+    ViewData["Title"] = "Vault Out Transaction";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Account</h4>
+<hr />
+<div class="row">
+    <div class="col m4">
+        <form asp-action="VaultOut" method="post">
+            <div asp-validation-summary="ModelOnly" class="red-text"></div>
+            <div class="input-field">
+                <label asp-for="Amount"></label>
+                <input asp-for="Amount" class="validate" />
+                <span asp-validation-for="Amount" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="AccountCode"></label>
+                <input asp-for="AccountCode" class="autocomplete validate" />
+                <span asp-validation-for="AccountCode" class="red-text"></span>
+            </div>
+            <input asp-for="TransactionType" value="VaultOut" class="validate" hidden />
+            <br />
+            <button type="submit" class="btn waves-effect waves-light">Post Transaction</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<br />
+
+@section scripts{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.autocomplete');
+            var customerAccounts = @Json.Serialize(Model.AccountCodes);
+            var count = customerAccounts.length;
+            var accounts = {};
+            for (var i = 0; i < count; i++) {
+                accounts[customerAccounts[i]] = null;
+            };
+            var options = {
+                data: accounts,
+            };
+            var instances = M.Autocomplete.init(elems, options);
+        });
+    </script>
+}

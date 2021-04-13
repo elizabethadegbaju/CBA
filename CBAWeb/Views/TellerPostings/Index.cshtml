@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Posting>
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">Create New</a> |
+    <a asp-action="VaultIn">Vault In</a> |
+    <a asp-action="VaultOut">Vault Out</a> |
+</p>
+<table class="table highlight">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionSlipNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Notes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostingDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Debit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Credit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Balance)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TransactionSlipNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TransactionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Notes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostingDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostedBy.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Debit)
+                    @if (item.Debit == null)
+                    {
+                        @("-")
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Credit)
+                    @if (item.Credit == null)
+                    {
+                        @("-")
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Balance)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

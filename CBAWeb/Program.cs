@@ -27,10 +27,13 @@ namespace CBAWeb
                 {
                     var userManager = services.GetRequiredService<UserManager<CBAUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<CBARole>>();
-                    await SeedData.SeedRolesAsync(userManager, roleManager);
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    await SeedData.SeedRolesAsync(roleManager);
                     logger.LogInformation("SeedData for Default roles successful");
                     await SeedData.SeedSuperUserAsync(userManager, roleManager);
                     logger.LogInformation("SeedData for Default users successful");
+                    await SeedData.SeedBankVaultAsync(context);
+                    logger.LogInformation("SeedData for Bank Vault successful");
                     logger.LogInformation("Application Starting");
                 }
                 catch (Exception e)

@@ -8,7 +8,7 @@ namespace CBAData.Interfaces
 {
     public interface IGLCategoryService
     {
-        public Task AddGLCategoryAsync(string name, AccountType accountType);
+        public Task AddGLCategoryAsync(GLCategory category);
         public Task EditGLCategoryAsync(GLCategory category);
         public Task<GLCategory> RetrieveGLCategoryAsync(int id);
         public Task DeleteGLCategoryAsync(int id);

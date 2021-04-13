@@ -1,4 +1,4 @@
-﻿@model CBAData.ViewModels.AccountViewModel
+﻿@model CBAData.ViewModels.InternalAccountViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -19,9 +19,9 @@
                 <span asp-validation-for="AccountName" class="red-text"></span>
             </div>
             <div class="input-field">
-                <label asp-for="AccountNumber"></label>
-                <input asp-for="AccountNumber" disabled class="validate" />
-                <span asp-validation-for="AccountNumber" class="red-text"></span>
+                <label asp-for="AccountCode"></label>
+                <input asp-for="AccountCode" disabled class="validate" />
+                <span asp-validation-for="AccountCode" class="red-text"></span>
             </div>
             <div>
                 <label asp-for="CategoryId"></label>

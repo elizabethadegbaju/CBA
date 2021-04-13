@@ -1,0 +1,81 @@
+﻿@model IEnumerable<CBAData.Models.Customer>
+
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActivated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @{
+                    var status = "Activated";
+                    if (!item.IsActivated)
+                    {
+                        status = "Deactivated";
+                    };
+                }
+                @status
+            </td>
+            <td>
+                <a class="dropdown-trigger btn" href="#" data-target="@(item.CustomerId)actions">Action</a>
+                <ul id="@(item.CustomerId)actions" class="dropdown-content">
+                    <li>
+                        <a asp-action="Details" asp-route-id="@item.CustomerId">
+                            <i class="material-icons">visibility</i> View Customer
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Edit" asp-route-id="@item.CustomerId">
+                            <i class="material-icons">edit</i> Edit Customer
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Delete" asp-route-id="@item.CustomerId">
+                            <i class="material-icons">delete</i> Delete Customer
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

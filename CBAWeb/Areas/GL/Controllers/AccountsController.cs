@@ -27,7 +27,7 @@ namespace CBAWeb.Areas.GL.Controllers
         // GET: Accounts
         public async Task<IActionResult> Index()
         {
-            return View(await _gLAccountService.ListGLAccountsAsync());
+            return View(await _gLAccountService.ListInternalAccountsAsync());
         }
 
         // GET: Accounts/Details/5
@@ -38,7 +38,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var gLAccount = await _gLAccountService.RetrieveGLAccountAsync(id.Value);
+            var gLAccount = await _gLAccountService.RetrieveInternalAccountAsync(id.Value);
             if (gLAccount == null)
             {
                 return NotFound();
@@ -51,7 +51,7 @@ namespace CBAWeb.Areas.GL.Controllers
         [Authorize(Policy = "CBA021")]
         public IActionResult Create()
         {
-            var model = _gLAccountService.GetAddGLAccount();
+            var model = _gLAccountService.GetAddInternalAccount();
             return View(model);
         }
 
@@ -61,11 +61,11 @@ namespace CBAWeb.Areas.GL.Controllers
         [Authorize(Policy = "CBA021")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryId,AccountName,IsActivated")] AccountViewModel accountViewModel)
+        public async Task<IActionResult> Create([Bind("CategoryId,AccountName,IsActivated")] InternalAccountViewModel accountViewModel)
         {
             if (ModelState.IsValid)
             {
-                await _gLAccountService.AddGLAccountAsync(accountViewModel);
+                await _gLAccountService.AddInternalAccountAsync(accountViewModel);
                 return RedirectToAction(nameof(Index));
             }
             return View(accountViewModel);
@@ -80,7 +80,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var gLAccountViewModel = await _gLAccountService.GetEditGLAccount(id.Value);
+            var gLAccountViewModel = await _gLAccountService.GetEditInternalAccount(id.Value);
             if (gLAccountViewModel == null)
             {
                 return NotFound();
@@ -94,7 +94,7 @@ namespace CBAWeb.Areas.GL.Controllers
         [Authorize(Policy = "CBA022")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountName,IsActivated")] AccountViewModel accountViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountName,IsActivated")] InternalAccountViewModel accountViewModel)
         {
             if (id != accountViewModel.Id)
             {
@@ -105,7 +105,7 @@ namespace CBAWeb.Areas.GL.Controllers
             {
                 try
                 {
-                    await _gLAccountService.EditGLAccountAsync(accountViewModel);
+                    await _gLAccountService.EditInternalAccountAsync(accountViewModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -131,7 +131,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var gLAccount = await _gLAccountService.RetrieveGLAccountAsync(id.Value);
+            var gLAccount = await _gLAccountService.RetrieveInternalAccountAsync(id.Value);
             if (gLAccount == null)
             {
                 return NotFound();

@@ -1,0 +1,73 @@
+﻿@model TellerPostingViewModel
+
+@{
+    ViewData["Title"] = "Create Teller Posting";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Account</h4>
+<hr />
+<div class="row">
+    <div class="col m4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="red-text"></div>
+            <div class="input-field">
+                <label asp-for="TransactionSlipNo"></label>
+                <input asp-for="TransactionSlipNo" class="validate" />
+                <span asp-validation-for="TransactionSlipNo" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="TransactionDate"></label>
+                <input asp-for="TransactionDate" type="text" class="validate datepicker" />
+                <span asp-validation-for="TransactionDate" class="red-text"></span>
+            </div>
+            <div>
+                <label asp-for="TransactionType"></label>
+                <select asp-for="TransactionType" asp-items="@Html.GetEnumSelectList<TransactionType>().Take(2)" class="browser-default">
+                </select>
+                <span asp-validation-for="TransactionType" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="Amount"></label>
+                <input asp-for="Amount" class="validate" />
+                <span asp-validation-for="Amount" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="AccountNumber"></label>
+                <input asp-for="AccountNumber" class="autocomplete validate" />
+                <span asp-validation-for="AccountNumber" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="Notes"></label>
+                <input asp-for="Notes" class="validate" />
+                <span asp-validation-for="Notes" class="red-text"></span>
+            </div>
+            <br />
+            <button type="submit" class="btn waves-effect waves-light">Post Transaction</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<br />
+
+@section scripts{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.autocomplete');
+            var customerAccounts = @Json.Serialize(Model.AccountNumbers);
+            var count = customerAccounts.length;
+            var accounts = {};
+            for (var i = 0; i < count; i++) {
+                accounts[customerAccounts[i]] = null;
+            };
+            var options = {
+                data: accounts,
+            };
+            var instances = M.Autocomplete.init(elems, options);
+        });
+    </script>
+}

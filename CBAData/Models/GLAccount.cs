@@ -11,21 +11,20 @@ namespace CBAData.Models
         {
             IsActivated = true;
         }
-
+        [DisplayName("S/N")]
         public int GLAccountId { get; set; }
-
-        public int GLCategoryId { get; set; }
-        public GLCategory GLCategory { get; set; }
-
-        [DisplayName("Account Number")]
-        public string AccountNumber { get; set; }
 
         [DisplayName("Account Name")]
         public string AccountName { get; set; }
-        public CBAUser User { get; set; }
-        public string CBAUserId { get; set; }
+
+        [DisplayName("Account Balance")]
+        public float AccountBalance { get; set; }
 
         [DisplayName("Account Status")]
         public bool IsActivated { get; set; }
+
+        public int? GLCategoryId { get; set; }
+        public GLCategory GLCategory { get; set; }
+        public List<Posting> Postings { get; set; }
     }
 }

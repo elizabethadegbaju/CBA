@@ -1,5 +1,7 @@
-﻿using CBAData.Models;
+﻿using CBAData.Interfaces;
+using CBAData.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +14,7 @@ namespace CBAData
 {
     public static class SeedData
     {
-        public static async Task SeedRolesAsync(UserManager<CBAUser> userManager, RoleManager<CBARole> roleManager)
+        public static async Task SeedRolesAsync(RoleManager<CBARole> roleManager)
         {
             await roleManager.CreateAsync(new CBARole(DefaultRole.SuperUser.ToString()));
         }
@@ -23,6 +25,7 @@ namespace CBAData
                 Email = "superuser@appzonegroup.com",
                 UserName = "superuser",
                 EmailConfirmed = true,
+                IsEnabled = true
             };
             if (!userManager.Users.Any(user => user.Id == superUser.Id))
             {
@@ -50,6 +53,36 @@ namespace CBAData
                 {
                     await roleManager.AddClaimAsync(superUserRole, new Claim(permission.Name,name));
                 }
+            }
+        }
+        public async static Task SeedBankVaultAsync(ApplicationDbContext context)
+        {
+            if (!context.GLCategories.Any(category => category.Name.ToLower() == "cash assets"))
+            {
+                var cashAssets = new GLCategory
+                {
+                    Name = "CASH ASSETS",
+                    Type = AccountType.Assets,
+                    IsEnabled = true,
+                    Description = "GL Category for Cash Assets Accounts"
+                };
+                context.Add(cashAssets);
+                await context.SaveChangesAsync();
+            }
+
+            GLCategory category = await context.GLCategories.SingleOrDefaultAsync(c => c.Name.ToLower() == "cash assets");
+            if (!context.InternalAccounts.Any(account => account.AccountCode == "10000000000000"))
+            {
+                var vault = new InternalAccount
+                {
+                    AccountName = "Vault",
+                    AccountBalance = 100000000,
+                    AccountCode = "10000000000000",
+                    IsActivated = true,
+                    GLCategory = category
+                };
+                context.Add(vault);
+                await context.SaveChangesAsync();
             }
         }
     }

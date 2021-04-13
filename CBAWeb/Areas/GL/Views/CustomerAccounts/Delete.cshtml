@@ -1,0 +1,69 @@
+﻿@model CBAData.Models.CustomerAccount
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>CustomerAccount</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.Customer)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.Customer.CustomerId)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.AccountNumber)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.AccountNumber)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.AccountClass)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.AccountClass)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.AccountName)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.AccountName)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.DateOpened)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.DateOpened)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.AccountBalance)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.AccountBalance)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.IsActivated)
+        </dt>
+        <dd class="col s10">
+            @{
+                var status = "Activated";
+                if (!Model.IsActivated)
+                {
+                    status = "Deactivated";
+                };
+            }
+            @status
+        </dd>
+    </dl>    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="GLAccountId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

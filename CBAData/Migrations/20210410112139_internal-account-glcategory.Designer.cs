@@ -10,16 +10,49 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CBAData.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210408045303_user-one-role")]
-    partial class useronerole
+    [Migration("20210410112139_internal-account-glcategory")]
+    partial class internalaccountglcategory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("CBAData.Models.AccountConfiguration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float?>("CurrentMaxDailyWithdrawal")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("CurrentMinBalance")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("FinancialDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float?>("LoanInterestRate")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("SavingsInterestRate")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("SavingsMaxDailyWithdrawal")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("SavingsMinBalance")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccountConfigurations");
+                });
 
             modelBuilder.Entity("CBAData.Models.CBAUser", b =>
                 {
@@ -98,6 +131,83 @@ namespace CBAData.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("CBAData.Models.Customer", b =>
+                {
+                    b.Property<int>("CustomerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActivated")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CustomerId");
+
+                    b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("CBAData.Models.GLAccount", b =>
+                {
+                    b.Property<int>("GLAccountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AccountName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("GLCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActivated")
+                        .HasColumnType("bit");
+
+                    b.HasKey("GLAccountId");
+
+                    b.HasIndex("GLCategoryId");
+
+                    b.ToTable("GLAccounts");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("GLAccount");
+                });
+
+            modelBuilder.Entity("CBAData.Models.GLCategory", b =>
+                {
+                    b.Property<int>("GLCategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("GLCategoryId");
+
+                    b.ToTable("GLCategories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -241,6 +351,41 @@ namespace CBAData.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CBAData.Models.CustomerAccount", b =>
+                {
+                    b.HasBaseType("CBAData.Models.GLAccount");
+
+                    b.Property<int>("AccountClass")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AccountNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasDiscriminator().HasValue("CustomerAccount");
+                });
+
+            modelBuilder.Entity("CBAData.Models.InternalAccount", b =>
+                {
+                    b.HasBaseType("CBAData.Models.GLAccount");
+
+                    b.Property<string>("AccountCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CBAUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("CBAUserId")
+                        .IsUnique()
+                        .HasFilter("[CBAUserId] IS NOT NULL");
+
+                    b.HasDiscriminator().HasValue("InternalAccount");
+                });
+
             modelBuilder.Entity("CBAData.Models.CBARole", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
@@ -258,6 +403,15 @@ namespace CBAData.Migrations
                         .HasForeignKey("CBARoleId");
 
                     b.Navigation("CBARole");
+                });
+
+            modelBuilder.Entity("CBAData.Models.GLAccount", b =>
+                {
+                    b.HasOne("CBAData.Models.GLCategory", "GLCategory")
+                        .WithMany("GLAccounts")
+                        .HasForeignKey("GLCategoryId");
+
+                    b.Navigation("GLCategory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -309,6 +463,41 @@ namespace CBAData.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CBAData.Models.CustomerAccount", b =>
+                {
+                    b.HasOne("CBAData.Models.Customer", "Customer")
+                        .WithMany("Accounts")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("CBAData.Models.InternalAccount", b =>
+                {
+                    b.HasOne("CBAData.Models.CBAUser", "User")
+                        .WithOne("Till")
+                        .HasForeignKey("CBAData.Models.InternalAccount", "CBAUserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CBAData.Models.CBAUser", b =>
+                {
+                    b.Navigation("Till");
+                });
+
+            modelBuilder.Entity("CBAData.Models.Customer", b =>
+                {
+                    b.Navigation("Accounts");
+                });
+
+            modelBuilder.Entity("CBAData.Models.GLCategory", b =>
+                {
+                    b.Navigation("GLAccounts");
                 });
 
             modelBuilder.Entity("CBAData.Models.CBARole", b =>

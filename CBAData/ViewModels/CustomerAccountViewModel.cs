@@ -3,30 +3,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace CBAData.ViewModels
 {
-    public class AccountViewModel
+    public class CustomerAccountViewModel
     {
-        public AccountViewModel()
-        {
-            GLCategories = new List<SelectListItem>();
-            Users = new List<SelectListItem>();
-        }
+        public int Id { get; set; }
+        public int CustomerId { get; set; }
 
         [DisplayName("Account Number")]
         public string AccountNumber { get; set; }
+
+        [EnumDataType(typeof(AccountClass)), DisplayName("Account Class")]
+        public AccountClass AccountClass { get; set; }
 
         [DisplayName("Account Name")]
         public string AccountName { get; set; }
 
         [DisplayName("Account Status")]
         public bool IsActivated { get; set; }
-
-        public string CategoryId { get; set; }
-        public IList<SelectListItem> GLCategories { get; set; }
-        public IList<SelectListItem> Users { get; set; }
-        public int Id { get; set; }
     }
 }

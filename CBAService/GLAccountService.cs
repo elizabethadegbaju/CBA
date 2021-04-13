@@ -21,13 +21,13 @@ namespace CBAService
             _context = context;
         }
 
-        public async Task AddGLAccountAsync(AccountViewModel accountViewModel)
+        public async Task AddInternalAccountAsync(InternalAccountViewModel accountViewModel)
         {
             var categoryId = int.Parse(accountViewModel.CategoryId);
             var category = await _context.GLCategories.FindAsync(categoryId);
-            var account = new GLAccount
+            var account = new InternalAccount
             {
-                AccountNumber = GenerateAccountNumber(category.Type),
+                AccountCode = GenerateInternalAccountCode(category.Type),
                 AccountName = accountViewModel.AccountName,
                 GLCategoryId = categoryId,
                 IsActivated = accountViewModel.IsActivated
@@ -36,7 +36,7 @@ namespace CBAService
             await _context.SaveChangesAsync();
         }
 
-        private string GenerateAccountNumber(AccountType type)
+        private string GenerateInternalAccountCode(AccountType type)
         {
             long milliseconds = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             var start = "";
@@ -63,7 +63,14 @@ namespace CBAService
             return start + milliseconds.ToString();
         }
 
-        public async Task EditGLAccountAsync(AccountViewModel accountViewModel)
+        private string GenerateCustomerAccountNumber(AccountClass accountClass, int customerId, int accountId)
+        {
+            int classId = (int)accountClass;
+            string accountNumber = classId.ToString() + customerId.ToString("D4") + accountId.ToString("D6");
+            return accountNumber;
+        }
+
+        public async Task EditInternalAccountAsync(InternalAccountViewModel accountViewModel)
         {
             var account = await _context.GLAccounts.FindAsync(accountViewModel.Id);
             account.AccountName = accountViewModel.AccountName;
@@ -72,22 +79,22 @@ namespace CBAService
             await _context.SaveChangesAsync();
         }
 
-        public async Task<GLAccount> RetrieveGLAccountAsync(int id)
+        public async Task<InternalAccount> RetrieveInternalAccountAsync(int id)
         {
-            var account = await _context.GLAccounts.Include(account => account.GLCategory).Include(account => account.User).FirstOrDefaultAsync(m => m.GLAccountId == id);
+            var account = await _context.InternalAccounts.Include(account => account.GLCategory).Include(account => account.User).FirstOrDefaultAsync(m => m.GLAccountId == id);
             return account;
         }
 
         public async Task DeleteGLAccountAsync(int id)
         {
-            var account = RetrieveGLAccountAsync(id).Result;
+            var account = RetrieveInternalAccountAsync(id).Result;
             _context.Remove(account);
             await _context.SaveChangesAsync();
         }
 
         public async Task ActivateGLAccountAsync(int id)
         {
-            var account = RetrieveGLAccountAsync(id).Result;
+            var account = RetrieveInternalAccountAsync(id).Result;
             account.IsActivated = true;
             _context.Update(account);
             await _context.SaveChangesAsync();
@@ -95,25 +102,26 @@ namespace CBAService
 
         public async Task DeactivateGLAccountAsync(int id)
         {
-            var account = RetrieveGLAccountAsync(id).Result;
+            var account = RetrieveInternalAccountAsync(id).Result;
             account.IsActivated = false;
             _context.Update(account);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<GLAccount>> ListGLAccountsAsync()
+        public async Task<List<InternalAccount>> ListInternalAccountsAsync()
         {
-            var accounts = await _context.GLAccounts.Include(account => account.GLCategory).Include(account=>account.User).ToListAsync();
+            var accounts = await _context.InternalAccounts.Include(account => account.GLCategory).Include(account => account.User).ToListAsync();
             return accounts;
         }
+
         public async Task<bool> GLAccountExists(int id)
         {
             return await _context.GLAccounts.AnyAsync(e => e.GLAccountId == id);
         }
 
-        public AccountViewModel GetAddGLAccount()
+        public InternalAccountViewModel GetAddInternalAccount()
         {
-            var accountViewModel = new AccountViewModel();
+            var accountViewModel = new InternalAccountViewModel();
             var categories = _context.GLCategories.ToList();
             foreach (var category in categories)
             {
@@ -125,13 +133,14 @@ namespace CBAService
             }
             return accountViewModel;
         }
-        public async Task<AccountViewModel> GetEditGLAccount(int id)
+
+        public async Task<InternalAccountViewModel> GetEditInternalAccount(int id)
         {
-            var account = await RetrieveGLAccountAsync(id);
-            var accountViewModel = new AccountViewModel()
+            var account = await RetrieveInternalAccountAsync(id);
+            var accountViewModel = new InternalAccountViewModel()
             {
                 AccountName = account.AccountName,
-                AccountNumber = account.AccountNumber,
+                AccountCode = account.AccountCode,
                 IsActivated = account.IsActivated,
                 CategoryId = account.GLCategoryId.ToString(),
                 Id = account.GLAccountId
@@ -142,6 +151,77 @@ namespace CBAService
                 Value = account.GLCategory.GLCategoryId.ToString()
             });
             return accountViewModel;
+        }
+
+        public async Task<CustomerAccount> AddCustomerAccountAsync(CustomerAccountViewModel accountViewModel)
+        {
+            var customer = await _context.Customers.Include(c => c.Accounts).FirstOrDefaultAsync(c => c.CustomerId == accountViewModel.CustomerId);
+            if (customer.Accounts.Any(a => a.AccountClass == accountViewModel.AccountClass))
+            {
+                throw new Exception($"Unable to create account. Customer already has a {accountViewModel.AccountClass} account in the system.");
+            }
+            var customerAccount = new CustomerAccount()
+            {
+                CustomerId = accountViewModel.CustomerId,
+                IsActivated = accountViewModel.IsActivated,
+                AccountClass = accountViewModel.AccountClass,
+                AccountName = $"{customer.FirstName} {customer.LastName}",
+                DateOpened = DateTime.Now
+            };
+            _context.Add(customerAccount);
+            await _context.SaveChangesAsync();
+            customerAccount.AccountNumber = GenerateCustomerAccountNumber(customerAccount.AccountClass, customerAccount.CustomerId, customerAccount.GLAccountId);
+            _context.Update(customerAccount);
+            await _context.SaveChangesAsync();
+            return customerAccount;
+        }
+
+        public async Task EditCustomerAccountAsync(CustomerAccountViewModel accountViewModel)
+        {
+            var customerAccount = await RetrieveCustomerAccountAsync(accountViewModel.Id);
+            customerAccount.AccountName = accountViewModel.AccountName;
+            customerAccount.IsActivated = accountViewModel.IsActivated;
+            _context.Update(customerAccount);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<CustomerAccount> RetrieveCustomerAccountAsync(int id)
+        {
+            var account = await _context.CustomerAccounts
+                .Include(c => c.Customer)
+                .FirstOrDefaultAsync(m => m.GLAccountId == id);
+            return account;
+        }
+
+        public async Task<List<CustomerAccount>> ListCustomerAccountsAsync()
+        {
+            var accounts = _context.CustomerAccounts.Include(c => c.Customer);
+            return await accounts.ToListAsync();
+        }
+
+        public CustomerAccountViewModel GetAddCustomerAccount(int customerId, AccountClass accountClass)
+        {
+            var viewModel = new CustomerAccountViewModel
+            {
+                CustomerId = customerId,
+                AccountClass = accountClass
+            };
+            return viewModel;
+        }
+
+        public async Task<CustomerAccountViewModel> GetEditCustomerAccount(int id)
+        {
+            var account = await RetrieveCustomerAccountAsync(id);
+            var viewModel = new CustomerAccountViewModel
+            {
+                Id = account.GLAccountId,
+                CustomerId = account.CustomerId,
+                AccountClass = account.AccountClass,
+                IsActivated = account.IsActivated,
+                AccountName = account.AccountName,
+                AccountNumber = account.AccountNumber
+            };
+            return viewModel;
         }
     }
 }

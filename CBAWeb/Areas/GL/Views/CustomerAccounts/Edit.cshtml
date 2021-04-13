@@ -1,0 +1,55 @@
+﻿@model CustomerAccountViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>CustomerAccount</h4>
+<hr />
+<div class="row">
+    <div class="col m4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="input-field">
+                <label asp-for="CustomerId"></label>
+                <input asp-for="CustomerId" class="validate" disabled />
+                <span asp-validation-for="CustomerId" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="AccountNumber"></label>
+                <input asp-for="AccountNumber" class="validate" disabled />
+                <span asp-validation-for="AccountNumber" class="red-text"></span>
+            </div>
+            <div>
+                <label asp-for="AccountClass"></label>
+                <input asp-for="AccountClass" class="validate" disabled />
+                <span asp-validation-for="AccountClass" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="AccountName"></label>
+                <input asp-for="AccountName" class="validate" />
+                <span asp-validation-for="AccountName" class="red-text"></span>
+            </div>
+            <div class="switch">
+                <label asp-for="IsActivated"></label>
+                <br />
+                <label>
+                    Deactivated
+                    <input asp-for="IsActivated" type="checkbox">
+                    <span class="lever"></span>
+                    Activated
+                </label>
+            </div>
+            <br />
+            <button type="submit" class="btn waves-effect waves-light">Save</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<br />
