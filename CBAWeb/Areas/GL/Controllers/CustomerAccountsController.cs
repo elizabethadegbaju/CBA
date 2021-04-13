@@ -67,7 +67,20 @@ namespace CBAWeb.Areas.GL.Controllers
         {
             if (ModelState.IsValid)
             {
+                try
+                {
+
                 var account = await _gLAccountService.AddCustomerAccountAsync(accountViewModel);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = new StatusMessage
+                    {
+                        Message = ex.Message,
+                        Type = StatusType.Error
+                    };
+                    return View(accountViewModel);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(accountViewModel);

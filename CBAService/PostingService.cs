@@ -115,7 +115,7 @@ namespace CBAService
 
             CBAUser user = await _context.Users.Include(u => u.Till).FirstOrDefaultAsync(u => u.Id == userId);
             InternalAccount tellerAccount = user.Till;
-            if (!(viewModel.TransactionSlipNo == null) || (await _context.Postings.AnyAsync(p => p.TransactionSlipNo == viewModel.TransactionSlipNo)))
+            if ((viewModel.TransactionSlipNo == null) || (await _context.Postings.AnyAsync(p => p.TransactionSlipNo == viewModel.TransactionSlipNo)))
             {
                 throw new Exception("Duplicate Transaction. A transaction with this Slip Number has already been posted.");
             }

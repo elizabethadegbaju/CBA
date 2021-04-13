@@ -119,7 +119,7 @@ namespace CBAWeb.Controllers
             }
         }
 
-        // GET: TellerPostingsController/VaultIn
+        // GET: TellerPostingsController/VaultOut
         [Authorize(Policy = "CBA024")]
         public async Task<ActionResult> VaultOut()
         {
