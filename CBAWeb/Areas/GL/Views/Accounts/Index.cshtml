@@ -13,10 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AccountCode)
+                @Html.DisplayNameFor(model => model.GLAccountId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AccountName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountCode)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.GLCategory)
@@ -27,6 +30,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.IsActivated)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountBalance)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -35,10 +41,13 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AccountCode)
+                    @Html.DisplayFor(modelItem => item.GLAccountId)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.AccountName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountCode)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.GLCategory.Name)
@@ -55,6 +64,9 @@
                         };
                     }
                     @status
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountBalance)
                 </td>
                 <td>
                     <a class="dropdown-trigger btn" href="#" data-target="@(item.GLAccountId)actions">Action</a>

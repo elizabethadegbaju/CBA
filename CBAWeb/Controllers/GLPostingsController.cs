@@ -53,7 +53,7 @@ namespace CBAWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "CBA024")]
-        public async Task<ActionResult> Create([Bind("Amount,DebitAccountCode,DebitAccountCode,Notes")] GLPostingViewModel viewModel)
+        public async Task<ActionResult> Create([Bind("Amount,CreditAccountCode,DebitAccountCode,Notes")] GLPostingViewModel viewModel)
         {
             try
             {

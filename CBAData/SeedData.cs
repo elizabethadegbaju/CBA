@@ -62,7 +62,9 @@ namespace CBAData
                 var cashAssets = new GLCategory
                 {
                     Name = "CASH ASSETS",
-                    Type = AccountType.Assets
+                    Type = AccountType.Assets,
+                    IsEnabled = true,
+                    Description = "GL Category for Cash Assets Accounts"
                 };
                 context.Add(cashAssets);
                 await context.SaveChangesAsync();

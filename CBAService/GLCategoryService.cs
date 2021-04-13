@@ -19,13 +19,12 @@ namespace CBAService
             _context = context;
         }
 
-        public async Task AddGLCategoryAsync(string name, AccountType accountType)
+        public async Task AddGLCategoryAsync(GLCategory category)
         {
-            var category = new GLCategory
+            if (await _context.GLCategories.AnyAsync(c => c.Name.ToLower() == category.Name))
             {
-                Name = name,
-                Type = accountType
-            };
+                throw new Exception("A Category with this name already exists");
+            }
             _context.Add(category);
             await _context.SaveChangesAsync();
         }

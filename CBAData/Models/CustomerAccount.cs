@@ -16,5 +16,8 @@ namespace CBAData.Models
 
         [EnumDataType(typeof(AccountClass)), DisplayName("Account Class")]
         public AccountClass AccountClass { get; set; }
+
+        [DisplayName("Date Opened")]
+        public DateTime DateOpened { get; set; }
     }
 }

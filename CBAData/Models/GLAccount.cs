@@ -11,7 +11,7 @@ namespace CBAData.Models
         {
             IsActivated = true;
         }
-
+        [DisplayName("S/N")]
         public int GLAccountId { get; set; }
 
         [DisplayName("Account Name")]
