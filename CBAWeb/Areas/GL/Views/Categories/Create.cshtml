@@ -23,9 +23,14 @@
                 <input asp-for="Name" class="validate" />
                 <span asp-validation-for="Name" class="red-text"></span>
             </div>
+            <div class="input-field">
+                <label asp-for="Description"></label>
+                <input asp-for="Description" class="validate" />
+                <span asp-validation-for="Description" class="red-text"></span>
+            </div>
             <div class="switch">
                 <label asp-for="IsEnabled"></label>
-                <br/>
+                <br />
                 <label>
                     Disabled
                     <input asp-for="IsEnabled" type="checkbox">

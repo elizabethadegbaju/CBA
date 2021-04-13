@@ -59,11 +59,23 @@ namespace CBAWeb.Areas.GL.Controllers
         [Authorize(Policy = "CBA018")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Type,Name,IsEnabled")] GLCategory gLCategory)
+        public async Task<IActionResult> Create([Bind("Type,Name,IsEnabled,Description")] GLCategory gLCategory)
         {
             if (ModelState.IsValid)
             {
-                await _gLCategoryService.AddGLCategoryAsync(gLCategory.Name, gLCategory.Type);
+                try
+                {
+                    await _gLCategoryService.AddGLCategoryAsync(gLCategory);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = new StatusMessage
+                    {
+                        Type = StatusType.Error,
+                        Message = ex.Message
+                    };
+                    return View(gLCategory);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(gLCategory);
@@ -92,7 +104,7 @@ namespace CBAWeb.Areas.GL.Controllers
         [Authorize(Policy = "CBA019")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsEnabled")] GLCategory gLCategory)
+        public async Task<IActionResult> Edit(int id, [Bind("GLCategoryId,Name,IsEnabled,Description")] GLCategory gLCategory)
         {
             if (id != gLCategory.GLCategoryId)
             {
@@ -115,6 +127,15 @@ namespace CBAWeb.Areas.GL.Controllers
                     {
                         throw;
                     }
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = new StatusMessage
+                    {
+                        Type = StatusType.Error,
+                        Message = ex.Message
+                    };
+                    return View(gLCategory);
                 }
                 return RedirectToAction(nameof(Index));
             }
