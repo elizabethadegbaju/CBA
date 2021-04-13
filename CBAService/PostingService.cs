@@ -291,7 +291,7 @@ namespace CBAService
 
         public async Task<GLPostingViewModel> GetCreateGLPosting()
         {
-            var accountCodes = await _context.InternalAccounts.Select(a => a.AccountCode).ToListAsync();
+            var accountCodes = await _context.InternalAccounts.Where(a => a.IsActivated == true).Select(a => a.AccountCode).ToListAsync();
             var viewModel = new GLPostingViewModel()
             {
                 AccountCodes = accountCodes
@@ -301,8 +301,8 @@ namespace CBAService
 
         public async Task<TellerPostingViewModel> GetCreateTellerPosting()
         {
-            var accountNumbers = await _context.CustomerAccounts.Select(a => a.AccountNumber).ToListAsync();
-            var accountCodes = await _context.InternalAccounts.Select(a => a.AccountCode).ToListAsync();
+            var accountNumbers = await _context.CustomerAccounts.Where(a => a.IsActivated == true).Select(a => a.AccountNumber).ToListAsync();
+            var accountCodes = await _context.InternalAccounts.Where(a => a.IsActivated == true).Select(a => a.AccountCode).ToListAsync();
             var viewModel = new TellerPostingViewModel()
             {
                 AccountNumbers = accountNumbers,
