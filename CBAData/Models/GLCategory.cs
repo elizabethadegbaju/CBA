@@ -18,11 +18,14 @@ namespace CBAData.Models
 
         [EnumDataType(typeof(AccountType))]
         public AccountType Type { get; set; }
+
+        [Required]
         public string Name { get; set; }
 
         [DisplayName("Status")]
         public bool IsEnabled { get;set; }
 
+        [Required]
         public string Description { get; set; }
 
         public List<GLAccount> GLAccounts { get; set; }
