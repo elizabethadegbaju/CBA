@@ -19,5 +19,8 @@ namespace CBAData.Models
 
         [DisplayName("Date Opened")]
         public DateTime DateOpened { get; set; }
+
+        [DisplayName("Loan Account")]
+        public LoanAccount LoanAccount { get; set; }
     }
 }

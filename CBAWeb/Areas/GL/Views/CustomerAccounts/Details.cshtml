@@ -1,4 +1,4 @@
-﻿@model CBAData.Models.CustomerAccount
+﻿@model LoanAccount
 
 @{
     ViewData["Title"] = "Details";
@@ -7,7 +7,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Customer @Html.DisplayFor(model => model.AccountClass) Account</h4>
+    <h4>Loan Account</h4>
     <hr />
     <dl class="row">
         <dt class="col s2">
@@ -23,10 +23,10 @@
             @Html.DisplayFor(model => model.AccountNumber)
         </dd>
         <dt class="col s2">
-            @Html.DisplayNameFor(model => model.AccountClass)
+            @Html.DisplayNameFor(model => model.CustomerAccount)
         </dt>
         <dd class="col s10">
-            @Html.DisplayFor(model => model.AccountClass)
+            @Html.DisplayFor(model => model.CustomerAccount)
         </dd>
         <dt class="col s2">
             @Html.DisplayNameFor(model => model.AccountName)
@@ -47,21 +47,44 @@
             @Html.DisplayFor(model => model.AccountBalance)
         </dd>
         <dt class="col s2">
-            @Html.DisplayNameFor(model => model.IsActivated)
+            @Html.DisplayNameFor(model => model.InterestRate)
         </dt>
         <dd class="col s10">
-            @{
-                var status = "Activated";
-                if (!Model.IsActivated)
-                {
-                    status = "Deactivated";
-                };
-            }
-            @status
+            @Html.DisplayFor(model => model.InterestRate)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.Principal)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.Principal)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.CompoundInterest)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.CompoundInterest)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.DurationYears)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.DurationYears)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.RepaymentFrequencyMonths)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.RepaymentFrequencyMonths)
+        </dd>
+        <dt class="col s2">
+            @Html.DisplayNameFor(model => model.RepaymentAmountPerTime)
+        </dt>
+        <dd class="col s10">
+            @Html.DisplayFor(model => model.RepaymentAmountPerTime)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.GLAccountId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.GLAccountId">Restructure Loan</a> |
     <a asp-action="Index">Back to List</a>
 </div>

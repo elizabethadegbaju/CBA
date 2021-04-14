@@ -160,12 +160,16 @@ namespace CBAService
             {
                 throw new Exception($"Unable to create account. Customer already has a {accountViewModel.AccountClass} account in the system.");
             }
+            if (accountViewModel.AccountClass==AccountClass.Loan)
+            {
+                throw new Exception("Wrong account class selected.");
+            }
             var customerAccount = new CustomerAccount()
             {
                 CustomerId = accountViewModel.CustomerId,
                 IsActivated = accountViewModel.IsActivated,
                 AccountClass = accountViewModel.AccountClass,
-                AccountName = $"{customer.FirstName} {customer.LastName}",
+                AccountName = $"{customer.FirstName} {customer.LastName} {accountViewModel.AccountClass}",
                 DateOpened = DateTime.Now
             };
             _context.Add(customerAccount);
@@ -219,6 +223,95 @@ namespace CBAService
                 AccountClass = account.AccountClass,
                 IsActivated = account.IsActivated,
                 AccountName = account.AccountName,
+                AccountNumber = account.AccountNumber
+            };
+            return viewModel;
+        }
+
+        public async Task<LoanAccount> AddLoanAccountAsync(LoanAccountViewModel accountViewModel)
+        {
+            var customer = await _context.Customers.Include(c => c.Accounts).FirstOrDefaultAsync(c => c.CustomerId == accountViewModel.LinkedAccount.CustomerId);
+            var settings = _context.AccountConfigurations.First();
+            if (customer.Accounts.Any(a => a.AccountClass == AccountClass.Loan))
+            {
+                throw new Exception($"Unable to create account. Customer already has a Loan account in the system.");
+            }
+            var loanAccount = new LoanAccount()
+            {
+                CustomerAccount = accountViewModel.LinkedAccount,
+                IsActivated = true,
+                AccountClass = AccountClass.Loan,
+                AccountName = $"{customer.FirstName} {customer.LastName} Loan",
+                DateOpened = DateTime.Now,
+                Principal = accountViewModel.Principal,
+                InterestRate = (double)settings.LoanInterestRate,
+                DurationYears = accountViewModel.DurationYears,
+                RepaymentFrequencyMonths = accountViewModel.RepaymentFrequencyMonths,
+                StartDate = accountViewModel.StartDate,
+                Customer = accountViewModel.LinkedAccount.Customer
+            };
+            _context.Add(loanAccount);
+            var noPaymentsPerYear = 12 / loanAccount.RepaymentFrequencyMonths;
+            loanAccount.CompoundInterest = (loanAccount.Principal * Math.Pow((1 + (loanAccount.InterestRate / 100) / (noPaymentsPerYear)), (noPaymentsPerYear * loanAccount.DurationYears))) - loanAccount.Principal;
+            loanAccount.AccountNumber = GenerateCustomerAccountNumber(loanAccount.AccountClass, loanAccount.CustomerId, loanAccount.GLAccountId);
+            await _context.SaveChangesAsync();
+
+
+            return loanAccount;
+        }
+
+        public async Task EditLoanAccountAsync(LoanAccountViewModel accountViewModel)
+        {
+            var loanAccount = await RetrieveLoanAccountAsync(accountViewModel.GLAccountId);
+            loanAccount.AccountName = accountViewModel.AccountName;
+            loanAccount.DurationYears = accountViewModel.DurationYears;
+            loanAccount.RepaymentFrequencyMonths = accountViewModel.RepaymentFrequencyMonths;
+            var noPaymentsPerYear = 12 / loanAccount.RepaymentFrequencyMonths;
+            loanAccount.CompoundInterest = (loanAccount.Principal * Math.Pow((1 + (loanAccount.InterestRate / 100) / (noPaymentsPerYear)), (noPaymentsPerYear * loanAccount.DurationYears))) - loanAccount.Principal;
+            _context.Update(loanAccount);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<LoanAccount> RetrieveLoanAccountAsync(int id)
+        {
+            var account = await _context.LoanAccounts
+                .Include(c => c.CustomerAccount)
+                .FirstOrDefaultAsync(m => m.GLAccountId == id);
+            return account;
+        }
+
+        public async Task<List<LoanAccount>> ListLoanAccountsAsync()
+        {
+            var accounts = _context.LoanAccounts.Include(l => l.CustomerAccount);
+            return await accounts.ToListAsync();
+        }
+
+        public async Task<LoanAccountViewModel> GetAddLoanAccount(string linkedAccountNumber)
+        {
+            var linkedAccount = await _context.CustomerAccounts.Include(a=>a.Customer).Where(c => c.AccountNumber == linkedAccountNumber).FirstOrDefaultAsync();
+            var customerAccounts = await _context.CustomerAccounts.Select(c => c.AccountNumber).ToListAsync();
+            var interestRate = await _context.AccountConfigurations.Select(s => s.LoanInterestRate).FirstOrDefaultAsync();
+            var viewModel = new LoanAccountViewModel
+            {
+                LinkedAccount = linkedAccount,
+                CustomerAccounts = customerAccounts,
+                InterestRate = (double)interestRate
+            };
+            return viewModel;
+        }
+
+        public async Task<LoanAccountViewModel> GetEditLoanAccount(int id)
+        {
+            var account = await RetrieveLoanAccountAsync(id);
+            var viewModel = new LoanAccountViewModel
+            {
+                GLAccountId = account.GLAccountId,
+                LinkedAccount=account.CustomerAccount,
+                Principal = account.Principal,
+                InterestRate = account.InterestRate,
+                DurationYears = account.DurationYears,
+                RepaymentFrequencyMonths=account.RepaymentFrequencyMonths,
+                StartDate = account.StartDate,
                 AccountNumber = account.AccountNumber
             };
             return viewModel;

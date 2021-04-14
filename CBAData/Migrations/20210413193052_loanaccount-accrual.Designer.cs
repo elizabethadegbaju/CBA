@@ -4,14 +4,16 @@ using CBAData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CBAData.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210413193052_loanaccount-accrual")]
+    partial class loanaccountaccrual
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -444,21 +446,18 @@ namespace CBAData.Migrations
                     b.HasDiscriminator().HasValue("InternalAccount");
                 });
 
-            modelBuilder.Entity("CBAData.Models.CBARole", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("bit");
-
-                    b.HasDiscriminator().HasValue("CBARole");
-                });
-
             modelBuilder.Entity("CBAData.Models.LoanAccount", b =>
                 {
-                    b.HasBaseType("CBAData.Models.CustomerAccount");
+                    b.HasBaseType("CBAData.Models.GLAccount");
+
+                    b.Property<string>("AccountNumber")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("LoanAccount_AccountNumber");
 
                     b.Property<double>("AccrualBalance")
+                        .HasColumnType("float");
+
+                    b.Property<double>("AmountPaid")
                         .HasColumnType("float");
 
                     b.Property<double>("CompoundInterest")
@@ -467,8 +466,8 @@ namespace CBAData.Migrations
                     b.Property<int>("CustomerAccountId")
                         .HasColumnType("int");
 
-                    b.Property<float>("DurationYears")
-                        .HasColumnType("real");
+                    b.Property<int>("DurationMonths")
+                        .HasColumnType("int");
 
                     b.Property<double>("InterestRate")
                         .HasColumnType("float");
@@ -479,17 +478,25 @@ namespace CBAData.Migrations
                     b.Property<double>("RepaymentAmountPerTime")
                         .HasColumnType("float");
 
-                    b.Property<float>("RepaymentFrequencyMonths")
-                        .HasColumnType("real");
+                    b.Property<int>("RepaymentFrequencyMonths")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.HasIndex("CustomerAccountId")
-                        .IsUnique()
-                        .HasFilter("[CustomerAccountId] IS NOT NULL");
+                    b.HasIndex("CustomerAccountId");
 
                     b.HasDiscriminator().HasValue("LoanAccount");
+                });
+
+            modelBuilder.Entity("CBAData.Models.CBARole", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("bit");
+
+                    b.HasDiscriminator().HasValue("CBARole");
                 });
 
             modelBuilder.Entity("CBAData.Models.CBAUser", b =>
@@ -600,13 +607,13 @@ namespace CBAData.Migrations
 
             modelBuilder.Entity("CBAData.Models.LoanAccount", b =>
                 {
-                    b.HasOne("CBAData.Models.CustomerAccount", "CustomerAccount")
-                        .WithOne("LoanAccount")
-                        .HasForeignKey("CBAData.Models.LoanAccount", "CustomerAccountId")
+                    b.HasOne("CBAData.Models.CustomerAccount", "LinkedAccount")
+                        .WithMany()
+                        .HasForeignKey("CustomerAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CustomerAccount");
+                    b.Navigation("LinkedAccount");
                 });
 
             modelBuilder.Entity("CBAData.Models.CBAUser", b =>
@@ -629,11 +636,6 @@ namespace CBAData.Migrations
             modelBuilder.Entity("CBAData.Models.GLCategory", b =>
                 {
                     b.Navigation("GLAccounts");
-                });
-
-            modelBuilder.Entity("CBAData.Models.CustomerAccount", b =>
-                {
-                    b.Navigation("LoanAccount");
                 });
 
             modelBuilder.Entity("CBAData.Models.CBARole", b =>

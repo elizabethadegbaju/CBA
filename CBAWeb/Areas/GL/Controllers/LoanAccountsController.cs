@@ -1,37 +1,36 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using CBAData.Models;
-using CBAService;
 using CBAData.Interfaces;
-using CBAData.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using CBAData.ViewModels;
+using CBAData.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CBAWeb.Areas.GL.Controllers
 {
     [Area("GL")]
-    public class CustomerAccountsController : Controller
+    public class LoanAccountsController : Controller
     {
         private readonly IGLAccountService _gLAccountService;
 
-        public CustomerAccountsController(IGLAccountService gLAccountService)
+        public LoanAccountsController(IGLAccountService gLAccountService)
         {
             _gLAccountService = gLAccountService;
         }
 
-        // GET: GL/CustomerAccounts
+        // GET: GL/LoanAccounts
         [Authorize(Policy = "CBA014")]
         public async Task<IActionResult> Index()
         {
-            var accounts = await _gLAccountService.ListCustomerAccountsAsync();
+            var accounts = await _gLAccountService.ListLoanAccountsAsync();
             return View(accounts);
         }
 
-        // GET: GL/CustomerAccounts/Details/5
+        // GET: GL/LoanAccounts/Details/5
         [Authorize(Policy = "CBA014")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -40,36 +39,34 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var customerAccount = await _gLAccountService.RetrieveCustomerAccountAsync(id.Value);
-            if (customerAccount == null)
+            var loanAccount = await _gLAccountService.RetrieveLoanAccountAsync(id.Value);
+            if (loanAccount == null)
             {
                 return NotFound();
             }
 
-            return View(customerAccount);
+            return View(loanAccount);
         }
 
-        // GET: GL/CustomerAccounts/Create
+        // GET: GL/LoanAccounts/Create
         [Authorize(Policy = "CBA011")]
-        public IActionResult Create(int customerId, AccountClass accountClass)
+        public async Task<IActionResult> Create(string linkedAccountNumber)
         {
-            var viewModel = _gLAccountService.GetAddCustomerAccount(customerId, accountClass);
+            var viewModel = await _gLAccountService.GetAddLoanAccount(linkedAccountNumber);
             return View(viewModel);
         }
 
-        // POST: GL/CustomerAccounts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: GL/LoanAccounts/Create
         [Authorize(Policy = "CBA011")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,AccountClass,IsActivated")] CustomerAccountViewModel accountViewModel)
+        public async Task<IActionResult> Create([Bind("GLAccountId,CustomerAccounts,InterestRate,AccountName,LinkedAccount,Principal,DurationYears,RepaymentFrequencyMonths,StartDate")] LoanAccountViewModel accountViewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var account = await _gLAccountService.AddCustomerAccountAsync(accountViewModel);
+                    var account = await _gLAccountService.AddLoanAccountAsync(accountViewModel);
                 }
                 catch (Exception ex)
                 {
@@ -78,14 +75,14 @@ namespace CBAWeb.Areas.GL.Controllers
                         Message = ex.Message,
                         Type = StatusType.Error
                     };
-                    return View(accountViewModel);
+                    return View();
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(accountViewModel);
         }
 
-        // GET: GL/CustomerAccounts/Edit/5
+        // GET: GL/LoanAccounts/Edit/5
         [Authorize(Policy = "CBA012")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -93,8 +90,7 @@ namespace CBAWeb.Areas.GL.Controllers
             {
                 return NotFound();
             }
-
-            var accountViewModel = await _gLAccountService.GetEditCustomerAccount(id.Value);
+            var accountViewModel = await _gLAccountService.GetEditLoanAccount(id.Value);
             if (accountViewModel == null)
             {
                 return NotFound();
@@ -102,15 +98,13 @@ namespace CBAWeb.Areas.GL.Controllers
             return View(accountViewModel);
         }
 
-        // POST: GL/CustomerAccounts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: GL/LoanAccounts/Edit/5
         [Authorize(Policy = "CBA012")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountName,IsActivated")] CustomerAccountViewModel accountViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("GLAccountId,CustomerAccounts,InterestRate,AccountName,LinkedAccount,Principal,DurationYears,RepaymentFrequencyMonths,StartDate")] LoanAccountViewModel accountViewModel)
         {
-            if (id != accountViewModel.Id)
+            if (id != accountViewModel.GLAccountId)
             {
                 return NotFound();
             }
@@ -119,11 +113,12 @@ namespace CBAWeb.Areas.GL.Controllers
             {
                 try
                 {
-                    await _gLAccountService.EditCustomerAccountAsync(accountViewModel);
+                    await _gLAccountService.EditLoanAccountAsync(accountViewModel);
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _gLAccountService.GLAccountExists(accountViewModel.Id))
+                    if (!await _gLAccountService.GLAccountExists(accountViewModel.GLAccountId))
                     {
                         return NotFound();
                     }
@@ -146,7 +141,7 @@ namespace CBAWeb.Areas.GL.Controllers
             return View(accountViewModel);
         }
 
-        // GET: GL/CustomerAccounts/Delete/5
+        // GET: GL/LoanAccounts/Delete/5
         [Authorize(Policy = "CBA013")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -155,23 +150,35 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            var customerAccount = await _gLAccountService.RetrieveCustomerAccountAsync(id.Value);
-            if (customerAccount == null)
+            var loanAccount = await _gLAccountService.RetrieveLoanAccountAsync(id.Value);
+            if (loanAccount == null)
             {
                 return NotFound();
             }
 
-            return View(customerAccount);
+            return View(loanAccount);
         }
 
-        // POST: GL/CustomerAccounts/Delete/5
+        // POST: GL/LoanAccounts/Delete/5
         [Authorize(Policy = "CBA013")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _gLAccountService.DeleteGLAccountAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _gLAccountService.DeleteGLAccountAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = new StatusMessage
+                {
+                    Message = ex.Message,
+                    Type = StatusType.Error
+                };
+                return View();
+            }
         }
     }
 }
