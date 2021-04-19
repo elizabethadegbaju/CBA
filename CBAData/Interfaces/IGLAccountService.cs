@@ -23,6 +23,13 @@ namespace CBAData.Interfaces
         public CustomerAccountViewModel GetAddCustomerAccount(int customerId, AccountClass accountClass);
         public Task<CustomerAccountViewModel> GetEditCustomerAccount(int id);
 
+        public Task<LoanAccount> AddLoanAccountAsync(LoanAccountViewModel accountViewModel);
+        public Task EditLoanAccountAsync(LoanAccountViewModel accountViewModel);
+        public Task<LoanAccount> RetrieveLoanAccountAsync(int id);
+        public Task<List<LoanAccount>> ListLoanAccountsAsync();
+        public Task<LoanAccountViewModel> GetAddLoanAccount(string linkedAccountNumber);
+        public Task<LoanAccountViewModel> GetEditLoanAccount(int id);
+
         public Task DeleteGLAccountAsync(int id);
         public Task ActivateGLAccountAsync(int id);
         public Task DeactivateGLAccountAsync(int id);

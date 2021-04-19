@@ -5,6 +5,7 @@
     <UserSecretsId>aspnet-CBA-04B2C5CD-CC57-4B7D-8DC3-0EEDE6A2F64B</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'CBA' " />
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.3" />
@@ -24,4 +25,8 @@
     <ProjectReference Include="..\CBAService\CBAService.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\GL\Views\LoanAccounts\" />
+    <Folder Include="Areas\GL\Views\CustomerAccounts\" />
+  </ItemGroup>
 </Project>

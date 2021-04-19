@@ -40,13 +40,7 @@
                                     <a asp-area="" asp-action="Index" asp-controller="GLPostings" title="Postings Within Internal Accounts">GL Postings</a>
                                 </li>
                                 <li>
-                                    <a asp-area="" asp-action="Create" asp-controller="GLPostings" title="Post Transaction between internal accounts">Create GL Posting</a>
-                                </li>
-                                <li>
                                     <a asp-area="" asp-action="Index" asp-controller="TellerPostings" title="Postings to Customer Accounts">Teller Postings</a>
-                                </li>
-                                <li>
-                                    <a asp-area="" asp-action="Create" asp-controller="TellerPostings" title="Post Transaction to Customer Account">Create Teller Posting</a>
                                 </li>
                             </ul>
                         </div>
@@ -60,13 +54,16 @@
                         <div class="collapsible-body">
                             <ul>
                                 <li>
-                                    <a asp-area="GL" asp-action="Index" asp-controller="Categories" title="GL Category Management">Categories</a>
+                                    <a asp-area="GL" asp-action="Index" asp-controller="Categories" title="GL Category Management">GL Category Management</a>
                                 </li>
                                 <li>
                                     <a asp-area="GL" asp-action="Index" asp-controller="Accounts" title="Internal Account Management">Internal Accounts</a>
                                 </li>
                                 <li>
                                     <a asp-area="GL" asp-action="Index" asp-controller="CustomerAccounts" title="Customer Account Management">Customer Accounts</a>
+                                </li>
+                                <li>
+                                    <a asp-area="GL" asp-action="Index" asp-controller="LoanAccounts" title="Loan Account Management">Loan Accounts</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
@@ -94,21 +91,6 @@
 
         <footer class="page-footer">
             <div>
-                <!-- <div class="row">
-            <div class="col l6 s12">
-                <h5 class="white-text">Footer Content</h5>
-                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
-            </div>
-            <div class="col l4 offset-l2 s12">
-                <h5 class="white-text">Links</h5>
-                <ul>
-                    <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
-                    <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
-                    <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
-                    <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
-                </ul>
-            </div>
-            </div> -->
             </div>
             <div class="footer-copyright">
                 <div class="container">

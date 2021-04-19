@@ -1,7 +1,7 @@
-﻿@model IEnumerable<CBAData.Models.CustomerAccount>
+﻿@model IEnumerable<LoanAccount>
 
 @{
-    ViewData["Title"] = "Customer Accounts";
+    ViewData["Title"] = "Loan Accounts";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -13,19 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Customer)
+                @Html.DisplayNameFor(model => model.CustomerAccount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AccountNumber)
+                @Html.DisplayNameFor(model => model.Principal)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AccountClass)
+                @Html.DisplayNameFor(model => model.InterestRate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AccountName)
+                @Html.DisplayNameFor(model => model.DurationYears)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsActivated)
+                @Html.DisplayNameFor(model => model.StartDate)
             </th>
             <th></th>
         </tr>
@@ -34,26 +34,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Customer.CustomerId)
+                @Html.DisplayFor(modelItem => item.CustomerAccount.AccountNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AccountNumber)
+                @Html.DisplayFor(modelItem => item.Principal)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AccountClass)
+                @Html.DisplayFor(modelItem => item.InterestRate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AccountName)
+                @Html.DisplayFor(modelItem => item.DurationYears)
             </td>
             <td>
-                @{
-                    var status = "Activated";
-                    if (!item.IsActivated)
-                    {
-                        status = "Deactivated";
-                    };
-                }
-                @status
+                @Html.DisplayFor(modelItem => item.StartDate)
             </td>
             <td>
                 <a class="dropdown-trigger btn" href="#" data-target="@(item.GLAccountId)actions">Action</a>

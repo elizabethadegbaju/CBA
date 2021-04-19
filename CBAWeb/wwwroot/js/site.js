@@ -11,3 +11,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     M.Dropdown.init(elems, options);
 });
+document.addEventListener('DOMContentLoaded', function () {
+    var elems = document.querySelectorAll('.datepicker');
+    var options = {
+        "defaultDate": Date.now(),
+        "setDefaultDate": true,
+        "autoClose": true,
+        "disableWeekends": true,
+    }
+    var instances = M.Datepicker.init(elems, options);
+});

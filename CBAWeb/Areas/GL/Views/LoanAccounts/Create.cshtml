@@ -1,0 +1,78 @@
+﻿@model LoanAccountViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Loan Account</h4>
+<hr />
+<div class="row">
+    <div class="col m4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="red-text"></div>
+            <input type="hidden" asp-for="CustomerAccounts" />
+            <div class="input-field">
+                <label asp-for="LinkedAccount.AccountNumber">Linked Account Number</label>
+                <input asp-for="LinkedAccount.AccountNumber" class="validate autocomplete" />
+                <span asp-validation-for="LinkedAccount.AccountNumber" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="AccountName"></label>
+                <input asp-for="AccountName" class="validate" />
+                <span asp-validation-for="AccountName" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="Principal"></label>
+                <input asp-for="Principal" class="validate" />
+                <span asp-validation-for="Principal" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="InterestRate"></label>
+                <input asp-for="InterestRate" class="validate" disabled />
+                <span asp-validation-for="InterestRate" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="DurationYears"></label>
+                <input asp-for="DurationYears" class="validate" />
+                <span asp-validation-for="DurationYears" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="RepaymentFrequencyMonths"></label>
+                <input asp-for="RepaymentFrequencyMonths" class="validate" />
+                <span asp-validation-for="RepaymentFrequencyMonths" class="red-text"></span>
+            </div>
+            <div class="input-field">
+                <label asp-for="StartDate"></label>
+                <input asp-for="StartDate" type="text" class="validate datepicker" />
+                <span asp-validation-for="StartDate" class="red-text"></span>
+            </div>
+            <br />
+            <button type="submit" class="btn waves-effect waves-light">Create Account</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<br />
+
+@section scripts{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.autocomplete');
+            var customerAccounts = @Json.Serialize(Model.CustomerAccounts);
+            var count = customerAccounts.length;
+            var accounts = {};
+            for (var i = 0; i < count; i++) {
+                accounts[customerAccounts[i]] = null;
+            };
+            var options = {
+                data: accounts,
+            };
+            var instances = M.Autocomplete.init(elems, options);
+        });
+    </script>
+}
