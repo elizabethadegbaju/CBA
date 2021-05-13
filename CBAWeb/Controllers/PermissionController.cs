@@ -41,39 +41,6 @@ namespace CBAWeb.Controllers
             return View(model);
         }
 
-        // GET: PermissionController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: PermissionController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: PermissionController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PermissionController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
         // POST: PermissionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -83,27 +50,6 @@ namespace CBAWeb.Controllers
             var user = await _userManager.GetUserAsync(User);
             await _permissionService.EditRoleClaimsAsync(role, model.RoleClaims, user);
             return RedirectToAction(nameof(RolesController.Index), "Roles");
-        }
-
-        // GET: PermissionController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: PermissionController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }
