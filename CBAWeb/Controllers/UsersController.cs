@@ -4,16 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using CBAData.ViewModels;
@@ -47,12 +41,6 @@ namespace CBAWeb.Controllers
             return View(users);
         }
 
-        // GET: UsersController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: UsersController/Create
         [Authorize(Policy = "CBA001")]
         public ActionResult Create()
@@ -77,7 +65,7 @@ namespace CBAWeb.Controllers
                     await _userService.UpdateUserRoleAsync(user, role.Name);
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { userId = user.Id, code = code }, HttpContext.Request.Scheme);
+                    var callbackUrl = Url.Action(nameof(ConfirmEmail), "Users", new { userId = user.Id, code }, HttpContext.Request.Scheme);
                     var pathToFile = _env.WebRootPath
                         + Path.DirectorySeparatorChar.ToString()
                         + "Templates"
