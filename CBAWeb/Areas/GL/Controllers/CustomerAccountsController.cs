@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CBAData.Models;
-using CBAService;
 using CBAData.Interfaces;
 using CBAData.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -46,7 +42,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            return View(customerAccount);
+            return View(customerAccount as LoanAccount);
         }
 
         // GET: GL/CustomerAccounts/Create
@@ -69,7 +65,7 @@ namespace CBAWeb.Areas.GL.Controllers
             {
                 try
                 {
-                    var account = await _gLAccountService.AddCustomerAccountAsync(accountViewModel);
+                    await _gLAccountService.AddCustomerAccountAsync(accountViewModel);
                 }
                 catch (Exception ex)
                 {
@@ -161,7 +157,7 @@ namespace CBAWeb.Areas.GL.Controllers
                 return NotFound();
             }
 
-            return View(customerAccount);
+            return View(customerAccount as LoanAccount);
         }
 
         // POST: GL/CustomerAccounts/Delete/5
